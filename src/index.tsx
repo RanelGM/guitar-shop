@@ -5,7 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import App from './components/app/app';
 import { createAPI } from 'api/api';
-import reducer from 'store/reducer';
+import { rootReducer } from 'store/root-reducer';
 import { loadProductAction } from 'store/api-actions';
 
 let isServerError = false;
@@ -13,7 +13,7 @@ let isServerError = false;
 const api = createAPI();
 
 const store = configureStore({
-  reducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       thunk: {

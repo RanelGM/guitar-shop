@@ -1,4 +1,9 @@
+import { MouseEvent } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Guitar } from 'types/guitar';
+import { ThunkActionDispatch } from 'types/action';
+import { getCart } from 'store/order-data/selectors';
+import { setCart } from 'store/action';
 import { getNumberWithSpaceBetween, addWordInToArray } from 'utils/utils';
 
 type CardProps = {
@@ -15,9 +20,30 @@ const adaptImageSrc = (src: string): string => {
 
 function Card({ guitar }: CardProps): JSX.Element {
   const { id, name, previewImg, price, rating } = guitar;
-
   const adaptedImageSrc = adaptImageSrc(previewImg);
   const adaptedPrice = getNumberWithSpaceBetween(price);
+
+  const guitarsInCart = useSelector(getCart);
+  const isGuitarInCart = guitarsInCart?.includes(guitar);
+  const dispatch = useDispatch() as ThunkActionDispatch;
+
+  const handleCartBtnClick = (evt: MouseEvent) => {
+    evt.preventDefault();
+
+    const updatingChart = guitarsInCart ? guitarsInCart.slice() : [];
+
+    if (!isGuitarInCart) {
+      updatingChart.push(guitar);
+    }
+
+    if (isGuitarInCart) {
+      const index = updatingChart.indexOf(guitar);
+      updatingChart.splice(index, 1);
+    }
+
+
+    dispatch(setCart(updatingChart));
+  };
 
   return (
     <div className="product-card"><img src={adaptedImageSrc} width="75" height="190" alt={name} />
@@ -36,12 +62,20 @@ function Card({ guitar }: CardProps): JSX.Element {
           <span className="rate__count">#todo</span><span className="rate__message"></span>
         </div>
         <p className="product-card__title">{name}</p>
-        <p className="product-card__price"><span className="visually-hidden">Цена:</span>{adaptedPrice} ₽
-        </p>
+        <p className="product-card__price"><span className="visually-hidden">Цена:</span>{adaptedPrice} ₽</p>
       </div>
-      <div className="product-card__buttons"><a href="#todo" className="button button--mini">Подробнее</a><a className="button button--red button--mini button--add-to-cart" href="#todo">Купить</a>
+      <div className="product-card__buttons">
+        <a href="#todo" className="button button--mini">Подробнее</a>
+        <a href="#todo"
+          className={`button button--mini ${isGuitarInCart
+            ? 'button--red-border button--in-cart'
+            : 'button--red  button--add-to-cart'}
+          `}
+          onClick={handleCartBtnClick}
+        >{isGuitarInCart ? 'В Корзине' : 'Купить'}
+        </a>
       </div>
-    </div>
+    </div >
   );
 }
 
