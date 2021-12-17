@@ -1,6 +1,16 @@
 import { CatalogScreen } from 'components/page-screens/page-screens';
 
-function App(): JSX.Element {
+type AppProps = {
+  isServerError: boolean,
+}
+
+function App({ isServerError }: AppProps): JSX.Element {
+  if (isServerError) {
+    return (
+      <div>Сервер недоступен на текущий момент. Попробуйте позднее</div>
+    );
+  }
+
   return (
     <CatalogScreen />
   );
