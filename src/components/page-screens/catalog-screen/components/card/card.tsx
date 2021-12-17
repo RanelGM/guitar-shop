@@ -1,26 +1,42 @@
-function Card(): JSX.Element {
+import { Guitar } from 'types/guitar';
+import { getNumberWithSpaceBetween, addWordInToArray } from 'utils/utils';
+
+type CardProps = {
+  guitar: Guitar
+}
+
+const MAX_STARS_COUNT = 5;
+const stars = Array.from({ length: MAX_STARS_COUNT }, (item, index) => index);
+
+const adaptImageSrc = (src: string): string => {
+  const adaptingPath = 'content';
+  return addWordInToArray(adaptingPath, src.split('/'));
+};
+
+function Card({ guitar }: CardProps): JSX.Element {
+  const { id, name, previewImg, price, rating } = guitar;
+
+  const adaptedImageSrc = adaptImageSrc(previewImg);
+  const adaptedPrice = getNumberWithSpaceBetween(price);
+
   return (
-    <div className="product-card"><img src="img/content/guitar-2.jpg" width="75" height="190" alt="СURT Z30 Plus Acoustics" />
+    <div className="product-card"><img src={adaptedImageSrc} width="75" height="190" alt={name} />
       <div className="product-card__info">
         <div className="rate product-card__rate" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-full-star"></use>
-          </svg>
-          <svg width="12" height="11" aria-hidden="true">
-            <use xlinkHref="#icon-star"></use>
-          </svg><span className="rate__count">9</span><span className="rate__message"></span>
+          {stars.map((item, index) => {
+            const isFullStar = index < rating;
+
+            return (
+              <svg key={`${id}-${item}`} width="12" height="11" aria-hidden="true">
+                <use xlinkHref={isFullStar ? '#icon-full-star' : '#icon-star'}></use>
+              </svg>
+            );
+          })}
+
+          <span className="rate__count">#todo</span><span className="rate__message"></span>
         </div>
-        <p className="product-card__title">СURT Z30 Plus Acoustics</p>
-        <p className="product-card__price"><span className="visually-hidden">Цена:</span>129 500 ₽
+        <p className="product-card__title">{name}</p>
+        <p className="product-card__price"><span className="visually-hidden">Цена:</span>{adaptedPrice} ₽
         </p>
       </div>
       <div className="product-card__buttons"><a href="#todo" className="button button--mini">Подробнее</a><a className="button button--red button--mini button--add-to-cart" href="#todo">Купить</a>

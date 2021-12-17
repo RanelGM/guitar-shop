@@ -1,5 +1,5 @@
 export enum APIRoute {
-  Guitars = '/guitars1',
+  Guitars = '/guitars',
 }
 
 export enum GuitarType {
