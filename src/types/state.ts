@@ -3,6 +3,7 @@ import { RootState } from 'store/root-reducer';
 
 export type ProductDataState = {
   guitars: Guitar[] | null,
+  similarAtSearch: Guitar[] | null,
 }
 
 export type OrderDataState = {
