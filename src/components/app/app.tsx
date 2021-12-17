@@ -1,4 +1,4 @@
-import { CatalogScreen } from 'components/page-screens/page-screens';
+import { CatalogScreen, ErrorScreen } from 'components/page-screens/page-screens';
 
 type AppProps = {
   isServerError: boolean,
@@ -6,9 +6,7 @@ type AppProps = {
 
 function App({ isServerError }: AppProps): JSX.Element {
   if (isServerError) {
-    return (
-      <div>Сервер недоступен на текущий момент. Попробуйте позднее</div>
-    );
+    return <ErrorScreen />;
   }
 
   return (
