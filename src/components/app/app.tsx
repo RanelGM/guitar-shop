@@ -20,7 +20,7 @@ function App({ isServerError }: AppProps): JSX.Element {
         <Route exact path={AppRoute.Catalog}>
           <CatalogScreen />
         </Route>
-        <Route exact path={AppRoute.Product}>
+        <Route exact path={`${AppRoute.Product}/:id`}>
           <UnderConstructionScreen />
         </Route>
         <Route exact path={AppRoute.Cart}>

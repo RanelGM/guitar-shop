@@ -1,8 +1,10 @@
 import { FocusEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { ThunkActionDispatch } from 'types/action';
 import { loadSearchSimilarAction } from 'store/api-actions';
 import { getSimilarAtSearch } from 'store/product-data/selectors';
+import { AppRoute } from 'utils/const';
 
 function SearchForm(): JSX.Element {
   const dispatch = useDispatch() as ThunkActionDispatch;
@@ -13,10 +15,16 @@ function SearchForm(): JSX.Element {
   const listRef = useRef<HTMLUListElement | null>(null);
 
   const handleSearchChange = async () => {
-    if (searchRef.current !== null && listRef.current !== null) {
-      await dispatch(loadSearchSimilarAction(searchRef.current.value));
-      listRef.current.classList.remove('hidden');
+    const searchInput = searchRef.current as HTMLInputElement;
+    const listElement = listRef.current as HTMLUListElement;
+
+    if (searchInput.value.length === 0) {
+      listElement.classList.add('hidden');
+      return;
     }
+
+    await dispatch(loadSearchSimilarAction(searchInput.value));
+    listElement.classList.remove('hidden');
   };
 
   const handleSearchFocus = () => {
@@ -59,7 +67,11 @@ function SearchForm(): JSX.Element {
           zIndex: 1,
         }}
       >
-        {similarGuitars?.map((guitar) => <li key={`search-${guitar.id}`} className="form-search__select-item" tabIndex={0}>{guitar.name}</li>)}
+        {similarGuitars?.map((guitar) => (
+          <li key={`search-${guitar.id}`}>
+            <Link to={`${AppRoute.Product}/${guitar.id}`} className="form-search__select-item" >{guitar.name}</Link>
+          </li>
+        ))}
       </ul>
     </div >
   );

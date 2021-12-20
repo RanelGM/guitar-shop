@@ -2281,6 +2281,7 @@ button,
 }
 
 .form-search__select-item {
+  display: block;
   padding-top: 4px;
   padding-bottom: 4px;
 
