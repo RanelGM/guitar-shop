@@ -27,7 +27,7 @@ function App({ isServerError }: AppProps): JSX.Element {
           <UnderConstructionScreen />
         </Route>
       </Switch>
-    </BrowserRouter>
+    </BrowserRouter >
   );
 }
 
