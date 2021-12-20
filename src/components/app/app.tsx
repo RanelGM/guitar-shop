@@ -1,4 +1,6 @@
-import { CatalogScreen, ErrorScreen } from 'components/page-screens/page-screens';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { CatalogScreen, ErrorScreen, UnderConstructionScreen } from 'components/page-screens/page-screens';
+import { AppRoute } from 'utils/const';
 
 type AppProps = {
   isServerError: boolean,
@@ -10,7 +12,22 @@ function App({ isServerError }: AppProps): JSX.Element {
   }
 
   return (
-    <CatalogScreen />
+    <BrowserRouter>
+      <Switch>
+        <Route exact path={AppRoute.Home}>
+          <Redirect to={AppRoute.Catalog} />
+        </Route>
+        <Route exact path={AppRoute.Catalog}>
+          <CatalogScreen />
+        </Route>
+        <Route exact path={AppRoute.Product}>
+          <UnderConstructionScreen />
+        </Route>
+        <Route exact path={AppRoute.Cart}>
+          <UnderConstructionScreen />
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
 
