@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Guitar } from 'types/guitar';
+import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { getCart } from 'store/order-data/selectors';
 import { setCart } from 'store/action';
@@ -19,7 +19,8 @@ const adaptImageSrc = (src: string): string => {
 };
 
 function Card({ guitar }: CardProps): JSX.Element {
-  const { id, name, previewImg, price, rating } = guitar;
+  const { id, name, previewImg, price, rating, comments } = guitar;
+
   const adaptedImageSrc = adaptImageSrc(previewImg);
   const adaptedPrice = getNumberWithSpaceBetween(price);
 
@@ -59,7 +60,7 @@ function Card({ guitar }: CardProps): JSX.Element {
             );
           })}
 
-          <span className="rate__count">#todo</span><span className="rate__message"></span>
+          <span className="rate__count">{comments.length}</span><span className="rate__message"></span>
         </div>
         <p className="product-card__title">{name}</p>
         <p className="product-card__price"><span className="visually-hidden">Цена:</span>{adaptedPrice} ₽</p>

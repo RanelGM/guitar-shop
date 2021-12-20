@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import { ActionType } from 'types/action';
-import { Guitar } from 'types/guitar';
+import { Guitar } from 'types/product';
 
 export const loadProductData = createAction(
   ActionType.LoadProductData,

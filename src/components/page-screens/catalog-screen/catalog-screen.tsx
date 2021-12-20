@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { Guitar } from 'types/guitar';
+import { Guitar } from 'types/product';
 import { Breadcrumbs, Footer, Header, Pagination } from 'components/common/common';
 import { Filter, Sort, Card } from './components/components';
 import { getGuitars } from 'store/product-data/selectors';

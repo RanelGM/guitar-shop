@@ -1,4 +1,4 @@
-import { Guitar } from './guitar';
+import { Guitar } from './product';
 import { RootState } from 'store/root-reducer';
 
 export type ProductDataState = {

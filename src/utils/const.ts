@@ -6,7 +6,7 @@ export enum AppRoute {
 }
 
 export enum APIRoute {
-  Guitars = '/guitars',
+  Guitars = '/guitars?_embed=comments',
   SearchSimilar = '/guitars?name_like',
 }
 
@@ -29,3 +29,6 @@ export enum SortAria {
   Ascending = 'По возрастанию',
   Descending = 'По убыванию',
 }
+
+export const DEFAULT_SORT_TYPE = SortType.Price;
+export const DEFAULT_SORT_ORDER = SortType.Ascending;
