@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ProductDataState } from 'types/state';
-import { loadProductData, setSearchSimilar } from '../action';
+import { loadProductData, setGuitars, setSearchSimilar } from '../action';
 
 const initialState: ProductDataState = {
   guitars: null,
@@ -10,6 +10,9 @@ const initialState: ProductDataState = {
 const ProductData = createReducer(initialState, (builder) => {
   builder
     .addCase(loadProductData, (state, action) => {
+      state.guitars = action.payload;
+    })
+    .addCase(setGuitars, (state, action) => {
       state.guitars = action.payload;
     })
     .addCase(setSearchSimilar, (state, action) => {
