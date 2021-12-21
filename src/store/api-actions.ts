@@ -1,7 +1,7 @@
 import { ThunkActionResult } from 'types/action';
-import { Guitar } from 'types/product';
+import { Guitar, SortType } from 'types/product';
 import { loadProductData, setSearchSimilar, setGuitars } from './action';
-import { APIRoute, SortType, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE } from 'utils/const';
+import { APIRoute, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE } from 'utils/const';
 
 export const loadProductAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {

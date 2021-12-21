@@ -16,19 +16,12 @@ export enum GuitarType {
   Ukulele = 'ukulele',
 }
 
-export enum SortType {
-  Price = 'price',
-  Rating = 'rating',
-  Ascending = 'asc',
-  Descending = 'desc',
-}
+export const SortGroup = {
+  Price: { type: 'price', label: 'По цене' },
+  Rating: { type: 'rating', label: 'По популярности' },
+  Ascending: { type: 'asc', label: 'По возрастанию' },
+  Descending: { type: 'desc', label: 'По убыванию' },
+} as const;
 
-export enum SortAria {
-  Price = 'По цене',
-  Rating = 'По популярности',
-  Ascending = 'По возрастанию',
-  Descending = 'По убыванию',
-}
-
-export const DEFAULT_SORT_TYPE = SortType.Price;
-export const DEFAULT_SORT_ORDER = SortType.Ascending;
+export const DEFAULT_SORT_TYPE = SortGroup.Price.type;
+export const DEFAULT_SORT_ORDER = SortGroup.Ascending.type;

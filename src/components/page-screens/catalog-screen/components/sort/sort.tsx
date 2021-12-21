@@ -1,21 +1,12 @@
 import { useState, MouseEvent, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { SortType, SortAria } from 'utils/const';
+import { SortType, SortLabel, SortKeys } from 'types/product';
+import { SortGroup } from 'utils/const';
 import { loadSortedGuitarsAction } from 'store/api-actions';
 
-const convertAriaToType = (ariaLabel: SortAria): SortType | null => {
-  switch (ariaLabel) {
-    case (SortAria.Price):
-      return SortType.Price;
-    case (SortAria.Rating):
-      return SortType.Rating;
-    case (SortAria.Ascending):
-      return SortType.Ascending;
-    case (SortAria.Descending):
-      return SortType.Descending;
-    default:
-      return null;
-  }
+const convertLabelToType = (label: SortLabel): SortType => {
+  const groupItem = Object.values(SortGroup).find((item) => item['label'] === label) as typeof SortGroup[SortKeys];
+  return groupItem.type;
 };
 
 function Sort(): JSX.Element {
@@ -24,10 +15,10 @@ function Sort(): JSX.Element {
   const [isDataLoaded, setIsDataLoaded] = useState(true);
   const dispatch = useDispatch();
 
-  const isSortByPrice = sortType === SortType.Price;
-  const isSortByRating = sortType === SortType.Rating;
-  const isSortByAscendingOrder = orderType === SortType.Ascending;
-  const isSortByDescendingOrder = orderType === SortType.Descending;
+  const isSortByPrice = sortType === SortGroup.Price.type;
+  const isSortByRating = sortType === SortGroup.Rating.type;
+  const isSortByAscendingOrder = orderType === SortGroup.Ascending.type;
+  const isSortByDescendingOrder = orderType === SortGroup.Descending.type;
 
   const handleSortClick = async (evt: MouseEvent) => {
     const sortButton = (evt.target as HTMLButtonElement).closest('button');
@@ -36,16 +27,16 @@ function Sort(): JSX.Element {
       return;
     }
 
-    const type = convertAriaToType(sortButton.ariaLabel as SortAria);
+    const type = convertLabelToType(sortButton.ariaLabel as SortLabel);
 
     switch (type) {
-      case SortType.Price:
-      case SortType.Rating:
+      case SortGroup.Price.type:
+      case SortGroup.Rating.type:
         setSortType(type);
         setIsDataLoaded(false);
         break;
-      case SortType.Ascending:
-      case SortType.Descending:
+      case SortGroup.Ascending.type:
+      case SortGroup.Descending.type:
         setOrderType(type);
         setIsDataLoaded(false);
         break;
@@ -67,14 +58,14 @@ function Sort(): JSX.Element {
       <h2 className="catalog-sort__title">Сортировать:</h2>
       <div className="catalog-sort__type">
         <button
-          aria-label={SortAria.Price}
+          aria-label={SortGroup.Price.label}
           tabIndex={isSortByPrice ? -1 : 0}
           className={`catalog-sort__type-button
           ${isSortByPrice ? 'catalog-sort__type-button--active' : ''}`}
         >по цене
         </button>
         <button
-          aria-label={SortAria.Rating}
+          aria-label={SortGroup.Rating.label}
           tabIndex={isSortByRating ? -1 : 0}
           className={`catalog-sort__type-button
           ${isSortByRating ? 'catalog-sort__type-button--active' : ''}`}
@@ -83,14 +74,14 @@ function Sort(): JSX.Element {
       </div>
       <div className="catalog-sort__order">
         <button
-          aria-label={SortAria.Ascending}
+          aria-label={SortGroup.Ascending.label}
           tabIndex={isSortByRating ? -1 : 0}
           className={`catalog-sort__order-button catalog-sort__order-button--up
           ${isSortByAscendingOrder ? 'catalog-sort__order-button--active' : ''}`}
         >
         </button>
         <button
-          aria-label={SortAria.Descending}
+          aria-label={SortGroup.Descending.label}
           tabIndex={isSortByRating ? -1 : 0}
           className={`catalog-sort__order-button catalog-sort__order-button--down
           ${isSortByDescendingOrder ? 'catalog-sort__order-button--active' : ''}`}
