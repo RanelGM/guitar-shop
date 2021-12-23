@@ -14,6 +14,8 @@ export type OrderDataState = {
 export type QueryDataState = {
   sortType: SortType | null,
   orderType: SortType | null,
+  priceRangeFrom: string,
+  priceRangeTo: string,
 }
 
 export type State = RootState;

@@ -10,6 +10,8 @@ export enum ActionType {
   SetCart = 'order/setCart',
   SetSortType = 'query/setSortType',
   SetOrderType = 'query/setOrderType',
+  SetPriceRangeFrom = 'query/setPriceRangeFrom',
+  SetPriceRangeTo = 'query/setPriceRangeTo',
 }
 
 export type ThunkActionResult = ThunkAction<Promise<void>, State, AxiosInstance, Action>

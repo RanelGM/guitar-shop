@@ -31,3 +31,13 @@ export const setOrderType = createAction(
   ActionType.SetOrderType,
   (orderType: SortType) => ({ payload: orderType }),
 );
+
+export const setPriceRangeFrom = createAction(
+  ActionType.SetPriceRangeFrom,
+  (from: string) => ({ payload: from }),
+);
+
+export const setPriceRangeTo = createAction(
+  ActionType.SetPriceRangeTo,
+  (to: string) => ({ payload: to }),
+);
