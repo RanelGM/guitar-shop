@@ -1,4 +1,18 @@
-import { GuitarType, SortGroup } from 'utils/const';
+import { GuitarGroup, SortGroup } from 'utils/const';
+
+export type GuitarKey = keyof typeof GuitarGroup;
+export type GuitarType = typeof GuitarGroup[GuitarKey]['type'];
+export type GuitarLabel = typeof GuitarGroup[GuitarKey]['label'];
+export type GuitarStrings = typeof GuitarGroup[GuitarKey]['strings'];
+
+export type SortKey = keyof typeof SortGroup;
+export type SortType = typeof SortGroup[SortKey]['type'];
+export type SortLabel = typeof SortGroup[SortKey]['label'];
+
+export type Group = typeof GuitarGroup | typeof SortGroup;
+export type GroupKey = typeof GuitarGroup[GuitarKey] | typeof SortGroup[SortKey];
+export type GroupType = GuitarType | SortType;
+export type GroupLabel = GuitarLabel | SortLabel;
 
 type Comment = {
   'id': string,
@@ -23,7 +37,3 @@ export type Guitar = {
   'price': number,
   'comments': Comment[],
 }
-
-export type SortKeys = keyof typeof SortGroup
-export type SortType = typeof SortGroup[SortKeys]['type'];
-export type SortLabel = typeof SortGroup[SortKeys]['label']

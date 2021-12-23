@@ -10,11 +10,11 @@ export enum APIRoute {
   SearchSimilar = '/guitars?name_like',
 }
 
-export enum GuitarType {
-  Acoustic = 'acoustic',
-  Electric = 'electric',
-  Ukulele = 'ukulele',
-}
+export const GuitarGroup = {
+  Acoustic: { type: 'acoustic', label: 'Акустические гитары', strings: [6, 7, 12] },
+  Electric: { type: 'electric', label: 'Электрогитары', strings: [4, 6, 7] },
+  Ukulele: { type: 'ukulele', label: 'Укулеле', strings: [4] },
+} as const;
 
 export const SortGroup = {
   Price: { type: 'price', label: 'По цене' },

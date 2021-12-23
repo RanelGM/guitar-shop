@@ -1,53 +1,104 @@
+import { FormEvent, useState } from 'react';
+import { GuitarType, GuitarKey } from 'types/product';
+import { FilterPrice } from '../components';
+import { updateArray } from 'utils/utils';
+import { GuitarGroup } from 'utils/const';
+
+const GuitarGroupValues = Object.values(GuitarGroup);
+
+const getUniqueStringsFromTypes = (types: GuitarType[]): number[] => {
+  const stringSet = new Set<number>();
+
+  types.forEach((type) => {
+    const stringsCount = GuitarGroupValues.find((group) => group.type === type) as typeof GuitarGroup[GuitarKey];
+    stringsCount.strings.forEach((count) => stringSet.add(count));
+  });
+
+  return Array.from(stringSet);
+};
+
+const getUniqueTypesFromStringsCount = (stringsCount: number[]): GuitarType[] => {
+  const groups = GuitarGroupValues.filter((group) => group.strings.some((count) => stringsCount.includes(count)));
+  return groups.map((type) => type.type);
+};
+
 function Filter(): JSX.Element {
+  const [availableStringsCount, setAvailableStringsCount] = useState<number[] | null>(null);
+  const [checkedGuitarsTypes, setCheckedGuitarsTypes] = useState<GuitarType[] | null>(null);
+  const [checkedStringsCount, setCheckedStringsCount] = useState<number[] | null>(null);
+
+  const guitarsTypes = GuitarGroupValues.map((group) => group.type);
+  const stringsCount = getUniqueStringsFromTypes(guitarsTypes).sort((first, second) => first - second);
+  const isGuitarTypeCheckboxActive = checkedGuitarsTypes !== null && checkedGuitarsTypes.length > 0;
+  const isStringCountCheckboxActive = checkedStringsCount !== null && checkedStringsCount.length > 0;
+
+  const handleCheckboxChange = (evt: FormEvent) => {
+    const input = evt.target as HTMLInputElement;
+    const typeInput = input.closest('.catalog-filter__block-guitar-type');
+    const stringInput = input.closest('.catalog-filter__block-guitar-string');
+
+    if (typeInput) {
+      const type = input.id as GuitarType;
+      const checkedTypes = updateArray<GuitarType>(checkedGuitarsTypes, type);
+      const availableTypes = isStringCountCheckboxActive ? getUniqueTypesFromStringsCount(checkedStringsCount) : checkedTypes;
+      const availableStrings = checkedTypes.length ? getUniqueStringsFromTypes(checkedTypes) : getUniqueStringsFromTypes(availableTypes);
+
+      if (isStringCountCheckboxActive) {
+        const availableToCheckCount = checkedStringsCount.filter((count) => availableStrings.includes(count));
+        setCheckedStringsCount(availableToCheckCount);
+      }
+
+      setCheckedGuitarsTypes(checkedTypes);
+      setAvailableStringsCount(availableStrings);
+    }
+
+    if (stringInput) {
+      const stringCount = Number(input.id.split('-')[0]);
+      const checkedStrings = updateArray<number>(checkedStringsCount, stringCount);
+      const availableStrings = isGuitarTypeCheckboxActive ? getUniqueStringsFromTypes(checkedGuitarsTypes) : checkedStrings;
+
+      setCheckedStringsCount(checkedStrings);
+      setAvailableStringsCount(availableStrings);
+    }
+  };
+
   return (
     <form className="catalog-filter">
       <h2 className="title title--bigger catalog-filter__title">Фильтр</h2>
-      <fieldset className="catalog-filter__block">
-        <legend className="catalog-filter__block-title">Цена, ₽</legend>
-        <div className="catalog-filter__price-range">
-          <div className="form-input">
-            <label className="visually-hidden">Минимальная цена</label>
-            <input type="number" placeholder="1 000" id="priceMin" name="от" />
-          </div>
-          <div className="form-input">
-            <label className="visually-hidden">Максимальная цена</label>
-            <input type="number" placeholder="30 000" id="priceMax" name="до" />
-          </div>
-        </div>
-      </fieldset>
+      <FilterPrice />
+
       <fieldset className="catalog-filter__block">
         <legend className="catalog-filter__block-title">Тип гитар</legend>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input className="visually-hidden" type="checkbox" id="acoustic" name="acoustic" />
-          <label htmlFor="acoustic">Акустические гитары</label>
-        </div>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input className="visually-hidden" type="checkbox" id="electric" name="electric" />
-          <label htmlFor="electric">Электрогитары</label>
-        </div>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input className="visually-hidden" type="checkbox" id="ukulele" name="ukulele" />
-          <label htmlFor="ukulele">Укулеле</label>
-        </div>
+
+        {GuitarGroupValues.map((groupItem) => (
+          <div key={groupItem.type} className="form-checkbox catalog-filter__block-item">
+            <input className="visually-hidden catalog-filter__block-guitar-type" type="checkbox"
+              id={groupItem.type}
+              name={groupItem.type}
+              onChange={handleCheckboxChange}
+            />
+            <label htmlFor={groupItem.type}>{groupItem.label}</label>
+          </div>
+        ))}
+
       </fieldset>
       <fieldset className="catalog-filter__block">
         <legend className="catalog-filter__block-title">Количество струн</legend>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input className="visually-hidden" type="checkbox" id="4-strings" name="4-strings" />
-          <label htmlFor="4-strings">4</label>
-        </div>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input className="visually-hidden" type="checkbox" id="6-strings" name="6-strings" />
-          <label htmlFor="6-strings">6</label>
-        </div>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input className="visually-hidden" type="checkbox" id="7-strings" name="7-strings" />
-          <label htmlFor="7-strings">7</label>
-        </div>
-        <div className="form-checkbox catalog-filter__block-item">
-          <input className="visually-hidden" type="checkbox" id="12-strings" name="12-strings" disabled />
-          <label htmlFor="12-strings">12</label>
-        </div>
+
+        {stringsCount.map((count) => {
+          const isAvailable = availableStringsCount !== null && availableStringsCount.includes(count);
+          const isChecked = checkedStringsCount !== null && checkedStringsCount.includes(count);
+
+          return (
+            <div key={`${count}-string`} className="form-checkbox catalog-filter__block-item">
+              <input onChange={handleCheckboxChange} className="visually-hidden catalog-filter__block-guitar-string" type="checkbox" id={`${count}-strings`} name={`${count}-strings`}
+                disabled={!isAvailable && isGuitarTypeCheckboxActive}
+                checked={isAvailable && isChecked}
+              />
+              <label htmlFor={`${count}-strings`}>{count}</label>
+            </div>
+          );
+        })}
       </fieldset>
     </form>
   );

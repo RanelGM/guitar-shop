@@ -1,13 +1,9 @@
 import { useState, MouseEvent, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { SortType, SortLabel, SortKeys } from 'types/product';
+import { SortType, SortLabel } from 'types/product';
 import { SortGroup } from 'utils/const';
+import { convertLabelToType } from 'utils/utils';
 import { loadSortedGuitarsAction } from 'store/api-actions';
-
-const convertLabelToType = (label: SortLabel): SortType => {
-  const groupItem = Object.values(SortGroup).find((item) => item['label'] === label) as typeof SortGroup[SortKeys];
-  return groupItem.type;
-};
 
 function Sort(): JSX.Element {
   const [sortType, setSortType] = useState<SortType | null>(null);
@@ -27,7 +23,7 @@ function Sort(): JSX.Element {
       return;
     }
 
-    const type = convertLabelToType(sortButton.ariaLabel as SortLabel);
+    const type = convertLabelToType<SortLabel, typeof SortGroup>(sortButton.ariaLabel as SortLabel, SortGroup);
 
     switch (type) {
       case SortGroup.Price.type:
