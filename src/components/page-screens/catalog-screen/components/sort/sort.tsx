@@ -5,7 +5,7 @@ import { getSortType, getOrderType } from 'store/query-data/selectors';
 import { setSortType, setOrderType } from 'store/action';
 import { SortGroup } from 'utils/const';
 import { convertLabelToType } from 'utils/utils';
-import { loadSortedGuitarsAction } from 'store/api-actions';
+import { loadFilteredGuitarsAction } from 'store/api-actions';
 
 function Sort(): JSX.Element {
   const [isDataLoaded, setIsDataLoaded] = useState(true);
@@ -23,7 +23,7 @@ function Sort(): JSX.Element {
       return;
     }
 
-    dispatch(loadSortedGuitarsAction(sortType, orderType));
+    dispatch(loadFilteredGuitarsAction());
   }, [dispatch, isDataLoaded, orderType, sortType]);
 
   const handleSortClick = async (evt: MouseEvent) => {

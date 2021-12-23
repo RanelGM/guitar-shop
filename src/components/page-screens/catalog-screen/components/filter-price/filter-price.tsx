@@ -1,9 +1,9 @@
 
-import { useRef, useState, FormEvent } from 'react';
+import { useRef, useState, FormEvent, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Guitar, SortType } from 'types/product';
 import { getDefaultServerGuitars } from 'store/product-data/selectors';
-import { loadFilteredByPriceGutarsAction } from 'store/api-actions';
+import { loadFilteredGuitarsAction } from 'store/api-actions';
 import { setPriceRangeFrom, setPriceRangeTo } from 'store/action';
 import { getPriceRangeFrom, getPriceRangeTo } from 'store/query-data/selectors';
 import { getNumberWithSpaceBetween } from 'utils/utils';
@@ -22,6 +22,7 @@ const sortGuitarsByPrice = (array: Guitar[], sortType: SortType) => {
 
 function FilterPrice(): JSX.Element {
   const dispatch = useDispatch();
+  const [isDataLoaded, setIsDataLoaded] = useState(true);
   const [blankInputAfterChange, setBlankInputAfterChange] = useState<HTMLInputElement | null>(null);
 
   const priceRangeFrom = useSelector(getPriceRangeFrom);
@@ -33,15 +34,24 @@ function FilterPrice(): JSX.Element {
   const MIN_PRICE_VALUE = sortGuitarsByPrice(guitars, SortGroup.Ascending.type)[0].price;
   const MAX_PRICE_VALUE = sortGuitarsByPrice(guitars, SortGroup.Descending.type)[0].price;
 
+  useEffect(() => {
+    if (isDataLoaded) {
+      return;
+    }
+
+    dispatch(loadFilteredGuitarsAction());
+  }, [dispatch, isDataLoaded, priceRangeFrom, priceRangeTo]);
+
   const handlePriceFocus = (evt: FormEvent) => {
     const input = evt.target as HTMLInputElement;
+    setIsDataLoaded(true);
 
     if (input.value === '') {
       setBlankInputAfterChange(null);
     }
   };
 
-  const handlePriceBlur = (evt: FormEvent) => {
+  const handlePriceBlur = async (evt: FormEvent) => {
     const input = evt.target as HTMLInputElement;
     const isMinPriceInput = input === minPriceInput.current;
     const isMaxPriceInput = input === maxPriceInput.current;
@@ -51,10 +61,7 @@ function FilterPrice(): JSX.Element {
         return;
       }
 
-      const priceFrom = blankInputAfterChange === minPriceInput.current ? MIN_PRICE_VALUE.toString() : priceRangeFrom;
-      const priceTo = blankInputAfterChange === maxPriceInput.current ? MAX_PRICE_VALUE.toString() : priceRangeTo;
-
-      dispatch(loadFilteredByPriceGutarsAction(priceFrom, priceTo));
+      setIsDataLoaded(false);
       return;
     }
 
@@ -65,19 +72,18 @@ function FilterPrice(): JSX.Element {
 
     if (isMinPriceInput) {
       updatingValue = value.toString();
-      const valueTo = priceRangeTo && priceRangeTo < updatingValue ? '' : priceRangeTo;
 
+      const valueTo = priceRangeTo && priceRangeTo < updatingValue ? '' : priceRangeTo;
       dispatch(setPriceRangeFrom(updatingValue));
       dispatch(setPriceRangeTo(valueTo));
-      dispatch(loadFilteredByPriceGutarsAction(updatingValue, valueTo));
     }
 
     if (isMaxPriceInput) {
       updatingValue = value > Number(priceRangeFrom) ? value.toString() : priceRangeFrom;
-
       dispatch(setPriceRangeTo(updatingValue));
-      dispatch(loadFilteredByPriceGutarsAction(priceRangeFrom, updatingValue));
     }
+
+    setIsDataLoaded(false);
   };
 
   const handlePriceChange = (evt: FormEvent) => {
@@ -95,7 +101,10 @@ function FilterPrice(): JSX.Element {
 
     if (isValueBlank) {
       setBlankInputAfterChange(input);
+      return;
     }
+
+    setBlankInputAfterChange(null);
   };
 
   return (
@@ -107,7 +116,7 @@ function FilterPrice(): JSX.Element {
           <input type="number" placeholder={getNumberWithSpaceBetween(MIN_PRICE_VALUE)} id="priceMin" name="от"
             onChange={handlePriceChange}
             ref={minPriceInput}
-            value={priceRangeFrom}
+            value={blankInputAfterChange === minPriceInput.current ? '' : priceRangeFrom}
           />
         </div>
         <div className="form-input">
@@ -115,7 +124,7 @@ function FilterPrice(): JSX.Element {
           <input type="number" placeholder={getNumberWithSpaceBetween(MAX_PRICE_VALUE)} id="priceMax" name="до"
             onChange={handlePriceChange}
             ref={maxPriceInput}
-            value={priceRangeTo}
+            value={blankInputAfterChange === maxPriceInput.current ? '' : priceRangeTo}
           />
         </div>
       </div>

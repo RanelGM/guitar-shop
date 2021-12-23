@@ -1,5 +1,6 @@
 import { ThunkActionResult } from 'types/action';
-import { Guitar, SortType } from 'types/product';
+import { Guitar } from 'types/product';
+import { store } from 'index';
 import { loadProductData, setSearchSimilar, setGuitars } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE } from 'utils/const';
 
@@ -19,26 +20,21 @@ export const loadSearchSimilarAction = (inputValue: string): ThunkActionResult =
     dispatch(setSearchSimilar(data));
   };
 
-export const loadSortedGuitarsAction = (type: SortType | null, order: SortType | null): ThunkActionResult =>
+export const loadFilteredGuitarsAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-    type = type ? type : DEFAULT_SORT_TYPE;
-    order = order ? order : DEFAULT_SORT_ORDER;
+    const queryState = store.getState().QUERY;
 
-    const path = order
-      ? `${GuitarEmbedWithComment}&${APIQuery.Sort}=${type}&${APIQuery.Order}=${order}`
-      : `${GuitarEmbedWithComment}&${APIQuery.Sort}=${type}`;
+    const priceFrom = queryState.priceRangeFrom ? `&${APIQuery.PriceFrom}=${queryState.priceRangeFrom}` : '';
+    const priceTo = queryState.priceRangeTo ? `&${APIQuery.PriceTo}=${queryState.priceRangeTo}` : '';
+    let sort = queryState.sortType ? `&${APIQuery.Sort}=${queryState.sortType}` : `&${APIQuery.Sort}=${DEFAULT_SORT_TYPE}`;
+    let order = queryState.orderType ? `&${APIQuery.Order}=${queryState.orderType}` : `&${APIQuery.Order}=${DEFAULT_SORT_ORDER}`;
 
-    const { data } = await api.get<Guitar[]>(path);
+    if (!queryState.sortType && !queryState.orderType) {
+      sort = '';
+      order = '';
+    }
 
-    dispatch(setGuitars(data));
-  };
-
-export const loadFilteredByPriceGutarsAction = (from: string, to: string): ThunkActionResult =>
-  async (dispatch, _getState, api): Promise<void> => {
-    const pathFrom = from ? `&${APIQuery.PriceFrom}=${from}` : '';
-    const pathTo = to ? `&${APIQuery.PriceTo}=${to}` : '';
-
-    const path = `${GuitarEmbedWithComment}${pathFrom}${pathTo}`;
+    const path = GuitarEmbedWithComment + sort + order + priceFrom + priceTo;
 
     const { data } = await api.get<Guitar[]>(path);
 
