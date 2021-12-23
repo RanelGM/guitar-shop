@@ -1,8 +1,9 @@
 
 import { useRef, useState, FormEvent } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Guitar, SortType } from 'types/product';
-import { getGuitars } from 'store/product-data/selectors';
+import { getDefaultServerGuitars } from 'store/product-data/selectors';
+import { loadFilteredByPriceGutarsAction } from 'store/api-actions';
 import { getNumberWithSpaceBetween } from 'utils/utils';
 import { SortGroup } from 'utils/const';
 
@@ -18,7 +19,8 @@ const sortGuitarsByPrice = (array: Guitar[], sortType: SortType) => {
 };
 
 function FilterPrice(): JSX.Element {
-  const guitars = useSelector(getGuitars) as Guitar[];
+  const guitars = useSelector(getDefaultServerGuitars) as Guitar[];
+  const dispatch = useDispatch();
 
   const minPriceValue = sortGuitarsByPrice(guitars, SortGroup.Ascending.type)[0].price;
   const maxPriceValue = sortGuitarsByPrice(guitars, SortGroup.Descending.type)[0].price;
@@ -39,16 +41,19 @@ function FilterPrice(): JSX.Element {
     const isMaxPriceInput = input === maxPriceInput.current;
     let value = isMinPriceInput ? Number(minPriceInput.current?.value) : Number(maxPriceInput.current?.value);
     value = value < minPriceValue ? minPriceValue : value;
+    value = value > maxPriceValue ? maxPriceValue : value;
     let updatingValue = '';
 
     if (isMinPriceInput) {
       updatingValue = value.toString();
       setMinPriceValue(updatingValue);
+      dispatch(loadFilteredByPriceGutarsAction(updatingValue, maxPriceInputValue));
     }
 
     if (isMaxPriceInput) {
-      updatingValue = value > maxPriceValue ? maxPriceValue.toString() : value.toString();
+      updatingValue = value > Number(minPriceInputValue) ? value.toString() : minPriceInputValue;
       setMaxPriceValue(updatingValue);
+      dispatch(loadFilteredByPriceGutarsAction(minPriceInputValue, updatingValue));
     }
   };
 

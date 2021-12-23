@@ -6,8 +6,17 @@ export enum AppRoute {
 }
 
 export enum APIRoute {
-  Guitars = '/guitars?_embed=comments',
-  SearchSimilar = '/guitars?name_like',
+  Guitar = '/guitars',
+  SimilarGuitar = '/guitars?name_like',
+}
+
+export enum APIQuery {
+  EmbedComment = '_embed=comments',
+  Similar = 'name_like',
+  Sort = '_sort',
+  Order = '_order',
+  PriceFrom = 'price_gte',
+  PriceTo = 'price_lte',
 }
 
 export const GuitarGroup = {
