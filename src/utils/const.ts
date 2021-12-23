@@ -17,6 +17,7 @@ export enum APIQuery {
   Order = '_order',
   PriceFrom = 'price_gte',
   PriceTo = 'price_lte',
+  GuitarType = 'type',
 }
 
 export const GuitarGroup = {

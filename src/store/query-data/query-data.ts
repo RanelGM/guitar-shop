@@ -1,12 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { QueryDataState } from 'types/state';
-import { setSortType, setOrderType, setPriceRangeFrom, setPriceRangeTo } from 'store/action';
+import { setSortType, setOrderType, setPriceRangeFrom, setPriceRangeTo, setGuitarType } from 'store/action';
 
 const initialState: QueryDataState = {
   sortType: null,
   orderType: null,
   priceRangeFrom: '',
   priceRangeTo: '',
+  guitarType: null,
 };
 
 const QueryData = createReducer(initialState, (builder) => {
@@ -22,6 +23,9 @@ const QueryData = createReducer(initialState, (builder) => {
     })
     .addCase(setPriceRangeTo, (state, action) => {
       state.priceRangeTo = action.payload;
+    })
+    .addCase(setGuitarType, (state, action) => {
+      state.guitarType = action.payload;
     });
 });
 

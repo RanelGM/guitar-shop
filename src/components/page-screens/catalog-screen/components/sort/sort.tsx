@@ -8,7 +8,7 @@ import { convertLabelToType } from 'utils/utils';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
 
 function Sort(): JSX.Element {
-  const [isDataLoaded, setIsDataLoaded] = useState(true);
+  const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const dispatch = useDispatch();
   const sortType = useSelector(getSortType);
   const orderType = useSelector(getOrderType);
@@ -19,12 +19,12 @@ function Sort(): JSX.Element {
   const isSortByDescendingOrder = orderType === SortGroup.Descending.type;
 
   useEffect(() => {
-    if (isDataLoaded) {
+    if (!isUpdateRequired) {
       return;
     }
 
     dispatch(loadFilteredGuitarsAction());
-  }, [dispatch, isDataLoaded, orderType, sortType]);
+  }, [dispatch, isUpdateRequired, orderType, sortType]);
 
   const handleSortClick = async (evt: MouseEvent) => {
     const sortButton = (evt.target as HTMLButtonElement).closest('button');
@@ -39,12 +39,12 @@ function Sort(): JSX.Element {
       case SortGroup.Price.type:
       case SortGroup.Rating.type:
         dispatch(setSortType(type));
-        setIsDataLoaded(false);
+        setIsUpdateRequired(true);
         break;
       case SortGroup.Ascending.type:
       case SortGroup.Descending.type:
         dispatch(setOrderType(type));
-        setIsDataLoaded(false);
+        setIsUpdateRequired(true);
         break;
       default:
         break;

@@ -22,7 +22,7 @@ const sortGuitarsByPrice = (array: Guitar[], sortType: SortType) => {
 
 function FilterPrice(): JSX.Element {
   const dispatch = useDispatch();
-  const [isDataLoaded, setIsDataLoaded] = useState(true);
+  const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const [blankInputAfterChange, setBlankInputAfterChange] = useState<HTMLInputElement | null>(null);
 
   const priceRangeFrom = useSelector(getPriceRangeFrom);
@@ -35,16 +35,16 @@ function FilterPrice(): JSX.Element {
   const MAX_PRICE_VALUE = sortGuitarsByPrice(guitars, SortGroup.Descending.type)[0].price;
 
   useEffect(() => {
-    if (isDataLoaded) {
+    if (!isUpdateRequired) {
       return;
     }
 
     dispatch(loadFilteredGuitarsAction());
-  }, [dispatch, isDataLoaded, priceRangeFrom, priceRangeTo]);
+  }, [dispatch, isUpdateRequired, priceRangeFrom, priceRangeTo]);
 
   const handlePriceFocus = (evt: FormEvent) => {
     const input = evt.target as HTMLInputElement;
-    setIsDataLoaded(true);
+    setIsUpdateRequired(false);
 
     if (input.value === '') {
       setBlankInputAfterChange(null);
@@ -61,7 +61,7 @@ function FilterPrice(): JSX.Element {
         return;
       }
 
-      setIsDataLoaded(false);
+      setIsUpdateRequired(true);
       return;
     }
 
@@ -83,7 +83,7 @@ function FilterPrice(): JSX.Element {
       dispatch(setPriceRangeTo(updatingValue));
     }
 
-    setIsDataLoaded(false);
+    setIsUpdateRequired(true);
   };
 
   const handlePriceChange = (evt: FormEvent) => {

@@ -1,5 +1,9 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { GuitarType, GuitarKey } from 'types/product';
+import { getGuitarType } from 'store/query-data/selectors';
+import { setGuitarType } from 'store/action';
+import { loadFilteredGuitarsAction } from 'store/api-actions';
 import { FilterPrice } from '../components';
 import { updateArray } from 'utils/utils';
 import { GuitarGroup } from 'utils/const';
@@ -24,8 +28,19 @@ const getUniqueTypesFromStringsCount = (stringsCount: number[]): GuitarType[] =>
 
 function Filter(): JSX.Element {
   const [availableStringsCount, setAvailableStringsCount] = useState<number[] | null>(null);
-  const [checkedGuitarsTypes, setCheckedGuitarsTypes] = useState<GuitarType[] | null>(null);
+  const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const [checkedStringsCount, setCheckedStringsCount] = useState<number[] | null>(null);
+  const checkedGuitarsTypes = useSelector(getGuitarType);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isUpdateRequired) {
+      return;
+    }
+
+    dispatch(loadFilteredGuitarsAction());
+    setIsUpdateRequired(false);
+  }, [dispatch, isUpdateRequired]);
 
   const guitarsTypes = GuitarGroupValues.map((group) => group.type);
   const stringsCount = getUniqueStringsFromTypes(guitarsTypes).sort((first, second) => first - second);
@@ -48,7 +63,7 @@ function Filter(): JSX.Element {
         setCheckedStringsCount(availableToCheckCount);
       }
 
-      setCheckedGuitarsTypes(checkedTypes);
+      dispatch(setGuitarType(checkedTypes));
       setAvailableStringsCount(availableStrings);
     }
 
@@ -60,6 +75,8 @@ function Filter(): JSX.Element {
       setCheckedStringsCount(checkedStrings);
       setAvailableStringsCount(availableStrings);
     }
+
+    setIsUpdateRequired(true);
   };
 
   return (

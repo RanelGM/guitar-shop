@@ -1,10 +1,15 @@
 import { ThunkActionResult } from 'types/action';
-import { Guitar } from 'types/product';
+import { Guitar, GuitarType } from 'types/product';
 import { store } from 'index';
 import { loadProductData, setSearchSimilar, setGuitars } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE } from 'utils/const';
 
 const GuitarEmbedWithComment = `${APIRoute.Guitar}?${APIQuery.EmbedComment}`;
+
+const reduceGuitarsTypesArray = (array: GuitarType[]): string => array.reduce((result, type) => {
+  result += `&${APIQuery.GuitarType}=${type}`;
+  return result;
+}, '');
 
 export const loadProductAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
@@ -26,15 +31,16 @@ export const loadFilteredGuitarsAction = (): ThunkActionResult =>
 
     const priceFrom = queryState.priceRangeFrom ? `&${APIQuery.PriceFrom}=${queryState.priceRangeFrom}` : '';
     const priceTo = queryState.priceRangeTo ? `&${APIQuery.PriceTo}=${queryState.priceRangeTo}` : '';
-    let sort = queryState.sortType ? `&${APIQuery.Sort}=${queryState.sortType}` : `&${APIQuery.Sort}=${DEFAULT_SORT_TYPE}`;
-    let order = queryState.orderType ? `&${APIQuery.Order}=${queryState.orderType}` : `&${APIQuery.Order}=${DEFAULT_SORT_ORDER}`;
+    const guitarType = queryState.guitarType ? reduceGuitarsTypesArray(queryState.guitarType) : '';
+    let sortType = queryState.sortType ? `&${APIQuery.Sort}=${queryState.sortType}` : `&${APIQuery.Sort}=${DEFAULT_SORT_TYPE}`;
+    let orderType = queryState.orderType ? `&${APIQuery.Order}=${queryState.orderType}` : `&${APIQuery.Order}=${DEFAULT_SORT_ORDER}`;
 
     if (!queryState.sortType && !queryState.orderType) {
-      sort = '';
-      order = '';
+      sortType = '';
+      orderType = '';
     }
 
-    const path = GuitarEmbedWithComment + sort + order + priceFrom + priceTo;
+    const path = GuitarEmbedWithComment + sortType + orderType + priceFrom + priceTo + guitarType;
 
     const { data } = await api.get<Guitar[]>(path);
 

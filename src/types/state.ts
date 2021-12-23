@@ -1,4 +1,4 @@
-import { Guitar, SortType } from './product';
+import { Guitar, SortType, GuitarType } from './product';
 import { RootState } from 'store/root-reducer';
 
 export type ProductDataState = {
@@ -16,6 +16,7 @@ export type QueryDataState = {
   orderType: SortType | null,
   priceRangeFrom: string,
   priceRangeTo: string,
+  guitarType: GuitarType[] | null,
 }
 
 export type State = RootState;
