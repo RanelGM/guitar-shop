@@ -8,6 +8,8 @@ export enum ActionType {
   SetSimilarAtSearch = 'product/setSimilarAtSearch',
   SetGuitars = 'product/setGuitars',
   SetCart = 'order/setCart',
+  SetSortType = 'query/setSortType',
+  SetOrderType = 'query/setOrderType',
 }
 
 export type ThunkActionResult = ThunkAction<Promise<void>, State, AxiosInstance, Action>

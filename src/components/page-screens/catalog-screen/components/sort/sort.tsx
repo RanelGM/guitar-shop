@@ -1,20 +1,30 @@
 import { useState, MouseEvent, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { SortType, SortLabel } from 'types/product';
+import { useDispatch, useSelector } from 'react-redux';
+import { SortLabel } from 'types/product';
+import { getSortType, getOrderType } from 'store/query-data/selectors';
+import { setSortType, setOrderType } from 'store/action';
 import { SortGroup } from 'utils/const';
 import { convertLabelToType } from 'utils/utils';
 import { loadSortedGuitarsAction } from 'store/api-actions';
 
 function Sort(): JSX.Element {
-  const [sortType, setSortType] = useState<SortType | null>(null);
-  const [orderType, setOrderType] = useState<SortType | null>(null);
   const [isDataLoaded, setIsDataLoaded] = useState(true);
   const dispatch = useDispatch();
+  const sortType = useSelector(getSortType);
+  const orderType = useSelector(getOrderType);
 
   const isSortByPrice = sortType === SortGroup.Price.type;
   const isSortByRating = sortType === SortGroup.Rating.type;
   const isSortByAscendingOrder = orderType === SortGroup.Ascending.type;
   const isSortByDescendingOrder = orderType === SortGroup.Descending.type;
+
+  useEffect(() => {
+    if (isDataLoaded) {
+      return;
+    }
+
+    dispatch(loadSortedGuitarsAction(sortType, orderType));
+  }, [dispatch, isDataLoaded, orderType, sortType]);
 
   const handleSortClick = async (evt: MouseEvent) => {
     const sortButton = (evt.target as HTMLButtonElement).closest('button');
@@ -28,26 +38,18 @@ function Sort(): JSX.Element {
     switch (type) {
       case SortGroup.Price.type:
       case SortGroup.Rating.type:
-        setSortType(type);
+        dispatch(setSortType(type));
         setIsDataLoaded(false);
         break;
       case SortGroup.Ascending.type:
       case SortGroup.Descending.type:
-        setOrderType(type);
+        dispatch(setOrderType(type));
         setIsDataLoaded(false);
         break;
       default:
         break;
     }
   };
-
-  useEffect(() => {
-    if (isDataLoaded) {
-      return;
-    }
-
-    dispatch(loadSortedGuitarsAction(sortType, orderType));
-  }, [dispatch, isDataLoaded, orderType, sortType]);
 
   return (
     <div className="catalog-sort" onClick={handleSortClick}>
