@@ -15,7 +15,7 @@ const stars = Array.from({ length: MAX_STARS_COUNT }, (item, index) => index);
 
 const adaptImageSrc = (src: string): string => {
   const adaptingPath = 'content';
-  return addWordInToArray(adaptingPath, src.split('/'));
+  return `/${addWordInToArray(adaptingPath, src.split('/'))}`;
 };
 
 function Card({ guitar }: CardProps): JSX.Element {

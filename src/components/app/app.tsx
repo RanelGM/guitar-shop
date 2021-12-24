@@ -15,9 +15,9 @@ function App({ isServerError }: AppProps): JSX.Element {
     <BrowserRouter>
       <Switch>
         <Route exact path={AppRoute.Home}>
-          <Redirect to={AppRoute.Catalog} />
+          <Redirect to={AppRoute.CatalogStart} />
         </Route>
-        <Route exact path={AppRoute.Catalog}>
+        <Route exact path={`${AppRoute.Catalog}/:id`}>
           <CatalogScreen />
         </Route>
         <Route exact path={`${AppRoute.Product}/:id`}>
