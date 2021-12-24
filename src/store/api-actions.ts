@@ -20,7 +20,16 @@ export const loadProductAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const { data } = await api.get<Guitar[]>(GuitarEmbedWithComment);
 
+    let currentPage = Number(browserHistory.location.pathname.split('/').pop());
+
+    if (isNaN(currentPage) || currentPage < INITIAL_CATALOG_PAGE) {
+      currentPage = INITIAL_CATALOG_PAGE;
+    }
+
+    const guitarsToRender = data.slice(MAX_CARD_ON_PAGE_COUNT * (currentPage - INDEX_ADJUSTMENT_VALUE), MAX_CARD_ON_PAGE_COUNT * currentPage);
+
     dispatch(loadProductData(data));
+    dispatch(setGuitars(guitarsToRender));
   };
 
 export const loadSearchSimilarAction = (inputValue: string): ThunkActionResult =>

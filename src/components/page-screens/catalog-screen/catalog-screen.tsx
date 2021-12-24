@@ -5,21 +5,22 @@ import { Breadcrumbs, Footer, Header, Pagination } from 'components/common/commo
 import { Filter, Sort, Card } from './components/components';
 import { getDefaultServerGuitars, getGuitars } from 'store/product-data/selectors';
 import { setCurrentPage } from 'store/action';
-import { MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE } from 'utils/const';
+import { loadFilteredGuitarsAction } from 'store/api-actions';
+import { MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
 
 function CatalogScreen(): JSX.Element {
-  let guitarsToRender = useSelector(getGuitars) as Guitar[] | null;
+  const guitarsToRender = useSelector(getGuitars) as Guitar[];
   const guitarsFromServer = useSelector(getDefaultServerGuitars) as Guitar[];
   const location = useLocation();
   const dispatch = useDispatch();
   const currentPage = Number(location.pathname.split('/').pop());
   const maxPageCount = Math.ceil(guitarsFromServer.length / MAX_CARD_ON_PAGE_COUNT);
 
-  guitarsToRender = guitarsToRender !== null
-    ? guitarsToRender
-    : guitarsFromServer.slice(MAX_CARD_ON_PAGE_COUNT * (currentPage - INDEX_ADJUSTMENT_VALUE), MAX_CARD_ON_PAGE_COUNT * currentPage);
-
   dispatch(setCurrentPage(currentPage));
+
+  const handlePaginationClick = () => {
+    dispatch(loadFilteredGuitarsAction(true));
+  };
 
   return (
     <div className="wrapper">
@@ -42,6 +43,7 @@ function CatalogScreen(): JSX.Element {
             <Pagination
               currentPage={currentPage}
               maxPageCount={maxPageCount}
+              onLinkClick={handlePaginationClick}
             />
           </div>
         </div>
