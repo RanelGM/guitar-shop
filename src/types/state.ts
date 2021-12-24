@@ -17,6 +17,7 @@ export type QueryDataState = {
   priceRangeFrom: string,
   priceRangeTo: string,
   guitarType: GuitarType[] | null,
+  currentPage: number,
 }
 
 export type State = RootState;

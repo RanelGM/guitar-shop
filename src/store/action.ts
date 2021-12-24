@@ -46,3 +46,8 @@ export const setGuitarType = createAction(
   ActionType.SetGuitarType,
   (guitarType: GuitarType[]) => ({ payload: guitarType }),
 );
+
+export const setCurrentPage = createAction(
+  ActionType.SetCurrentPage,
+  (page: number) => ({ payload: page }),
+);

@@ -2,7 +2,7 @@ import { ThunkActionResult } from 'types/action';
 import { Guitar, GuitarType } from 'types/product';
 import { store } from 'index';
 import { loadProductData, setSearchSimilar, setGuitars } from './action';
-import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE } from 'utils/const';
+import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE } from 'utils/const';
 
 const GuitarEmbedWithComment = `${APIRoute.Guitar}?${APIQuery.EmbedComment}`;
 
@@ -29,6 +29,9 @@ export const loadFilteredGuitarsAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const queryState = store.getState().QUERY;
 
+    const page = queryState.currentPage as number;
+    const guitarsFrom = `&${APIQuery.GuitarFrom}=${MAX_CARD_ON_PAGE_COUNT * (page - INDEX_ADJUSTMENT_VALUE)}`;
+    const guitarsTo = `&${APIQuery.GuitarToLimit}=${MAX_CARD_ON_PAGE_COUNT}`;
     const priceFrom = queryState.priceRangeFrom ? `&${APIQuery.PriceFrom}=${queryState.priceRangeFrom}` : '';
     const priceTo = queryState.priceRangeTo ? `&${APIQuery.PriceTo}=${queryState.priceRangeTo}` : '';
     const guitarType = queryState.guitarType ? reduceGuitarsTypesArray(queryState.guitarType) : '';
@@ -40,7 +43,7 @@ export const loadFilteredGuitarsAction = (): ThunkActionResult =>
       orderType = '';
     }
 
-    const path = GuitarEmbedWithComment + sortType + orderType + priceFrom + priceTo + guitarType;
+    const path = GuitarEmbedWithComment + guitarsFrom + guitarsTo + sortType + orderType + priceFrom + priceTo + guitarType;
 
     const { data } = await api.get<Guitar[]>(path);
 

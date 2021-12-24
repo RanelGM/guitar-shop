@@ -1,17 +1,25 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { Guitar } from 'types/product';
 import { Breadcrumbs, Footer, Header, Pagination } from 'components/common/common';
 import { Filter, Sort, Card } from './components/components';
-import { getGuitars } from 'store/product-data/selectors';
-
-const MAX_CARD_COUNT = 9;
+import { getDefaultServerGuitars, getGuitars } from 'store/product-data/selectors';
+import { setCurrentPage } from 'store/action';
+import { MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE } from 'utils/const';
 
 function CatalogScreen(): JSX.Element {
-  const guitars = useSelector(getGuitars) as Guitar[];
+  let guitarsToRender = useSelector(getGuitars) as Guitar[] | null;
+  const guitarsFromServer = useSelector(getDefaultServerGuitars) as Guitar[];
   const location = useLocation();
+  const dispatch = useDispatch();
   const currentPage = Number(location.pathname.split('/').pop());
-  const maxPageCount = Math.ceil(guitars.length / MAX_CARD_COUNT);
+  const maxPageCount = Math.ceil(guitarsFromServer.length / MAX_CARD_ON_PAGE_COUNT);
+
+  guitarsToRender = guitarsToRender !== null
+    ? guitarsToRender
+    : guitarsFromServer.slice(MAX_CARD_ON_PAGE_COUNT * (currentPage - INDEX_ADJUSTMENT_VALUE), MAX_CARD_ON_PAGE_COUNT * currentPage);
+
+  dispatch(setCurrentPage(currentPage));
 
   return (
     <div className="wrapper">
@@ -28,7 +36,7 @@ function CatalogScreen(): JSX.Element {
             <Sort />
 
             <div className="cards catalog__cards">
-              {guitars.slice(0, MAX_CARD_COUNT).map((guitar) => <Card key={guitar.id} guitar={guitar} />)}
+              {guitarsToRender.map((guitar) => <Card key={guitar.id} guitar={guitar} />)}
             </div>
 
             <Pagination

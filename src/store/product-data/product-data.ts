@@ -12,7 +12,6 @@ const ProductData = createReducer(initialState, (builder) => {
   builder
     .addCase(loadProductData, (state, action) => {
       state.defaultServerGuitars = action.payload;
-      state.guitars = action.payload;
     })
     .addCase(setGuitars, (state, action) => {
       state.guitars = action.payload;

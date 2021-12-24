@@ -1,5 +1,6 @@
+import { INDEX_ADJUSTMENT_VALUE } from 'utils/const';
+
 const MAX_PAGINATION_COUNT = 3;
-const INDEX_ADJUSTMENT_VALUE = 1;
 
 type PagionationProps = {
   currentPage: number,

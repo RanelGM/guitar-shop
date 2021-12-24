@@ -7,3 +7,4 @@ export const getOrderType = (state: State): SortType | null => state[NameSpace.q
 export const getPriceRangeFrom = (state: State): string => state[NameSpace.query].priceRangeFrom;
 export const getPriceRangeTo = (state: State): string => state[NameSpace.query].priceRangeTo;
 export const getGuitarType = (state: State): GuitarType[] | null => state[NameSpace.query].guitarType;
+export const getCurrentPage = (state: State): number => state[NameSpace.query].currentPage;

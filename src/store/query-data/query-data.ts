@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { QueryDataState } from 'types/state';
-import { setSortType, setOrderType, setPriceRangeFrom, setPriceRangeTo, setGuitarType } from 'store/action';
+import { setSortType, setOrderType, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setCurrentPage } from 'store/action';
+import { START_FROM_PAGE } from 'utils/const';
 
 const initialState: QueryDataState = {
   sortType: null,
@@ -8,6 +9,7 @@ const initialState: QueryDataState = {
   priceRangeFrom: '',
   priceRangeTo: '',
   guitarType: null,
+  currentPage: START_FROM_PAGE,
 };
 
 const QueryData = createReducer(initialState, (builder) => {
@@ -26,6 +28,9 @@ const QueryData = createReducer(initialState, (builder) => {
     })
     .addCase(setGuitarType, (state, action) => {
       state.guitarType = action.payload;
+    })
+    .addCase(setCurrentPage, (state, action) => {
+      state.currentPage = action.payload;
     });
 });
 
