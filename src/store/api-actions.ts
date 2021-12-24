@@ -1,8 +1,8 @@
 import { ThunkActionResult } from 'types/action';
 import { Guitar, GuitarType } from 'types/product';
 import { store } from 'index';
-import { loadProductData, setSearchSimilar, setGuitars } from './action';
 import browserHistory from './browser-history';
+import { loadProductData, setSearchSimilar, setGuitars } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 
 const GuitarEmbedWithComment = `${APIRoute.Guitar}?${APIQuery.EmbedComment}`;
@@ -20,13 +20,13 @@ export const loadProductAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const { data } = await api.get<Guitar[]>(GuitarEmbedWithComment);
 
-    let currentPage = Number(browserHistory.location.pathname.split('/').pop());
+    let page = Number(browserHistory.location.pathname.split('/').pop());
 
-    if (isNaN(currentPage) || currentPage < INITIAL_CATALOG_PAGE) {
-      currentPage = INITIAL_CATALOG_PAGE;
+    if (isNaN(page) || page < INITIAL_CATALOG_PAGE) {
+      page = INITIAL_CATALOG_PAGE;
     }
 
-    const guitarsToRender = data.slice(MAX_CARD_ON_PAGE_COUNT * (currentPage - INDEX_ADJUSTMENT_VALUE), MAX_CARD_ON_PAGE_COUNT * currentPage);
+    const guitarsToRender = data.slice(MAX_CARD_ON_PAGE_COUNT * (page - INDEX_ADJUSTMENT_VALUE), MAX_CARD_ON_PAGE_COUNT * page);
 
     dispatch(loadProductData(data));
     dispatch(setGuitars(guitarsToRender));
@@ -44,8 +44,6 @@ export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionRe
     const queryState = store.getState().QUERY;
 
     const page = isPagination ? queryState.currentPage as number : INITIAL_CATALOG_PAGE;
-    const guitarsFrom = `&${APIQuery.GuitarFrom}=${MAX_CARD_ON_PAGE_COUNT * (page - INDEX_ADJUSTMENT_VALUE)}`;
-    const guitarsTo = `&${APIQuery.GuitarToLimit}=${MAX_CARD_ON_PAGE_COUNT}`;
     const priceFrom = queryState.priceRangeFrom ? `&${APIQuery.PriceFrom}=${queryState.priceRangeFrom}` : '';
     const priceTo = queryState.priceRangeTo ? `&${APIQuery.PriceTo}=${queryState.priceRangeTo}` : '';
     const guitarType = queryState.guitarType ? reduceGuitarsTypesArray(queryState.guitarType) : '';
@@ -57,11 +55,13 @@ export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionRe
       orderType = '';
     }
 
-    const path = GuitarEmbedWithComment + guitarsFrom + guitarsTo + sortType + orderType + priceFrom + priceTo + guitarType;
+    const path = GuitarEmbedWithComment + sortType + orderType + priceFrom + priceTo + guitarType;
 
     const { data } = await api.get<Guitar[]>(path);
+    const guitarsToRender = data.slice(MAX_CARD_ON_PAGE_COUNT * (page - INDEX_ADJUSTMENT_VALUE), MAX_CARD_ON_PAGE_COUNT * page);
 
-    dispatch(setGuitars(data));
+    dispatch(loadProductData(data));
+    dispatch(setGuitars(guitarsToRender));
 
     if (!isPagination && queryState.currentPage !== INITIAL_CATALOG_PAGE) {
       redirectToInitialPage();
