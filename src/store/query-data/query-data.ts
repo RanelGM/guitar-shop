@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { QueryDataState } from 'types/state';
 import { setSortType, setOrderType, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setCurrentPage } from 'store/action';
-import { START_FROM_PAGE } from 'utils/const';
+import { INITIAL_CATALOG_PAGE } from 'utils/const';
 
 const initialState: QueryDataState = {
   sortType: null,
@@ -9,7 +9,7 @@ const initialState: QueryDataState = {
   priceRangeFrom: '',
   priceRangeTo: '',
   guitarType: null,
-  currentPage: START_FROM_PAGE,
+  currentPage: INITIAL_CATALOG_PAGE,
 };
 
 const QueryData = createReducer(initialState, (builder) => {

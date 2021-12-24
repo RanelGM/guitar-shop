@@ -2,7 +2,8 @@ import { ThunkActionResult } from 'types/action';
 import { Guitar, GuitarType } from 'types/product';
 import { store } from 'index';
 import { loadProductData, setSearchSimilar, setGuitars } from './action';
-import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE } from 'utils/const';
+import browserHistory from './browser-history';
+import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 
 const GuitarEmbedWithComment = `${APIRoute.Guitar}?${APIQuery.EmbedComment}`;
 
@@ -10,6 +11,10 @@ const reduceGuitarsTypesArray = (array: GuitarType[]): string => array.reduce((r
   result += `&${APIQuery.GuitarType}=${type}`;
   return result;
 }, '');
+
+const redirectToInitialPage = () => {
+  browserHistory.push(`${AppRoute.Catalog}/${INITIAL_CATALOG_PAGE}`);
+};
 
 export const loadProductAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
@@ -25,11 +30,11 @@ export const loadSearchSimilarAction = (inputValue: string): ThunkActionResult =
     dispatch(setSearchSimilar(data));
   };
 
-export const loadFilteredGuitarsAction = (): ThunkActionResult =>
+export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const queryState = store.getState().QUERY;
 
-    const page = queryState.currentPage as number;
+    const page = isPagination ? queryState.currentPage as number : INITIAL_CATALOG_PAGE;
     const guitarsFrom = `&${APIQuery.GuitarFrom}=${MAX_CARD_ON_PAGE_COUNT * (page - INDEX_ADJUSTMENT_VALUE)}`;
     const guitarsTo = `&${APIQuery.GuitarToLimit}=${MAX_CARD_ON_PAGE_COUNT}`;
     const priceFrom = queryState.priceRangeFrom ? `&${APIQuery.PriceFrom}=${queryState.priceRangeFrom}` : '';
@@ -48,4 +53,8 @@ export const loadFilteredGuitarsAction = (): ThunkActionResult =>
     const { data } = await api.get<Guitar[]>(path);
 
     dispatch(setGuitars(data));
+
+    if (!isPagination && queryState.currentPage !== INITIAL_CATALOG_PAGE) {
+      redirectToInitialPage();
+    }
   };
