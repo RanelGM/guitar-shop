@@ -1,6 +1,7 @@
 import { FormEvent, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { GuitarType, GuitarKey } from 'types/product';
+import { ThunkActionDispatch } from 'types/action';
 import { getGuitarType } from 'store/query-data/selectors';
 import { setGuitarType } from 'store/action';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
@@ -27,11 +28,11 @@ const getUniqueTypesFromStringsCount = (stringsCount: number[]): GuitarType[] =>
 };
 
 function Filter(): JSX.Element {
+  const dispatch = useDispatch() as ThunkActionDispatch;
   const [availableStringsCount, setAvailableStringsCount] = useState<number[] | null>(null);
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const [checkedStringsCount, setCheckedStringsCount] = useState<number[] | null>(null);
   const checkedGuitarsTypes = useSelector(getGuitarType);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isUpdateRequired) {

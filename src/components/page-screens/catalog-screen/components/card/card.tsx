@@ -21,12 +21,12 @@ const adaptImageSrc = (src: string): string => {
 function Card({ guitar }: CardProps): JSX.Element {
   const { id, name, previewImg, price, rating, comments } = guitar;
 
-  const adaptedImageSrc = adaptImageSrc(previewImg);
-  const adaptedPrice = getNumberWithSpaceBetween(price);
-
+  const dispatch = useDispatch() as ThunkActionDispatch;
   const guitarsInCart = useSelector(getCart);
   const isGuitarInCart = guitarsInCart?.includes(guitar);
-  const dispatch = useDispatch() as ThunkActionDispatch;
+
+  const adaptedImageSrc = adaptImageSrc(previewImg);
+  const adaptedPrice = getNumberWithSpaceBetween(price);
 
   const handleCartBtnClick = (evt: MouseEvent) => {
     evt.preventDefault();

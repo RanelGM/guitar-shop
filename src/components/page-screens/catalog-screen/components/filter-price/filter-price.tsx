@@ -2,6 +2,7 @@
 import { useRef, useState, FormEvent, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Guitar, SortType } from 'types/product';
+import { ThunkActionDispatch } from 'types/action';
 import { getDefaultServerGuitars } from 'store/product-data/selectors';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
 import { setPriceRangeFrom, setPriceRangeTo } from 'store/action';
@@ -21,7 +22,7 @@ const sortGuitarsByPrice = (array: Guitar[], sortType: SortType) => {
 };
 
 function FilterPrice(): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch() as ThunkActionDispatch;
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const [blankInputAfterChange, setBlankInputAfterChange] = useState<HTMLInputElement | null>(null);
 

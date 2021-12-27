@@ -1,6 +1,7 @@
 import { useState, MouseEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SortLabel } from 'types/product';
+import { ThunkActionDispatch } from 'types/action';
 import { getSortType, getOrderType } from 'store/query-data/selectors';
 import { setSortType, setOrderType } from 'store/action';
 import { SortGroup } from 'utils/const';
@@ -8,8 +9,8 @@ import { convertLabelToType } from 'utils/utils';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
 
 function Sort(): JSX.Element {
+  const dispatch = useDispatch() as ThunkActionDispatch;
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
-  const dispatch = useDispatch();
   const sortType = useSelector(getSortType);
   const orderType = useSelector(getOrderType);
 

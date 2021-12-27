@@ -1,10 +1,9 @@
 import { MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { ThunkActionDispatch } from 'types/action';
 import { setCurrentPage } from 'store/action';
 import { INDEX_ADJUSTMENT_VALUE } from 'utils/const';
-
-const MAX_PAGINATION_COUNT = 3;
 
 type PagionationProps = {
   currentPage: number,
@@ -12,8 +11,10 @@ type PagionationProps = {
   onLinkClick: () => void,
 }
 
+const MAX_PAGINATION_COUNT = 3;
+
 function Pagination({ currentPage, maxPageCount, onLinkClick }: PagionationProps): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch() as ThunkActionDispatch;
   const pages = Array.from({ length: maxPageCount }, (item, index) => index + INDEX_ADJUSTMENT_VALUE);
   const sliceFromValue = MAX_PAGINATION_COUNT * Math.floor((currentPage - INDEX_ADJUSTMENT_VALUE) / MAX_PAGINATION_COUNT);
   const sliceToValue = sliceFromValue + MAX_PAGINATION_COUNT;
