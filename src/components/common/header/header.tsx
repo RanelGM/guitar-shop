@@ -1,11 +1,15 @@
 import { SearchForm, Cart } from './components/components';
 import { Logo } from 'components/common/common';
 
-function Header(): JSX.Element {
+type HeaderProps = {
+  isMainPage?: boolean,
+}
+
+function Header({ isMainPage }: HeaderProps): JSX.Element {
   return (
     <header className="header" id="header">
       <div className="container header__wrapper">
-        <Logo />
+        <Logo isMainPage={isMainPage} />
 
         <nav className="main-nav">
           <ul className="main-nav__list">

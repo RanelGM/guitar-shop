@@ -1,10 +1,14 @@
 import { Logo } from 'components/common/common';
 
-function Footer(): JSX.Element {
+type FooterProps = {
+  isMainPage?: boolean,
+}
+
+function Footer({ isMainPage }: FooterProps): JSX.Element {
   return (
     <footer className="footer">
       <div className="footer__container container">
-        <Logo />
+        <Logo isMainPage={isMainPage} />
 
         <div className="socials footer__socials">
           <ul className="socials__list">

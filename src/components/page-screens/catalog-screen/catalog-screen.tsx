@@ -24,7 +24,7 @@ function CatalogScreen(): JSX.Element {
 
   return (
     <div className="wrapper">
-      <Header />
+      <Header isMainPage />
 
       <main className="page-content">
         <div className="container">
@@ -49,7 +49,7 @@ function CatalogScreen(): JSX.Element {
         </div>
       </main>
 
-      <Footer />
+      <Footer isMainPage />
     </div>
   );
 }
