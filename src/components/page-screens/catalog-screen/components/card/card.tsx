@@ -1,10 +1,12 @@
 import { MouseEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { getCart } from 'store/order-data/selectors';
 import { setCart } from 'store/action';
 import { getNumberWithSpaceBetween, addWordInToArray, updateArray } from 'utils/utils';
+import { AppRoute } from 'utils/const';
 
 type CardProps = {
   guitar: Guitar
@@ -56,7 +58,7 @@ function Card({ guitar }: CardProps): JSX.Element {
         <p className="product-card__price"><span className="visually-hidden">Цена:</span>{adaptedPrice} ₽</p>
       </div>
       <div className="product-card__buttons">
-        <a href="#todo" className="button button--mini">Подробнее</a>
+        <Link to={`${AppRoute.Product}/${id}`} className="button button--mini">Подробнее</Link>
         <a href="#todo"
           className={`button button--mini ${isGuitarInCart
             ? 'button--red-border button--in-cart'
