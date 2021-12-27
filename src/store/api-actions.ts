@@ -1,6 +1,6 @@
 import { ThunkActionResult } from 'types/action';
 import { Guitar, GuitarType } from 'types/product';
-import { store } from 'index';
+import { handleServerError, store } from 'index';
 import browserHistory from './browser-history';
 import { loadProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
@@ -62,14 +62,19 @@ export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionRe
 
     const path = GuitarEmbedWithComment + sortType + orderType + priceFrom + priceTo + guitarType + diapasonFrom + diapasonTo;
 
-    const response = await api.get<Guitar[]>(path);
-    const { data } = response;
-    const totalCount = Number(response.headers[APIQuery.TotalCount]);
+    try {
+      const response = await api.get<Guitar[]>(path);
+      const { data } = response;
+      const totalCount = Number(response.headers[APIQuery.TotalCount]);
 
-    dispatch(setGuitarsTotalCount(totalCount));
-    dispatch(setGuitarsToRender(data));
+      dispatch(setGuitarsTotalCount(totalCount));
+      dispatch(setGuitarsToRender(data));
 
-    if (!isPagination && queryState.currentPage !== INITIAL_CATALOG_PAGE) {
-      redirectToInitialPage();
+      if (!isPagination && queryState.currentPage !== INITIAL_CATALOG_PAGE) {
+        redirectToInitialPage();
+      }
+    }
+    catch {
+      handleServerError();
     }
   };

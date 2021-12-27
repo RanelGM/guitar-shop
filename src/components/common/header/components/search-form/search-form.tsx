@@ -1,4 +1,4 @@
-import { FocusEvent, useRef } from 'react';
+import { FocusEvent, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ThunkActionDispatch } from 'types/action';
@@ -8,6 +8,7 @@ import { AppRoute } from 'utils/const';
 
 function SearchForm(): JSX.Element {
   const dispatch = useDispatch() as ThunkActionDispatch;
+  const [isSearchError, setIsSearchError] = useState(false);
   const similarGuitars = useSelector(getSimilarAtSearch);
 
   const parentRef = useRef<HTMLDivElement | null>(null);
@@ -23,7 +24,13 @@ function SearchForm(): JSX.Element {
       return;
     }
 
-    await dispatch(loadSearchSimilarAction(searchInput.value));
+    try {
+      await dispatch(loadSearchSimilarAction(searchInput.value));
+    }
+    catch {
+      setIsSearchError(true);
+    }
+
     listElement.classList.remove('hidden');
   };
 
@@ -67,11 +74,17 @@ function SearchForm(): JSX.Element {
           zIndex: 1,
         }}
       >
-        {similarGuitars?.map((guitar) => (
+        {!isSearchError && similarGuitars?.map((guitar) => (
           <li key={`search-${guitar.id}`}>
             <Link to={`${AppRoute.Product}/${guitar.id}`} className="form-search__select-item" >{guitar.name}</Link>
           </li>
         ))}
+
+        {isSearchError && (
+          <li>
+            Произошла ошибка при загрузке данных. Попробуйте позднее.
+          </li>
+        )}
       </ul>
     </div >
   );

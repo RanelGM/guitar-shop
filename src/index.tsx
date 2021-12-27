@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
 import App from './components/app/app';
 import { createAPI } from 'api/api';
+import browserHistory from 'store/browser-history';
 import { rootReducer } from 'store/root-reducer';
 import { loadProductAction } from 'store/api-actions';
 
@@ -22,6 +24,7 @@ export const store = configureStore({
     }),
 });
 
+
 const initiateBoard = async () => {
   try {
     await store.dispatch(loadProductAction());
@@ -33,7 +36,9 @@ const initiateBoard = async () => {
     ReactDOM.render(
       <React.StrictMode>
         <Provider store={store}>
-          <App isServerError={isServerError} />
+          <Router history={browserHistory}>
+            <App isServerError={isServerError} />
+          </Router >
         </Provider>
       </React.StrictMode>,
       document.getElementById('root'));
@@ -42,4 +47,7 @@ const initiateBoard = async () => {
 
 initiateBoard();
 
-
+export const handleServerError = () => {
+  isServerError = true;
+  initiateBoard();
+};
