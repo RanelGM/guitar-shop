@@ -32,8 +32,10 @@ function FilterPrice(): JSX.Element {
   const maxPriceInput = useRef<HTMLInputElement | null>(null);
 
   const guitars = useSelector(getDefaultServerGuitars) as Guitar[];
-  const MIN_PRICE_VALUE = sortGuitarsByPrice(guitars, SortGroup.Ascending.type)[0].price;
-  const MAX_PRICE_VALUE = sortGuitarsByPrice(guitars, SortGroup.Descending.type)[0].price;
+  const isGuitars = guitars.length !== 0;
+
+  const MIN_PRICE_VALUE = !isGuitars ? 0 : sortGuitarsByPrice(guitars, SortGroup.Ascending.type)[0].price;
+  const MAX_PRICE_VALUE = !isGuitars ? 0 : sortGuitarsByPrice(guitars, SortGroup.Descending.type)[0].price;
 
   useEffect(() => {
     if (!isUpdateRequired) {
