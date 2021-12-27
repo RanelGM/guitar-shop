@@ -4,7 +4,7 @@ import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { Breadcrumbs, Footer, Header, Pagination } from 'components/common/common';
 import { Filter, Sort, Card } from './components/components';
-import { getDefaultServerGuitars, getGuitars } from 'store/product-data/selectors';
+import { getGuitarsFiltered, getGuitarsToRender } from 'store/product-data/selectors';
 import { setCurrentPage } from 'store/action';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
 import { MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
@@ -12,8 +12,8 @@ import { MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
 function CatalogScreen(): JSX.Element {
   const dispatch = useDispatch() as ThunkActionDispatch;
   const location = useLocation();
-  const guitarsToRender = useSelector(getGuitars) as Guitar[];
-  const guitarsFromServer = useSelector(getDefaultServerGuitars) as Guitar[];
+  const guitarsToRender = useSelector(getGuitarsToRender) as Guitar[];
+  const guitarsFromServer = useSelector(getGuitarsFiltered) as Guitar[];
   const currentPage = Number(location.pathname.split('/').pop());
   const maxPageCount = Math.ceil(guitarsFromServer.length / MAX_CARD_ON_PAGE_COUNT);
 

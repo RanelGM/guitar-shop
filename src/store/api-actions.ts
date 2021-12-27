@@ -2,7 +2,7 @@ import { ThunkActionResult } from 'types/action';
 import { Guitar, GuitarType } from 'types/product';
 import { store } from 'index';
 import browserHistory from './browser-history';
-import { loadProductData, setSearchSimilar, setGuitars } from './action';
+import { loadProductData, setSearchSimilar, setGuitarsToRender, setGuitarsFiltered } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 
 const GuitarEmbedWithComment = `${APIRoute.Guitar}?${APIQuery.EmbedComment}`;
@@ -29,7 +29,8 @@ export const loadProductAction = (): ThunkActionResult =>
     const guitarsToRender = data.slice(MAX_CARD_ON_PAGE_COUNT * (page - INDEX_ADJUSTMENT_VALUE), MAX_CARD_ON_PAGE_COUNT * page);
 
     dispatch(loadProductData(data));
-    dispatch(setGuitars(guitarsToRender));
+    dispatch(setGuitarsFiltered(data));
+    dispatch(setGuitarsToRender(guitarsToRender));
   };
 
 export const loadSearchSimilarAction = (inputValue: string): ThunkActionResult =>
@@ -60,8 +61,8 @@ export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionRe
     const { data } = await api.get<Guitar[]>(path);
     const guitarsToRender = data.slice(MAX_CARD_ON_PAGE_COUNT * (page - INDEX_ADJUSTMENT_VALUE), MAX_CARD_ON_PAGE_COUNT * page);
 
-    dispatch(loadProductData(data));
-    dispatch(setGuitars(guitarsToRender));
+    dispatch(setGuitarsFiltered(data));
+    dispatch(setGuitarsToRender(guitarsToRender));
 
     if (!isPagination && queryState.currentPage !== INITIAL_CATALOG_PAGE) {
       redirectToInitialPage();

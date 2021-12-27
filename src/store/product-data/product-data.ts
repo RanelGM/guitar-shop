@@ -1,10 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ProductDataState } from 'types/state';
-import { loadProductData, setGuitars, setSearchSimilar } from '../action';
+import { loadProductData, setGuitarsFiltered, setGuitarsToRender, setSearchSimilar } from '../action';
 
 const initialState: ProductDataState = {
   defaultServerGuitars: null,
-  guitars: null,
+  guitarsFiltered: null,
+  guitarsToRender: null,
   similarAtSearch: null,
 };
 
@@ -13,8 +14,11 @@ const ProductData = createReducer(initialState, (builder) => {
     .addCase(loadProductData, (state, action) => {
       state.defaultServerGuitars = action.payload;
     })
-    .addCase(setGuitars, (state, action) => {
-      state.guitars = action.payload;
+    .addCase(setGuitarsFiltered, (state, action) => {
+      state.guitarsFiltered = action.payload;
+    })
+    .addCase(setGuitarsToRender, (state, action) => {
+      state.guitarsToRender = action.payload;
     })
     .addCase(setSearchSimilar, (state, action) => {
       state.similarAtSearch = action.payload;

@@ -7,8 +7,13 @@ export const loadProductData = createAction(
   (guitars: Guitar[]) => ({ payload: guitars }),
 );
 
-export const setGuitars = createAction(
-  ActionType.SetGuitars,
+export const setGuitarsFiltered = createAction(
+  ActionType.SetGuitarsFiltered,
+  (guitars: Guitar[]) => ({ payload: guitars }),
+);
+
+export const setGuitarsToRender = createAction(
+  ActionType.SetGuitarsToRender,
   (guitars: Guitar[]) => ({ payload: guitars }),
 );
 
