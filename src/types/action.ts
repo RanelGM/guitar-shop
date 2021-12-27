@@ -6,7 +6,7 @@ import { State } from './state';
 export enum ActionType {
   LoadProductData = 'product/loadProductData',
   SetSimilarAtSearch = 'product/setSimilarAtSearch',
-  SetGuitarsFiltered = 'product/setGuitarsFiltered',
+  SetGuitarsTotalCount = 'product/setGuitarsTotalCount',
   SetGuitarsToRender = 'product/setGuitarsToRender',
   SetCart = 'order/setCart',
   SetSortType = 'query/setSortType',

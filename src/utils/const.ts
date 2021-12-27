@@ -20,6 +20,7 @@ export enum APIQuery {
   GuitarType = 'type',
   GuitarFrom = '_start',
   GuitarToLimit = '_limit',
+  TotalCount = 'x-total-count'
 }
 
 export const GuitarGroup = {

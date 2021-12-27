@@ -1,3 +1,4 @@
+import { datatype } from 'faker';
 import { ActionType } from 'types/action';
 import reducer, { initialState } from 'store/product-data/product-data';
 import { getGuitarMock } from 'utils/mocks';
@@ -30,16 +31,6 @@ describe('Product Data reducer', () => {
       .toEqual(getExpectedPayload('defaultServerGuitars'));
   });
 
-  it('should update guitarsFiltered state with guitars when using setGuitarsFiltered action', () => {
-    const setGuitarsFiltered = {
-      type: ActionType.SetGuitarsFiltered,
-      payload: guitars,
-    };
-
-    expect(reducer(state, setGuitarsFiltered))
-      .toEqual(getExpectedPayload('guitarsFiltered'));
-  });
-
   it('should update guitarsToRender state with guitars when using setGuitarsToRender action', () => {
     const setGuitarsToRender = {
       type: ActionType.SetGuitarsToRender,
@@ -58,6 +49,23 @@ describe('Product Data reducer', () => {
 
     expect(reducer(state, setSearchSimilar))
       .toEqual(getExpectedPayload('similarAtSearch'));
+  });
+
+  it('should update guitarsTotalCount state with count when using setGuitarsTotalCount action', () => {
+    const count = datatype.number();
+    const setGuitarsTotalCount = {
+      type: ActionType.SetGuitarsTotalCount,
+      payload: count,
+    };
+
+    expect(reducer(state, setGuitarsTotalCount))
+      .toEqual(Object.assign(
+        {},
+        state,
+        {
+          guitarsTotalCount: count,
+        },
+      ));
   });
 });
 

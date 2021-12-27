@@ -88,16 +88,21 @@ function Filter(): JSX.Element {
       <fieldset className="catalog-filter__block">
         <legend className="catalog-filter__block-title">Тип гитар</legend>
 
-        {GuitarGroupValues.map((groupItem) => (
-          <div key={groupItem.type} className="form-checkbox catalog-filter__block-item">
-            <input className="visually-hidden catalog-filter__block-guitar-type" type="checkbox"
-              id={groupItem.type}
-              name={groupItem.type}
-              onChange={handleCheckboxChange}
-            />
-            <label htmlFor={groupItem.type}>{groupItem.label}</label>
-          </div>
-        ))}
+        {GuitarGroupValues.map((groupItem) => {
+          const isChecked = checkedGuitarsTypes !== null && checkedGuitarsTypes.includes(groupItem.type);
+
+          return (
+            <div key={groupItem.type} className="form-checkbox catalog-filter__block-item">
+              <input className="visually-hidden catalog-filter__block-guitar-type" type="checkbox"
+                id={groupItem.type}
+                name={groupItem.type}
+                onChange={handleCheckboxChange}
+                checked={isChecked}
+              />
+              <label htmlFor={groupItem.type}>{groupItem.label}</label>
+            </div>
+          );
+        })}
 
       </fieldset>
       <fieldset className="catalog-filter__block">
