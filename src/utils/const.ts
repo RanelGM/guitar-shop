@@ -1,7 +1,6 @@
 export enum AppRoute {
   Home = '/',
   Catalog = '/catalog',
-  CatalogStart = '/catalog/1',
   Product = '/product',
   Cart = '/cart',
 }
