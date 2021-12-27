@@ -4,6 +4,7 @@ import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { Breadcrumbs, Footer, Header, Pagination } from 'components/common/common';
 import { Filter, Sort, Card } from './components/components';
+import { NotFoundScreen } from '../page-screens';
 import { getGuitarsFiltered, getGuitarsToRender } from 'store/product-data/selectors';
 import { setCurrentPage } from 'store/action';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
@@ -22,6 +23,10 @@ function CatalogScreen(): JSX.Element {
   const handlePaginationClick = () => {
     dispatch(loadFilteredGuitarsAction(true));
   };
+
+  if (currentPage > maxPageCount) {
+    return <NotFoundScreen />;
+  }
 
   return (
     <div className="wrapper">

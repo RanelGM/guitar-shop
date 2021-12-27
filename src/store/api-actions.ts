@@ -20,9 +20,10 @@ export const loadProductAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const { data } = await api.get<Guitar[]>(GuitarEmbedWithComment);
 
+    const maxPageCount = Math.ceil(data.length / MAX_CARD_ON_PAGE_COUNT);
     let page = Number(browserHistory.location.pathname.split('/').pop());
 
-    if (isNaN(page) || page < INITIAL_CATALOG_PAGE) {
+    if (isNaN(page) || page < INITIAL_CATALOG_PAGE || page > maxPageCount) {
       page = INITIAL_CATALOG_PAGE;
     }
 
