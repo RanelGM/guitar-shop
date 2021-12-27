@@ -1,4 +1,4 @@
-import { Group, GroupKey, GroupType, GroupLabel, GuitarType } from 'types/product';
+import { Group, GroupKey, GroupType, GroupLabel, GuitarType, Guitar } from 'types/product';
 
 export const addWordInToArray = (word: string, array: string[], addToIndex = 1, separator = '/', deleteCount = 0): string => {
   array.splice(addToIndex, deleteCount, word);
@@ -20,7 +20,7 @@ export const convertLabelToType = <
   return groupItem.type;
 };
 
-export const updateArray = <TItem extends GuitarType | number>(array: TItem[] | null, item: TItem): TItem[] => {
+export const updateArray = <TItem extends GuitarType | number | Guitar>(array: TItem[] | null, item: TItem): TItem[] => {
   const isItemInArray = array?.includes(item);
   const updatingArray = array ? array.slice() : [];
 

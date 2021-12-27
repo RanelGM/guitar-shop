@@ -4,7 +4,7 @@ import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { getCart } from 'store/order-data/selectors';
 import { setCart } from 'store/action';
-import { getNumberWithSpaceBetween, addWordInToArray } from 'utils/utils';
+import { getNumberWithSpaceBetween, addWordInToArray, updateArray } from 'utils/utils';
 
 type CardProps = {
   guitar: Guitar
@@ -31,17 +31,7 @@ function Card({ guitar }: CardProps): JSX.Element {
   const handleCartBtnClick = (evt: MouseEvent) => {
     evt.preventDefault();
 
-    const updatingChart = guitarsInCart ? guitarsInCart.slice() : [];
-
-    if (!isGuitarInCart) {
-      updatingChart.push(guitar);
-    }
-
-    if (isGuitarInCart) {
-      const index = updatingChart.indexOf(guitar);
-      updatingChart.splice(index, 1);
-    }
-
+    const updatingChart = updateArray<Guitar>(guitarsInCart, guitar);
 
     dispatch(setCart(updatingChart));
   };
