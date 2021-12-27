@@ -2,14 +2,14 @@ import { createReducer } from '@reduxjs/toolkit';
 import { ProductDataState } from 'types/state';
 import { loadProductData, setGuitarsFiltered, setGuitarsToRender, setSearchSimilar } from '../action';
 
-const initialState: ProductDataState = {
+export const initialState: ProductDataState = {
   defaultServerGuitars: null,
   guitarsFiltered: null,
   guitarsToRender: null,
   similarAtSearch: null,
 };
 
-const ProductData = createReducer(initialState, (builder) => {
+const productData = createReducer(initialState, (builder) => {
   builder
     .addCase(loadProductData, (state, action) => {
       state.defaultServerGuitars = action.payload;
@@ -25,4 +25,4 @@ const ProductData = createReducer(initialState, (builder) => {
     });
 });
 
-export default ProductData;
+export default productData;

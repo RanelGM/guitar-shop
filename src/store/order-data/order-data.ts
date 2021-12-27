@@ -2,15 +2,15 @@ import { createReducer } from '@reduxjs/toolkit';
 import { OrderDataState } from 'types/state';
 import { setCart } from '../action';
 
-const initialState: OrderDataState = {
+export const initialState: OrderDataState = {
   cart: null,
 };
 
-const OrderData = createReducer(initialState, (builder) => {
+const orderData = createReducer(initialState, (builder) => {
   builder
     .addCase(setCart, (state, action) => {
       state.cart = action.payload;
     });
 });
 
-export default OrderData;
+export default orderData;

@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
-import ProductData from './product-data/product-data';
-import OrderData from './order-data/order-data';
-import QueryData from './query-data/query-data';
+import productData from './product-data/product-data';
+import orderData from './order-data/order-data';
+import queryData from './query-data/query-data';
 
 export enum NameSpace {
   product = 'PRODUCT',
@@ -10,9 +10,9 @@ export enum NameSpace {
 }
 
 export const rootReducer = combineReducers({
-  [NameSpace.product]: ProductData,
-  [NameSpace.order]: OrderData,
-  [NameSpace.query]: QueryData,
+  [NameSpace.product]: productData,
+  [NameSpace.order]: orderData,
+  [NameSpace.query]: queryData,
 });
 
 export type RootState = ReturnType<typeof rootReducer>

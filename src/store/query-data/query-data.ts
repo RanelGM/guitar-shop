@@ -3,7 +3,7 @@ import { QueryDataState } from 'types/state';
 import { setSortType, setOrderType, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setCurrentPage } from 'store/action';
 import { INITIAL_CATALOG_PAGE } from 'utils/const';
 
-const initialState: QueryDataState = {
+export const initialState: QueryDataState = {
   sortType: null,
   orderType: null,
   priceRangeFrom: '',
@@ -12,7 +12,7 @@ const initialState: QueryDataState = {
   currentPage: INITIAL_CATALOG_PAGE,
 };
 
-const QueryData = createReducer(initialState, (builder) => {
+const queryData = createReducer(initialState, (builder) => {
   builder
     .addCase(setSortType, (state, action) => {
       state.sortType = action.payload;
@@ -34,4 +34,4 @@ const QueryData = createReducer(initialState, (builder) => {
     });
 });
 
-export default QueryData;
+export default queryData;
