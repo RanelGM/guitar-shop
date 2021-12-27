@@ -14,7 +14,7 @@ export type GroupKey = typeof GuitarGroup[GuitarKey] | typeof SortGroup[SortKey]
 export type GroupType = GuitarType | SortType;
 export type GroupLabel = GuitarLabel | SortLabel;
 
-type Comment = {
+export type Comment = {
   'id': string,
   'userName': string,
   'advantages': string,
