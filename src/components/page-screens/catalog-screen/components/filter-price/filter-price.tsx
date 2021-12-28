@@ -108,7 +108,7 @@ function FilterPrice(): JSX.Element {
           <input type="number" placeholder={getNumberWithSpaceBetween(MIN_PRICE_VALUE)} id="priceMin" name="от"
             onChange={handlePriceChange}
             ref={minPriceInput}
-            value={blankInputAfterChange === minPriceInput.current ? '' : priceRangeFrom}
+            value={!priceRangeFrom && blankInputAfterChange === minPriceInput.current ? '' : priceRangeFrom}
           />
         </div>
         <div className="form-input">
@@ -116,7 +116,7 @@ function FilterPrice(): JSX.Element {
           <input type="number" placeholder={getNumberWithSpaceBetween(MAX_PRICE_VALUE)} id="priceMax" name="до"
             onChange={handlePriceChange}
             ref={maxPriceInput}
-            value={blankInputAfterChange === maxPriceInput.current ? '' : priceRangeTo}
+            value={!priceRangeTo && blankInputAfterChange === maxPriceInput.current ? '' : priceRangeTo}
           />
         </div>
       </div>

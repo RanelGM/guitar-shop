@@ -1,3 +1,4 @@
+import browserHistory from 'store/browser-history';
 import { Group, GroupKey, GroupType, GroupLabel, GuitarType, Guitar, SortType } from 'types/product';
 import { SortGroup } from './const';
 
@@ -47,3 +48,6 @@ export const sortGuitarsByPrice = (array: Guitar[], sortType: SortType) => {
       return array;
   }
 };
+
+export const getPageFromLocation = () => Number(browserHistory.location.pathname.split('/').pop()?.split('&').shift());
+export const getQueryPath = (currentPage: string) => browserHistory.location.pathname.split('/').pop()?.slice(currentPage.length);

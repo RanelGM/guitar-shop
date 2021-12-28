@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { Breadcrumbs, Footer, Header, Pagination } from 'components/common/common';
@@ -9,17 +8,16 @@ import { getGuitarsTotalCount, getGuitarsToRender } from 'store/product-data/sel
 import { setCurrentPage } from 'store/action';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
 import { INITIAL_CATALOG_PAGE, MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
+import { getPageFromLocation } from 'utils/utils';
 
 function CatalogScreen(): JSX.Element {
   const dispatch = useDispatch() as ThunkActionDispatch;
-  const location = useLocation();
   const guitarsToRender = useSelector(getGuitarsToRender) as Guitar[];
   const guitarsTotalCount = useSelector(getGuitarsTotalCount) as number;
-  const currentPage = Number(location.pathname.split('/').pop());
+  const currentPage = getPageFromLocation();
   const maxPageCount = guitarsTotalCount !== 0 ? Math.ceil(guitarsTotalCount / MAX_CARD_ON_PAGE_COUNT) : INITIAL_CATALOG_PAGE;
 
   dispatch(setCurrentPage(currentPage));
-
 
   const handlePaginationClick = () => {
     dispatch(loadFilteredGuitarsAction(true));
