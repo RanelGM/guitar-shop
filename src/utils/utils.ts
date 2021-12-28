@@ -1,4 +1,5 @@
-import { Group, GroupKey, GroupType, GroupLabel, GuitarType, Guitar } from 'types/product';
+import { Group, GroupKey, GroupType, GroupLabel, GuitarType, Guitar, SortType } from 'types/product';
+import { SortGroup } from './const';
 
 export const addWordInToArray = (word: string, array: string[], addToIndex = 1, separator = '/', deleteCount = 0): string => {
   array.splice(addToIndex, deleteCount, word);
@@ -34,4 +35,15 @@ export const updateArray = <TItem extends GuitarType | number | Guitar>(array: T
   }
 
   return updatingArray;
+};
+
+export const sortGuitarsByPrice = (array: Guitar[], sortType: SortType) => {
+  switch (sortType) {
+    case SortGroup.Ascending.type:
+      return array.slice().sort((first, second) => first.price - second.price);
+    case SortGroup.Descending.type:
+      return array.slice().sort((first, second) => second.price - first.price);
+    default:
+      return array;
+  }
 };

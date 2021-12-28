@@ -1,25 +1,14 @@
 
 import { useRef, useState, FormEvent, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Guitar, SortType } from 'types/product';
+import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { getDefaultServerGuitars } from 'store/product-data/selectors';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
 import { setPriceRangeFrom, setPriceRangeTo } from 'store/action';
 import { getPriceRangeFrom, getPriceRangeTo } from 'store/query-data/selectors';
-import { getNumberWithSpaceBetween } from 'utils/utils';
+import { getNumberWithSpaceBetween, sortGuitarsByPrice } from 'utils/utils';
 import { SortGroup } from 'utils/const';
-
-const sortGuitarsByPrice = (array: Guitar[], sortType: SortType) => {
-  switch (sortType) {
-    case SortGroup.Ascending.type:
-      return array.slice().sort((first, second) => first.price - second.price);
-    case SortGroup.Descending.type:
-      return array.slice().sort((first, second) => second.price - first.price);
-    default:
-      return array;
-  }
-};
 
 function FilterPrice(): JSX.Element {
   const dispatch = useDispatch() as ThunkActionDispatch;
