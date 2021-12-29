@@ -15,6 +15,7 @@ export enum ActionType {
   SetPriceRangeTo = 'query/setPriceRangeTo',
   SetGuitarType = 'query/setGuitarType',
   SetCurrentPage = 'query/setCurrentPage',
+  SetIsServerError = 'query/setIsServerError',
 }
 
 export type ThunkActionResult = ThunkAction<Promise<void>, State, AxiosInstance, Action>

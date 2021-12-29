@@ -56,3 +56,8 @@ export const setCurrentPage = createAction(
   ActionType.SetCurrentPage,
   (page: number) => ({ payload: page }),
 );
+
+export const setIsServerError = createAction(
+  ActionType.SetIsServerError,
+  (is: boolean) => ({ payload: is }),
+);

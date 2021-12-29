@@ -1,8 +1,7 @@
 import { ThunkActionDispatch, ThunkActionResult } from 'types/action';
 import { Guitar, GuitarType } from 'types/product';
-import { handleServerError } from 'index';
 import browserHistory from './browser-history';
-import { loadProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType } from './action';
+import { loadProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setIsServerError } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { getQueryState } from './query-data/selectors';
 import { QueryDataState } from 'types/state';
@@ -53,11 +52,11 @@ const parsePathToState = (path: string, page: number, dispatch: ThunkActionDispa
     }
 
     return result;
-  }, [] as GuitarType[]) as GuitarType[] | null;
+  }, [] as GuitarType[]) as GuitarType[];
 
   if (priceRangeFrom) { dispatch(setPriceRangeFrom(priceRangeFrom)); }
   if (priceRangeTo) { dispatch(setPriceRangeTo(priceRangeTo)); }
-  if (types) { dispatch(setGuitarType(types)); }
+  if (types.length > 1) { dispatch(setGuitarType(types)); }
 
   return Object.assign(
     {},
@@ -75,7 +74,7 @@ export const loadProductAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const { data: defaultGuitars } = await api.get<Guitar[]>(GuitarEmbedWithComment);
 
-    const maxPageCount = Math.ceil(defaultGuitars.length / MAX_CARD_ON_PAGE_COUNT);
+    let maxPageCount = Math.ceil(defaultGuitars.length / MAX_CARD_ON_PAGE_COUNT);
     let page = getPageFromLocation();
 
     if (isNaN(page) || page < INITIAL_CATALOG_PAGE || page > maxPageCount) {
@@ -86,9 +85,18 @@ export const loadProductAction = (): ThunkActionResult =>
     const state = parsePathToState(path, page, dispatch);
     const { path: pathWithDiapason } = parseStateToPath(state, true);
 
-    const response = await api.get<Guitar[]>(pathWithDiapason);
-    const { data: guitarsToRender } = response;
+    let response = await api.get<Guitar[]>(pathWithDiapason);
+    let { data: guitarsToRender } = response;
     const totalCount = Number(response.headers[APIQuery.TotalCount]);
+    maxPageCount = Math.ceil(totalCount / MAX_CARD_ON_PAGE_COUNT);
+
+    if (page > maxPageCount) {
+      page = INITIAL_CATALOG_PAGE;
+      const diapasonFrom = `&${APIQuery.GuitarFrom}=${0}`;
+      const diapasonTo = `&${APIQuery.GuitarToLimit}=${MAX_CARD_ON_PAGE_COUNT}`;
+      response = await api.get<Guitar[]>(`${GuitarEmbedWithComment}${path}${diapasonFrom}${diapasonTo}`);
+      guitarsToRender = response.data;
+    }
 
     dispatch(setGuitarsTotalCount(totalCount));
     dispatch(loadProductData(defaultGuitars));
@@ -117,6 +125,6 @@ export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionRe
       dispatch(setGuitarsToRender(data));
     }
     catch {
-      handleServerError();
+      dispatch(setIsServerError(true));
     }
   };

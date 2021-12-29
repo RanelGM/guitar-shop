@@ -2,28 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
 
 import App from './components/app/app';
-import { createAPI } from 'api/api';
 import browserHistory from 'store/browser-history';
-import { rootReducer } from 'store/root-reducer';
 import { loadProductAction } from 'store/api-actions';
+import store from 'store/store';
 
 let isServerError = false;
-
-const api = createAPI();
-
-export const store = configureStore({
-  reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      thunk: {
-        extraArgument: api,
-      },
-    }),
-});
-
 
 const initiateBoard = async () => {
   try {
@@ -46,8 +31,3 @@ const initiateBoard = async () => {
 };
 
 initiateBoard();
-
-export const handleServerError = () => {
-  isServerError = true;
-  initiateBoard();
-};

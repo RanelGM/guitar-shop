@@ -111,4 +111,20 @@ describe('Query Data reducer', () => {
         },
       ));
   });
+
+  it('should update isServerError state for true when using setIsServerError action', () => {
+    const setIsServerError = {
+      type: ActionType.SetIsServerError,
+      payload: true,
+    };
+
+    expect(reducer(state, setIsServerError))
+      .toEqual(Object.assign(
+        {},
+        state,
+        {
+          isServerError: true,
+        },
+      ));
+  });
 });

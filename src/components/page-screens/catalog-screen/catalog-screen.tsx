@@ -3,15 +3,17 @@ import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { Breadcrumbs, Footer, Header, Pagination } from 'components/common/common';
 import { Filter, Sort, Card } from './components/components';
-import { NotFoundScreen } from '../page-screens';
+import { ErrorScreen, NotFoundScreen } from '../page-screens';
 import { getGuitarsTotalCount, getGuitarsToRender } from 'store/product-data/selectors';
 import { setCurrentPage } from 'store/action';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
+import { getIsServerError } from 'store/query-data/selectors';
 import { INITIAL_CATALOG_PAGE, MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
 import { getPageFromLocation } from 'utils/utils';
 
 function CatalogScreen(): JSX.Element {
   const dispatch = useDispatch() as ThunkActionDispatch;
+  const isServerError = useSelector(getIsServerError) as boolean;
   const guitarsToRender = useSelector(getGuitarsToRender) as Guitar[];
   const guitarsTotalCount = useSelector(getGuitarsTotalCount) as number;
   const currentPage = getPageFromLocation();
@@ -22,6 +24,10 @@ function CatalogScreen(): JSX.Element {
   const handlePaginationClick = () => {
     dispatch(loadFilteredGuitarsAction(true));
   };
+
+  if (isServerError) {
+    return <ErrorScreen />;
+  }
 
   if (currentPage > maxPageCount) {
     return <NotFoundScreen />;

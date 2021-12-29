@@ -1,4 +1,4 @@
-import { store } from 'index';
+import store from '../store';
 import { QueryDataState, State } from 'types/state';
 import { GuitarType, SortType } from 'types/product';
 import { NameSpace } from 'store/root-reducer';
@@ -9,4 +9,5 @@ export const getPriceRangeFrom = (state: State): string => state[NameSpace.query
 export const getPriceRangeTo = (state: State): string => state[NameSpace.query].priceRangeTo;
 export const getGuitarType = (state: State): GuitarType[] | null => state[NameSpace.query].guitarType;
 export const getCurrentPage = (state: State): number => state[NameSpace.query].currentPage;
+export const getIsServerError = (state: State): boolean => state[NameSpace.query].isServerError;
 export const getQueryState = (): QueryDataState => store.getState()[NameSpace.query];
