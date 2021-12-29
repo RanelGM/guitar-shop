@@ -18,7 +18,7 @@ const redirectToRoute = (url: string) => {
   browserHistory.push(`${AppRoute.Catalog}/${url}`);
 };
 
-const parseStateToPath = (state: QueryDataState, isPagination?: boolean) => {
+export const parseStateToPath = (state: QueryDataState, isPagination?: boolean) => {
   const page = isPagination ? state.currentPage : INITIAL_CATALOG_PAGE;
   const priceFrom = state.priceRangeFrom ? `&${APIQuery.PriceFrom}=${state.priceRangeFrom}` : '';
   const priceTo = state.priceRangeTo ? `&${APIQuery.PriceTo}=${state.priceRangeTo}` : '';

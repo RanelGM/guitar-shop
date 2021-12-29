@@ -11,7 +11,7 @@ const getGuitarComment = (id: number): Comment => ({
   'disadvantages': lorem.words(),
   'comment': lorem.sentence(),
   'rating': datatype.number({ min: 1, max: 5 }),
-  'createAt': datatype.datetime(),
+  'createAt': datatype.datetime().toString(),
   'guitarId': id,
 });
 
