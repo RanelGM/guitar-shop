@@ -21,7 +21,7 @@ function CatalogScreen(): JSX.Element {
 
   dispatch(setCurrentPage(currentPage));
 
-  const handlePaginationClick = () => {
+  const onPaginationClick = () => {
     dispatch(loadFilteredGuitarsAction(true));
   };
 
@@ -54,7 +54,7 @@ function CatalogScreen(): JSX.Element {
             <Pagination
               currentPage={currentPage}
               maxPageCount={maxPageCount}
-              onLinkClick={handlePaginationClick}
+              onLinkClick={onPaginationClick}
             />
           </div>
         </div>

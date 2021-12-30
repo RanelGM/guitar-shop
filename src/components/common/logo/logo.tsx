@@ -8,14 +8,14 @@ type LogoProps = {
 function Logo({ isMainPage }: LogoProps): JSX.Element {
   if (isMainPage) {
     return (
-      <div className="header__logo logo">
+      <div className="header__logo logo" data-testid="logo">
         <img className="logo__img" width="70" height="70" src="/img/svg/logo.svg" alt="Логотип" />
       </div>
     );
   }
 
   return (
-    <Link to={AppRoute.Home} className="header__logo logo">
+    <Link to={AppRoute.Home} className="header__logo logo" data-testid="logo">
       <img className="logo__img" width="70" height="70" src="/img/svg/logo.svg" alt="Логотип" />
     </Link>
   );
