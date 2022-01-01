@@ -30,7 +30,7 @@ export const getGuitarMock = (): Guitar => {
     'previewImg': image.imageUrl(),
     'stringCount': random.arrayElement(GuitarGroup[currentKey].strings),
     'rating': datatype.number({ min: 1, max: 5 }),
-    'price': datatype.number(),
+    'price': datatype.number({ min: 1700, max: 35000 }),
     'comments': [getGuitarComment(id), getGuitarComment(id), getGuitarComment(id)],
   });
 };

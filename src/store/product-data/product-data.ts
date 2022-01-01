@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ProductDataState } from 'types/state';
-import { loadProductData, setGuitarsTotalCount, setGuitarsToRender, setSearchSimilar } from '../action';
+import { setDefaultProductData, setGuitarsTotalCount, setGuitarsToRender, setSearchSimilar } from '../action';
 
 export const initialState: ProductDataState = {
   defaultServerGuitars: null,
@@ -11,7 +11,7 @@ export const initialState: ProductDataState = {
 
 const productData = createReducer(initialState, (builder) => {
   builder
-    .addCase(loadProductData, (state, action) => {
+    .addCase(setDefaultProductData, (state, action) => {
       state.defaultServerGuitars = action.payload;
     })
     .addCase(setGuitarsTotalCount, (state, action) => {

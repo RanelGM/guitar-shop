@@ -11,7 +11,7 @@ import { GuitarGroup } from 'utils/const';
 
 const GuitarGroupValues = Object.values(GuitarGroup);
 
-const getUniqueStringsFromTypes = (types: GuitarType[]): number[] => {
+export const getUniqueStringsFromTypes = (types: GuitarType[]): number[] => {
   const stringSet = new Set<number>();
 
   types.forEach((type) => {
@@ -29,10 +29,10 @@ const getUniqueTypesFromStringsCount = (stringsCount: number[]): GuitarType[] =>
 
 function Filter(): JSX.Element {
   const dispatch = useDispatch() as ThunkActionDispatch;
-  const [availableStringsCount, setAvailableStringsCount] = useState<number[] | null>(null);
+  const checkedGuitarsTypes = useSelector(getGuitarType);
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const [checkedStringsCount, setCheckedStringsCount] = useState<number[] | null>(null);
-  const checkedGuitarsTypes = useSelector(getGuitarType);
+  const [availableStringsCount, setAvailableStringsCount] = useState<number[] | null>(checkedGuitarsTypes !== null ? getUniqueStringsFromTypes(checkedGuitarsTypes) : null);
 
   useEffect(() => {
     if (!isUpdateRequired) {
@@ -45,10 +45,11 @@ function Filter(): JSX.Element {
 
   const guitarsTypes = GuitarGroupValues.map((group) => group.type);
   const stringsCount = getUniqueStringsFromTypes(guitarsTypes).sort((first, second) => first - second);
+
   const isGuitarTypeCheckboxActive = checkedGuitarsTypes !== null && checkedGuitarsTypes.length > 0;
   const isStringCountCheckboxActive = checkedStringsCount !== null && checkedStringsCount.length > 0;
 
-  const handleCheckboxChange = (evt: FormEvent) => {
+  const handleCheckboxChange = async (evt: FormEvent) => {
     const input = evt.target as HTMLInputElement;
     const typeInput = input.closest('.catalog-filter__block-guitar-type');
     const stringInput = input.closest('.catalog-filter__block-guitar-string');

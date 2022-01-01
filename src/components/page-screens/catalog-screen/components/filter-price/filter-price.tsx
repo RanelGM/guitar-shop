@@ -21,7 +21,7 @@ function FilterPrice(): JSX.Element {
   const maxPriceInput = useRef<HTMLInputElement | null>(null);
 
   const guitars = useSelector(getDefaultServerGuitars) as Guitar[];
-  const isGuitars = guitars.length !== 0;
+  const isGuitars = guitars !== null ? guitars.length !== 0 : false;
 
   const MIN_PRICE_VALUE = !isGuitars ? 0 : sortGuitarsByPrice(guitars, SortGroup.Ascending.type)[0].price;
   const MAX_PRICE_VALUE = !isGuitars ? 0 : sortGuitarsByPrice(guitars, SortGroup.Descending.type)[0].price;
@@ -104,7 +104,7 @@ function FilterPrice(): JSX.Element {
       <legend className="catalog-filter__block-title">Цена, ₽</legend>
       <div className="catalog-filter__price-range">
         <div className="form-input">
-          <label className="visually-hidden">Минимальная цена</label>
+          <label className="visually-hidden" htmlFor="priceMin">Минимальная цена</label>
           <input type="number" placeholder={getNumberWithSpaceBetween(MIN_PRICE_VALUE)} id="priceMin" name="от"
             onChange={handlePriceChange}
             ref={minPriceInput}
@@ -112,7 +112,7 @@ function FilterPrice(): JSX.Element {
           />
         </div>
         <div className="form-input">
-          <label className="visually-hidden">Максимальная цена</label>
+          <label className="visually-hidden" htmlFor="priceMax">Максимальная цена</label>
           <input type="number" placeholder={getNumberWithSpaceBetween(MAX_PRICE_VALUE)} id="priceMax" name="до"
             onChange={handlePriceChange}
             ref={maxPriceInput}

@@ -6,7 +6,7 @@ import { State } from 'types/state';
 import { Guitar, GuitarType } from 'types/product';
 import { createAPI } from 'api/api';
 import { loadProductAction, loadSearchSimilarAction, loadFilteredGuitarsAction, parseStateToPath } from './api-actions';
-import { loadProductData, setGuitarsToRender, setGuitarsTotalCount, setGuitarType, setIsServerError, setPriceRangeFrom, setPriceRangeTo, setSearchSimilar } from './action';
+import { setDefaultProductData, setGuitarsToRender, setGuitarsTotalCount, setGuitarType, setIsServerError, setPriceRangeFrom, setPriceRangeTo, setSearchSimilar } from './action';
 import { getGuitarMock } from 'utils/mocks';
 import { APIRoute, APIQuery, AppRoute, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, GuitarGroup, SortGroup, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { sortGuitarsByPrice } from 'utils/utils';
@@ -87,7 +87,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([
       setGuitarsTotalCount(totalCount),
-      loadProductData(defaultGuitars),
+      setDefaultProductData(defaultGuitars),
       setGuitarsToRender(guitarsToRender),
     ]);
   });
@@ -118,7 +118,7 @@ describe('Async actions', () => {
       setPriceRangeTo(priceRangeTo),
       setGuitarType(types),
       setGuitarsTotalCount(totalCount),
-      loadProductData(defaultGuitars),
+      setDefaultProductData(defaultGuitars),
       setGuitarsToRender(guitarsToRender),
     ]);
   });

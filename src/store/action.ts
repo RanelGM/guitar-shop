@@ -2,7 +2,7 @@ import { createAction } from '@reduxjs/toolkit';
 import { ActionType } from 'types/action';
 import { Guitar, GuitarType, SortType } from 'types/product';
 
-export const loadProductData = createAction(
+export const setDefaultProductData = createAction(
   ActionType.LoadProductData,
   (guitars: Guitar[]) => ({ payload: guitars }),
 );
@@ -49,7 +49,7 @@ export const setPriceRangeTo = createAction(
 
 export const setGuitarType = createAction(
   ActionType.SetGuitarType,
-  (guitarType: GuitarType[]) => ({ payload: guitarType }),
+  (guitarType: GuitarType[] | null) => ({ payload: guitarType }),
 );
 
 export const setCurrentPage = createAction(

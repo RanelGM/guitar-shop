@@ -34,7 +34,7 @@ function Sort(): JSX.Element {
       return;
     }
 
-    const type = convertLabelToType<SortLabel, typeof SortGroup>(sortButton.ariaLabel as SortLabel, SortGroup);
+    const type = convertLabelToType<SortLabel, typeof SortGroup>(sortButton.getAttribute('aria-label') as SortLabel, SortGroup);
 
     switch (type) {
       case SortGroup.Price.type:
@@ -61,14 +61,14 @@ function Sort(): JSX.Element {
           tabIndex={isSortByPrice ? -1 : 0}
           className={`catalog-sort__type-button
           ${isSortByPrice ? 'catalog-sort__type-button--active' : ''}`}
-        >по цене
+        >{SortGroup.Price.label.toLowerCase()}
         </button>
         <button
           aria-label={SortGroup.Rating.label}
           tabIndex={isSortByRating ? -1 : 0}
           className={`catalog-sort__type-button
           ${isSortByRating ? 'catalog-sort__type-button--active' : ''}`}
-        >по популярности
+        >{SortGroup.Rating.label.toLowerCase()}
         </button>
       </div>
       <div className="catalog-sort__order">
