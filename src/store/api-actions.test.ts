@@ -12,6 +12,8 @@ import { APIRoute, APIQuery, AppRoute, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_
 import { sortGuitarsByPrice } from 'utils/utils';
 import { NameSpace } from './root-reducer';
 
+import * as QuerySelectors from 'store/query-data/selectors';
+
 const api = createAPI();
 const mockAPI = new MockAdapter(api);
 const middlewares = [thunk.withExtraArgument(api)];
@@ -189,11 +191,42 @@ describe('Async actions', () => {
     ]);
   });
 
+  it(`should dispatch setGuitarsTotalCount with totalCount and setGuitarsToRender with guitarsToRender when loadFilteredGuitarsAction
+  and server response is OK, should generate unique URL if it is pagination`, async () => {
+    const types = [GuitarGroup.Acoustic.type, GuitarGroup.Ukulele.type];
+    const state = getState(defaultGuitars, page, true, true, types);
+    const queryState = state[NameSpace.query];
+    const store = mockStore(state);
+    const { path, url } = parseStateToPath(queryState, true);
+
+    const getQueryState = jest.spyOn(QuerySelectors, 'getQueryState');
+    getQueryState.mockReturnValue(queryState);
+
+    mockAPI
+      .onGet(path)
+      .reply(200, guitarsToRender, headers);
+
+    expect(store.getActions()).toEqual([]);
+
+    await (store.dispatch(loadFilteredGuitarsAction(true)));
+
+    expect(fakeHistory.location.pathname).toEqual(`${AppRoute.Catalog}/${url}`);
+
+    expect(store.getActions()).toEqual([
+      setGuitarsTotalCount(totalCount),
+      setGuitarsToRender(guitarsToRender),
+    ]);
+  });
+
   it(`should dispatch setIsServerError when loadFilteredGuitarsAction
       and server response is NOT OK`, async () => {
     const state = getState(defaultGuitars, page);
     const queryState = state[NameSpace.query];
     const store = mockStore(state);
+
+    const getQueryState = jest.spyOn(QuerySelectors, 'getQueryState');
+    getQueryState.mockReturnValue(queryState);
+
     const { path } = parseStateToPath(queryState);
 
     mockAPI
