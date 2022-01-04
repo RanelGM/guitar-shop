@@ -9,7 +9,6 @@ import { createMemoryHistory } from 'history';
 import { State } from 'types/state';
 import CatalogScreen from './catalog-screen';
 import { NameSpace } from 'store/root-reducer';
-import store from 'store/store';
 import { getGuitarMock } from 'utils/mocks';
 
 const history = createMemoryHistory();
@@ -19,7 +18,13 @@ const mockStore = configureMockStore<State, Action, ThunkDispatch<State, undefin
 const guitars = [getGuitarMock(), getGuitarMock(), getGuitarMock()];
 const guitarsToRender = guitars;
 
-const state = Object.assign({}, store.getState(), {
+const store = mockStore({
+  [NameSpace.order]: {
+    cart: null,
+  },
+  [NameSpace.query]: {
+    guitarType: null,
+  },
   [NameSpace.product]: {
     defaultServerGuitars: guitars,
     guitarsToRender: guitarsToRender,
@@ -27,12 +32,10 @@ const state = Object.assign({}, store.getState(), {
   },
 });
 
-const mockedStore = mockStore(state);
-
 describe('Catalog Screen component', () => {
   it('should render component with children components', () => {
     render(
-      <Provider store={mockedStore}>
+      <Provider store={store}>
         <Router history={history}>
           <CatalogScreen />
         </Router>

@@ -65,7 +65,7 @@ function FilterPrice(): JSX.Element {
     if (isMinPriceInput) {
       updatingValue = value.toString();
 
-      const valueTo = priceRangeTo && priceRangeTo < updatingValue ? '' : priceRangeTo;
+      const valueTo = priceRangeTo && Number(priceRangeTo) < Number(updatingValue) ? '' : priceRangeTo;
       dispatch(setPriceRangeFrom(updatingValue));
       dispatch(setPriceRangeTo(valueTo));
     }

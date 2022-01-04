@@ -5,7 +5,7 @@ import { AppRoute } from 'utils/const';
 function NotFoundScreen(): JSX.Element {
   return (
     <div className="wrapper">
-      <Header />
+      <Header isError />
       <main className="page-content">
         <div className="container">
           <h1 className="page-content__title title">Запрашиваемая страница не найдена</h1>

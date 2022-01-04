@@ -1,13 +1,34 @@
+import { Action, Store } from 'redux';
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import thunk, { ThunkDispatch } from 'redux-thunk';
+import { configureMockStore } from '@jedmao/redux-mock-store';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 
+import { State } from 'types/state';
+import { GuitarType } from 'types/product';
 import Filter, { getUniqueStringsFromTypes } from './filter';
-import store from 'store/store';
+import { createAPI } from 'api/api';
 import { setGuitarType } from 'store/action';
+import { NameSpace } from 'store/root-reducer';
 import { GuitarGroup } from 'utils/const';
+
+const api = createAPI();
+const middlewares = [thunk.withExtraArgument(api)];
+const mockStore = configureMockStore<State, Action, ThunkDispatch<State, typeof api, Action>>(middlewares);
+
+const getStore = (types: GuitarType[] | null) => mockStore({
+  [NameSpace.product]: {
+    defaultServerGuitars: null,
+  },
+  [NameSpace.query]: {
+    priceRangeFrom: '',
+    priceRangeTo: '',
+    guitarType: types,
+  },
+});
 
 const history = createMemoryHistory();
 
@@ -20,7 +41,7 @@ const fakeHistory = {
 
 jest.mock('store/browser-history', () => fakeHistory);
 
-const getFilterMock = () => (
+const getFilterMock = (store: Store) => (
   <Provider store={store}>
     <Router history={history}>
       <Filter />
@@ -29,10 +50,10 @@ const getFilterMock = () => (
 );
 
 describe('Filter Component', () => {
-  beforeEach(() => store.dispatch(setGuitarType(null)));
-
   it('should render component', () => {
-    const filterComponent = getFilterMock();
+    const store = getStore(null);
+    const filterComponent = getFilterMock(store);
+
     render(filterComponent);
 
     expect(screen.getByText(/Фильтр/i)).toBeInTheDocument();
@@ -41,8 +62,9 @@ describe('Filter Component', () => {
     expect(screen.getByText(/Цена, ₽/i)).toBeInTheDocument();
   });
 
-  it('should check / uncheck type input when it is clicked, disable not corresponding string input', () => {
-    const filterComponent = getFilterMock();
+  it('should render unchecked types input and not disabled strings input when types is not provided', () => {
+    const store = getStore(null);
+    const filterComponent = getFilterMock(store);
     const guitarTypes = Object.values(GuitarGroup).map((group) => group.type);
     const strings = getUniqueStringsFromTypes(guitarTypes);
 
@@ -56,51 +78,52 @@ describe('Filter Component', () => {
     expect(ukuleleLabel).not.toBeChecked();
     expect(acousticLabel).not.toBeChecked();
     strings.forEach((string) => expect(screen.getByLabelText(string)).not.toBeDisabled());
-
-    userEvent.click(electricLabel);
-    expect(electricLabel).toBeChecked();
-    expect(ukuleleLabel).not.toBeChecked();
-    expect(acousticLabel).not.toBeChecked();
-
-    GuitarGroup.Electric.strings.forEach((string) => expect(screen.getByLabelText(string)).not.toBeDisabled());
-    expect(screen.getByLabelText('12')).toBeDisabled();
-
-    userEvent.click(acousticLabel);
-    userEvent.click(electricLabel);
-    userEvent.click(ukuleleLabel);
-    expect(electricLabel).not.toBeChecked();
-    expect(ukuleleLabel).toBeChecked();
-    expect(acousticLabel).toBeChecked();
-    strings.forEach((string) => expect(screen.getByLabelText(string)).not.toBeDisabled());
-
-
-    userEvent.click(ukuleleLabel);
-    expect(electricLabel).not.toBeChecked();
-    expect(ukuleleLabel).not.toBeChecked();
-    expect(acousticLabel).toBeChecked();
-    GuitarGroup.Acoustic.strings.forEach((string) => expect(screen.getByLabelText(string)).not.toBeDisabled());
-    expect(screen.getByLabelText('4')).toBeDisabled();
   });
 
   it('should render type input as checked if appropriate type is in state and disable not corresponding string input', () => {
-    const filterComponent = getFilterMock();
-    const GuitarGroupValues = Object.values(GuitarGroup);
-    const guitarTypes = GuitarGroupValues.map((group) => group.type);
-    const strings = getUniqueStringsFromTypes(guitarTypes);
+    const checkedTypes = [GuitarGroup.Acoustic.type, GuitarGroup.Ukulele.type];
+    const store = getStore(checkedTypes);
+    const filterComponent = getFilterMock(store);
 
-    const checkedTypes = [GuitarGroup.Electric.type, GuitarGroup.Ukulele.type];
+    const strings = getUniqueStringsFromTypes(Object.values(GuitarGroup).map((group) => group.type));
     const checkedStrings = getUniqueStringsFromTypes(checkedTypes);
     const unchekedStrings = strings.filter((string) => !checkedStrings.some((checkedString) => checkedString === string));
 
-    store.dispatch((setGuitarType(checkedTypes)));
-
     render(filterComponent);
 
-    expect(screen.getByLabelText(GuitarGroup.Electric.label)).toBeChecked();
+    expect(screen.getByLabelText(GuitarGroup.Acoustic.label)).toBeChecked();
     expect(screen.getByLabelText(GuitarGroup.Ukulele.label)).toBeChecked();
-    expect(screen.getByLabelText(GuitarGroup.Acoustic.label)).not.toBeChecked();
+    expect(screen.getByLabelText(GuitarGroup.Electric.label)).not.toBeChecked();
 
     checkedStrings.forEach((string) => expect(screen.getByLabelText(string)).not.toBeDisabled());
     unchekedStrings.forEach((string) => expect(screen.getByLabelText(string)).toBeDisabled());
+  });
+
+  it('should dispatch types input when user checking corresponding input', () => {
+    const store = getStore(null);
+    const filterComponent = getFilterMock(store);
+
+    render(filterComponent);
+
+    expect(store.getActions()).toEqual([]);
+
+    const electricLabel = screen.getByLabelText(GuitarGroup.Electric.label);
+    const ukuleleLabel = screen.getByLabelText(GuitarGroup.Ukulele.label);
+    const acousticLabel = screen.getByLabelText(GuitarGroup.Acoustic.label);
+
+    userEvent.click(electricLabel);
+
+    expect(store.getActions()).toEqual([
+      setGuitarType([GuitarGroup.Electric.type]),
+    ]);
+
+    userEvent.click(ukuleleLabel);
+    userEvent.click(acousticLabel);
+
+    expect(store.getActions()).toEqual([
+      setGuitarType([GuitarGroup.Electric.type]),
+      setGuitarType([GuitarGroup.Ukulele.type]),
+      setGuitarType([GuitarGroup.Acoustic.type]),
+    ]);
   });
 });

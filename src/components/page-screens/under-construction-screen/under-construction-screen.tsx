@@ -3,7 +3,7 @@ import { Footer, Header } from 'components/common/common';
 function UnderConstructionScreen(): JSX.Element {
   return (
     <div className="wrapper">
-      <Header />
+      <Header isError />
       <main className="page-content">
         <div className="container">
           <h1 className="page-content__title title">
