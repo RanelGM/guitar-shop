@@ -2,10 +2,10 @@ import { Guitar, SortType, GuitarType } from './product';
 import { RootState } from 'store/root-reducer';
 
 export type ProductDataState = {
-  defaultServerGuitars: Guitar[] | null,
-  guitarsTotalCount: number | null,
-  guitarsToRender: Guitar[] | null,
-  similarAtSearch: Guitar[] | null,
+  defaultServerGuitars: Guitar[] | [],
+  guitarsTotalCount: number,
+  guitarsToRender: Guitar[] | [],
+  similarAtSearch: Guitar[] | [],
 }
 
 export type OrderDataState = {

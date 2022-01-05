@@ -1,6 +1,6 @@
 import { FormEvent, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { GuitarType, GuitarKey } from 'types/product';
+import { GuitarType } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { getGuitarType } from 'store/query-data/selectors';
 import { setGuitarType } from 'store/action';
@@ -15,8 +15,11 @@ export const getUniqueStringsFromTypes = (types: GuitarType[]): number[] => {
   const stringSet = new Set<number>();
 
   types.forEach((type) => {
-    const stringsCount = GuitarGroupValues.find((group) => group.type === type) as typeof GuitarGroup[GuitarKey];
-    stringsCount.strings.forEach((count) => stringSet.add(count));
+    const stringsCount = GuitarGroupValues.find((group) => group.type === type);
+
+    if (stringsCount) {
+      stringsCount.strings.forEach((count) => stringSet.add(count));
+    }
   });
 
   return Array.from(stringSet);

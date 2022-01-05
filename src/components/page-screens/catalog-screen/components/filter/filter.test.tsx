@@ -21,7 +21,7 @@ const mockStore = configureMockStore<State, Action, ThunkDispatch<State, typeof 
 
 const getStore = (types: GuitarType[] | null) => mockStore({
   [NameSpace.product]: {
-    defaultServerGuitars: null,
+    defaultServerGuitars: [],
   },
   [NameSpace.query]: {
     priceRangeFrom: '',

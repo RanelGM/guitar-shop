@@ -74,7 +74,7 @@ function SearchForm(): JSX.Element {
           zIndex: 1,
         }}
       >
-        {!isSearchError && similarGuitars?.map((guitar) => (
+        {!isSearchError && similarGuitars.map((guitar) => (
           <li key={`search-${guitar.id}`}>
             <Link to={`${AppRoute.Product}/${guitar.id}`} className="form-search__select-item" >{guitar.name}</Link>
           </li>

@@ -13,7 +13,7 @@ const mockStore = configureMockStore<State, Action, ThunkDispatch<State, undefin
 
 const store = mockStore({
   [NameSpace.product]: {
-    similarAtSearch: null,
+    similarAtSearch: [],
   },
   [NameSpace.order]: {
     cart: null,

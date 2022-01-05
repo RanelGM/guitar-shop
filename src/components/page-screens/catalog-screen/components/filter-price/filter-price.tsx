@@ -1,7 +1,6 @@
 
 import { useRef, useState, FormEvent, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { getDefaultServerGuitars } from 'store/product-data/selectors';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
@@ -20,8 +19,8 @@ function FilterPrice(): JSX.Element {
   const minPriceInput = useRef<HTMLInputElement | null>(null);
   const maxPriceInput = useRef<HTMLInputElement | null>(null);
 
-  const guitars = useSelector(getDefaultServerGuitars) as Guitar[];
-  const isGuitars = guitars !== null ? guitars.length !== 0 : false;
+  const guitars = useSelector(getDefaultServerGuitars);
+  const isGuitars = guitars.length !== 0;
 
   const MIN_PRICE_VALUE = !isGuitars ? 0 : sortGuitarsByPrice(guitars, SortGroup.Ascending.type)[0].price;
   const MAX_PRICE_VALUE = !isGuitars ? 0 : sortGuitarsByPrice(guitars, SortGroup.Descending.type)[0].price;

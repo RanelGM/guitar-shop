@@ -1,12 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ProductDataState } from 'types/state';
 import { setDefaultProductData, setGuitarsTotalCount, setGuitarsToRender, setSearchSimilar } from '../action';
+import { INITIAL_GUITAR_COUNT } from 'utils/const';
 
 export const initialState: ProductDataState = {
-  defaultServerGuitars: null,
-  guitarsTotalCount: null,
-  guitarsToRender: null,
-  similarAtSearch: null,
+  defaultServerGuitars: [],
+  guitarsTotalCount: INITIAL_GUITAR_COUNT,
+  guitarsToRender: [],
+  similarAtSearch: [],
 };
 
 const productData = createReducer(initialState, (builder) => {

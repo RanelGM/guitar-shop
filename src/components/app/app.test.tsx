@@ -25,7 +25,7 @@ const store = mockStore({
     defaultServerGuitars: guitars,
     guitarsTotalCount: guitars.length,
     guitarsToRender: guitars,
-    similarAtSearch: null,
+    similarAtSearch: [],
   },
   ORDER: {
     cart: null,

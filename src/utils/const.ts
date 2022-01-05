@@ -42,3 +42,4 @@ export const DEFAULT_SORT_ORDER = SortGroup.Ascending.type;
 export const MAX_CARD_ON_PAGE_COUNT = 9;
 export const INDEX_ADJUSTMENT_VALUE = 1;
 export const INITIAL_CATALOG_PAGE = 1;
+export const INITIAL_GUITAR_COUNT = 0;

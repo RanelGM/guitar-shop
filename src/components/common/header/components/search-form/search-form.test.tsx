@@ -26,7 +26,7 @@ const history = createMemoryHistory();
 
 const getStore = (guitars: Guitar[] | null) => mockStore({
   [NameSpace.product]: {
-    similarAtSearch: guitars,
+    similarAtSearch: [],
   },
 });
 

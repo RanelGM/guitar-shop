@@ -29,6 +29,7 @@ const store = mockStore({
     defaultServerGuitars: guitars,
     guitarsToRender: guitarsToRender,
     guitarsTotalCount: guitars.length,
+    similarAtSearch: [],
   },
 });
 
