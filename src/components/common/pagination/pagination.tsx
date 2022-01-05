@@ -28,9 +28,9 @@ function Pagination({ currentPage, maxPageCount, onLinkClick }: PagionationProps
   const nextPagePath = `${sliceFromValue + MAX_PAGINATION_COUNT + INDEX_ADJUSTMENT_VALUE}${filterParams}`;
 
   const handleLinkClick = (evt: MouseEvent) => {
-    const linkElement = (evt.target as HTMLElement).closest('.link') as HTMLAnchorElement;
+    const linkElement = (evt.target as HTMLElement).closest('.link') as HTMLAnchorElement | null;
 
-    if (linkElement) {
+    if (linkElement !== null) {
       const pageNumberPath = Number(linkElement.href.split('/').pop()?.split('&').shift());
 
       dispatch(setCurrentPage(pageNumberPath));

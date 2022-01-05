@@ -7,7 +7,7 @@ import { getSimilarAtSearch } from 'store/product-data/selectors';
 import { AppRoute } from 'utils/const';
 
 function SearchForm(): JSX.Element {
-  const dispatch = useDispatch() as ThunkActionDispatch;
+  const dispatch = useDispatch<ThunkActionDispatch>();
   const [isSearchError, setIsSearchError] = useState(false);
   const similarGuitars = useSelector(getSimilarAtSearch);
 
@@ -16,22 +16,25 @@ function SearchForm(): JSX.Element {
   const listRef = useRef<HTMLUListElement | null>(null);
 
   const handleSearchChange = async () => {
-    const searchInput = searchRef.current as HTMLInputElement;
-    const listElement = listRef.current as HTMLUListElement;
+    const searchInput = searchRef.current;
+    const listElement = listRef.current;
 
-    if (searchInput.value.length === 0) {
+    if (searchInput !== null && listElement !== null && searchInput.value.length === 0) {
       listElement.classList.add('hidden');
       return;
     }
 
-    try {
-      await dispatch(loadSearchSimilarAction(searchInput.value));
+    if (searchInput !== null && listElement !== null) {
+      try {
+        await dispatch(loadSearchSimilarAction(searchInput.value));
+      }
+      catch {
+        setIsSearchError(true);
+      }
+      finally {
+        listElement.classList.remove('hidden');
+      }
     }
-    catch {
-      setIsSearchError(true);
-    }
-
-    listElement.classList.remove('hidden');
   };
 
   const handleSearchFocus = () => {
