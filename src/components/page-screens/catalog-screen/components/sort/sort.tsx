@@ -4,15 +4,15 @@ import { SortLabel } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { getSortType, getOrderType } from 'store/query-data/selectors';
 import { setSortType, setOrderType } from 'store/action';
-import { SortGroup } from 'utils/const';
+import { DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, SortGroup } from 'utils/const';
 import { convertLabelToType } from 'utils/utils';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
 
 function Sort(): JSX.Element {
   const dispatch = useDispatch<ThunkActionDispatch>();
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
-  const sortType = useSelector(getSortType);
-  const orderType = useSelector(getOrderType);
+  let sortType = useSelector(getSortType);
+  let orderType = useSelector(getOrderType);
 
   const isSortByPrice = sortType === SortGroup.Price.type;
   const isSortByRating = sortType === SortGroup.Rating.type;
@@ -35,21 +35,22 @@ function Sort(): JSX.Element {
     }
 
     const type = convertLabelToType<SortLabel, typeof SortGroup>(sortButton.getAttribute('aria-label') as SortLabel, SortGroup);
+    const isSortUpdate = type === SortGroup.Price.type || type === SortGroup.Rating.type;
+    const isOrderUpdate = type === SortGroup.Ascending.type || type === SortGroup.Descending.type;
 
-    switch (type) {
-      case SortGroup.Price.type:
-      case SortGroup.Rating.type:
-        dispatch(setSortType(type));
-        setIsUpdateRequired(true);
-        break;
-      case SortGroup.Ascending.type:
-      case SortGroup.Descending.type:
-        dispatch(setOrderType(type));
-        setIsUpdateRequired(true);
-        break;
-      default:
-        break;
+    if (isSortUpdate) {
+      orderType = orderType !== null ? orderType : DEFAULT_SORT_ORDER;
+      dispatch(setSortType(type));
+      dispatch(setOrderType(orderType));
     }
+
+    if (isOrderUpdate) {
+      sortType = sortType !== null ? sortType : DEFAULT_SORT_TYPE;
+      dispatch(setSortType(sortType));
+      dispatch(setOrderType(type));
+    }
+
+    setIsUpdateRequired(true);
   };
 
   return (
@@ -74,14 +75,14 @@ function Sort(): JSX.Element {
       <div className="catalog-sort__order">
         <button
           aria-label={SortGroup.Ascending.label}
-          tabIndex={isSortByRating ? -1 : 0}
+          tabIndex={isSortByAscendingOrder ? -1 : 0}
           className={`catalog-sort__order-button catalog-sort__order-button--up
           ${isSortByAscendingOrder ? 'catalog-sort__order-button--active' : ''}`}
         >
         </button>
         <button
           aria-label={SortGroup.Descending.label}
-          tabIndex={isSortByRating ? -1 : 0}
+          tabIndex={isSortByDescendingOrder ? -1 : 0}
           className={`catalog-sort__order-button catalog-sort__order-button--down
           ${isSortByDescendingOrder ? 'catalog-sort__order-button--active' : ''}`}
         >
