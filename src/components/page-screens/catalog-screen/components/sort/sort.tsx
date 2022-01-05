@@ -9,7 +9,7 @@ import { convertLabelToType } from 'utils/utils';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
 
 function Sort(): JSX.Element {
-  const dispatch = useDispatch() as ThunkActionDispatch;
+  const dispatch = useDispatch<ThunkActionDispatch>();
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const sortType = useSelector(getSortType);
   const orderType = useSelector(getOrderType);

@@ -12,7 +12,7 @@ import { INITIAL_CATALOG_PAGE, MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
 import { getPageFromLocation } from 'utils/utils';
 
 function CatalogScreen(): JSX.Element {
-  const dispatch = useDispatch() as ThunkActionDispatch;
+  const dispatch = useDispatch<ThunkActionDispatch>();
   const isServerError = useSelector(getIsServerError) as boolean;
   const guitarsToRender = useSelector(getGuitarsToRender) as Guitar[];
   const guitarsTotalCount = useSelector(getGuitarsTotalCount) as number;

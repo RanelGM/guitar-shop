@@ -28,7 +28,7 @@ const getUniqueTypesFromStringsCount = (stringsCount: number[]): GuitarType[] =>
 };
 
 function Filter(): JSX.Element {
-  const dispatch = useDispatch() as ThunkActionDispatch;
+  const dispatch = useDispatch<ThunkActionDispatch>();
   const checkedGuitarsTypes = useSelector(getGuitarType);
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const [checkedStringsCount, setCheckedStringsCount] = useState<number[] | null>(null);

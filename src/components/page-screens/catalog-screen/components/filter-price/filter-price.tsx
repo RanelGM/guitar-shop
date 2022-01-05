@@ -11,7 +11,7 @@ import { getNumberWithSpaceBetween, sortGuitarsByPrice } from 'utils/utils';
 import { SortGroup } from 'utils/const';
 
 function FilterPrice(): JSX.Element {
-  const dispatch = useDispatch() as ThunkActionDispatch;
+  const dispatch = useDispatch<ThunkActionDispatch>();
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const [blankInputAfterChange, setBlankInputAfterChange] = useState<HTMLInputElement | null>(null);
 

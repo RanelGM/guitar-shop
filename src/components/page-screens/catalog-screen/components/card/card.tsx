@@ -23,7 +23,7 @@ const adaptImageSrc = (src: string): string => {
 function Card({ guitar }: CardProps): JSX.Element {
   const { id, name, previewImg, price, rating, comments } = guitar;
 
-  const dispatch = useDispatch() as ThunkActionDispatch;
+  const dispatch = useDispatch<ThunkActionDispatch>();
   const guitarsInCart = useSelector(getCart);
   const isGuitarInCart = guitarsInCart?.includes(guitar);
 

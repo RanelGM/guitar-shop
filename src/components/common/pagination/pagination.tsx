@@ -15,7 +15,7 @@ type PagionationProps = {
 const MAX_PAGINATION_COUNT = 3;
 
 function Pagination({ currentPage, maxPageCount, onLinkClick }: PagionationProps): JSX.Element {
-  const dispatch = useDispatch() as ThunkActionDispatch;
+  const dispatch = useDispatch<ThunkActionDispatch>();
 
   const pages = Array.from({ length: maxPageCount }, (item, index) => index + INDEX_ADJUSTMENT_VALUE);
   const sliceFromValue = MAX_PAGINATION_COUNT * Math.floor((currentPage - INDEX_ADJUSTMENT_VALUE) / MAX_PAGINATION_COUNT);
