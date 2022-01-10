@@ -1235,6 +1235,11 @@ button,
   grid-template-columns: repeat(3, 1fr);
 }
 
+.cards__empty {
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
 .link {
   font: inherit;
 

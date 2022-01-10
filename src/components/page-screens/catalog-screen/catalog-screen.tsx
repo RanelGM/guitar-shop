@@ -17,6 +17,7 @@ function CatalogScreen(): JSX.Element {
   const guitarsTotalCount = useSelector(getGuitarsTotalCount);
   const currentPage = getPageFromLocation();
   const maxPageCount = guitarsTotalCount !== 0 ? Math.ceil(guitarsTotalCount / MAX_CARD_ON_PAGE_COUNT) : INITIAL_CATALOG_PAGE;
+  const isGuitars = guitarsToRender.length > 0;
 
   dispatch(setCurrentPage(currentPage));
 
@@ -47,6 +48,10 @@ function CatalogScreen(): JSX.Element {
             <Sort />
 
             <div className="cards catalog__cards">
+              {!isGuitars && (
+                <div className='cards__empty'>В каталоге не найдено гитар в соответствии с заданными параметрами</div>
+              )}
+
               {guitarsToRender.map((guitar) => <Card key={guitar.id} guitar={guitar} />)}
             </div>
 
