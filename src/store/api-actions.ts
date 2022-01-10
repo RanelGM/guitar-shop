@@ -1,7 +1,7 @@
 import { ThunkActionDispatch, ThunkActionResult } from 'types/action';
 import { Guitar, GuitarType } from 'types/product';
 import browserHistory from './browser-history';
-import { setDefaultProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setIsServerError } from './action';
+import { setDefaultProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setIsServerError, setIsUpdateLoaded } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { getQueryState } from './query-data/selectors';
 import { QueryDataState } from 'types/state';
@@ -112,9 +112,10 @@ export const loadSearchSimilarAction = (inputValue: string): ThunkActionResult =
 
 export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-
     const queryState = getQueryState();
     const { path, url } = parseStateToPath(queryState, isPagination);
+
+    dispatch(setIsUpdateLoaded(false));
 
     try {
       const response = await api.get<Guitar[]>(path);
@@ -125,6 +126,7 @@ export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionRe
       redirectToRoute(url);
       dispatch(setGuitarsTotalCount(totalCount));
       dispatch(setGuitarsToRender(data));
+      dispatch(setIsUpdateLoaded(true));
     }
     catch {
       dispatch(setIsServerError(true));

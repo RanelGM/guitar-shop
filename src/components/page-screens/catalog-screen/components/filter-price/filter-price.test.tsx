@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history';
 import { State } from 'types/state';
 import FilterPrice from './filter-price';
 import { createAPI } from 'api/api';
-import { setPriceRangeFrom, setPriceRangeTo } from 'store/action';
+import { setIsUpdateLoaded, setPriceRangeFrom, setPriceRangeTo } from 'store/action';
 import { NameSpace } from 'store/root-reducer';
 import { sortGuitarsByPrice } from 'utils/utils';
 import { SortGroup } from 'utils/const';
@@ -95,6 +95,7 @@ describe('Filter Price Component', () => {
     expect(store.getActions()).toEqual([
       setPriceRangeFrom(minAvailablePrice.toString()),
       setPriceRangeTo(maxAvailablePrice.toString()),
+      setIsUpdateLoaded(false),
     ]);
   });
 
@@ -113,6 +114,7 @@ describe('Filter Price Component', () => {
 
     expect(store.getActions()).toEqual([
       setPriceRangeTo(maxAvailablePrice.toString()),
+      setIsUpdateLoaded(false),
     ]);
   });
 });

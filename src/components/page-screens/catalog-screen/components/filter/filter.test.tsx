@@ -11,7 +11,7 @@ import { State } from 'types/state';
 import { GuitarType } from 'types/product';
 import Filter, { getUniqueStringsFromTypes } from './filter';
 import { createAPI } from 'api/api';
-import { setGuitarType } from 'store/action';
+import { setGuitarType, setIsUpdateLoaded } from 'store/action';
 import { NameSpace } from 'store/root-reducer';
 import { GuitarGroup } from 'utils/const';
 
@@ -22,6 +22,7 @@ const mockStore = configureMockStore<State, Action, ThunkDispatch<State, typeof 
 const getStore = (types: GuitarType[] | null) => mockStore({
   [NameSpace.product]: {
     defaultServerGuitars: [],
+    isUpdateLoaded: true,
   },
   [NameSpace.query]: {
     priceRangeFrom: '',
@@ -115,6 +116,7 @@ describe('Filter Component', () => {
 
     expect(store.getActions()).toEqual([
       setGuitarType([GuitarGroup.Electric.type]),
+      setIsUpdateLoaded(false),
     ]);
 
     userEvent.click(ukuleleLabel);
@@ -122,8 +124,11 @@ describe('Filter Component', () => {
 
     expect(store.getActions()).toEqual([
       setGuitarType([GuitarGroup.Electric.type]),
+      setIsUpdateLoaded(false),
       setGuitarType([GuitarGroup.Ukulele.type]),
+      setIsUpdateLoaded(false),
       setGuitarType([GuitarGroup.Acoustic.type]),
+      setIsUpdateLoaded(false),
     ]);
   });
 });

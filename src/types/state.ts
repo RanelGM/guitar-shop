@@ -3,6 +3,7 @@ import { RootState } from 'store/root-reducer';
 
 export type ProductDataState = {
   defaultServerGuitars: Guitar[] | [],
+  isUpdateLoaded: boolean,
   guitarsTotalCount: number,
   guitarsToRender: Guitar[] | [],
   similarAtSearch: Guitar[] | [],

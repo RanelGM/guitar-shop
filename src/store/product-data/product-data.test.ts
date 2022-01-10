@@ -31,6 +31,26 @@ describe('Product Data reducer', () => {
       .toEqual(getExpectedPayload('defaultServerGuitars'));
   });
 
+  it('should update isUpdateLoaded from true to false when using setIsUpdateLoaded action', () => {
+    const updateStatus = false;
+
+    const setIsUpdateLoaded = {
+      type: ActionType.setIsUpdateLoaded,
+      payload: updateStatus,
+    };
+
+    const expectingState = Object.assign(
+      {},
+      state,
+      {
+        'isUpdateLoaded': updateStatus,
+      },
+    );
+
+    expect(reducer(state, setIsUpdateLoaded))
+      .toEqual(expectingState);
+  });
+
   it('should update guitarsToRender state with guitars when using setGuitarsToRender action', () => {
     const setGuitarsToRender = {
       type: ActionType.SetGuitarsToRender,

@@ -27,6 +27,7 @@ const getStore = (guitarsToRender: Guitar[] | []) => mockStore({
   },
   [NameSpace.product]: {
     defaultServerGuitars: guitars,
+    isUpdateLoaded: true,
     guitarsToRender: guitarsToRender || guitars,
     guitarsTotalCount: guitars.length,
     similarAtSearch: [],

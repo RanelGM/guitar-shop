@@ -6,7 +6,7 @@ import { State } from 'types/state';
 import { Guitar, GuitarType } from 'types/product';
 import { createAPI } from 'api/api';
 import { loadProductAction, loadSearchSimilarAction, loadFilteredGuitarsAction, parseStateToPath } from './api-actions';
-import { setDefaultProductData, setGuitarsToRender, setGuitarsTotalCount, setGuitarType, setIsServerError, setPriceRangeFrom, setPriceRangeTo, setSearchSimilar } from './action';
+import { setDefaultProductData, setGuitarsToRender, setGuitarsTotalCount, setGuitarType, setIsServerError, setIsUpdateLoaded, setPriceRangeFrom, setPriceRangeTo, setSearchSimilar } from './action';
 import { getGuitarMock } from 'utils/mocks';
 import { APIRoute, APIQuery, AppRoute, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, GuitarGroup, SortGroup, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { sortGuitarsByPrice } from 'utils/utils';
@@ -125,7 +125,7 @@ describe('Async actions', () => {
     ]);
   });
 
-  it('should dispatch setSearchSimilar when using loadSearchSimilarAction', async () => {
+  it('should dispatch setSearchSimilar when using loadSearchSimilarAction and response is OK', async () => {
     const store = mockStore();
     const inputValue = 'random value';
     const guitars = [getGuitarMock(), getGuitarMock(), getGuitarMock()];
@@ -161,8 +161,10 @@ describe('Async actions', () => {
     expect(fakeHistory.location.pathname).toEqual(`${AppRoute.Catalog}/${INITIAL_CATALOG_PAGE}`);
 
     expect(store.getActions()).toEqual([
+      setIsUpdateLoaded(false),
       setGuitarsTotalCount(totalCount),
       setGuitarsToRender(guitarsToRender),
+      setIsUpdateLoaded(true),
     ]);
   });
 
@@ -186,8 +188,10 @@ describe('Async actions', () => {
     expect(fakeHistory.location.pathname).toEqual(`${AppRoute.Catalog}/${INITIAL_CATALOG_PAGE}`);
 
     expect(store.getActions()).toEqual([
+      setIsUpdateLoaded(false),
       setGuitarsTotalCount(totalCount),
       setGuitarsToRender(guitarsToRender),
+      setIsUpdateLoaded(true),
     ]);
   });
 
@@ -213,8 +217,10 @@ describe('Async actions', () => {
     expect(fakeHistory.location.pathname).toEqual(`${AppRoute.Catalog}/${url}`);
 
     expect(store.getActions()).toEqual([
+      setIsUpdateLoaded(false),
       setGuitarsTotalCount(totalCount),
       setGuitarsToRender(guitarsToRender),
+      setIsUpdateLoaded(true),
     ]);
   });
 
@@ -238,6 +244,7 @@ describe('Async actions', () => {
     await (store.dispatch(loadFilteredGuitarsAction()));
 
     expect(store.getActions()).toEqual([
+      setIsUpdateLoaded(false),
       setIsServerError(true),
     ]);
   });

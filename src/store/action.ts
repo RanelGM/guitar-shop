@@ -7,6 +7,11 @@ export const setDefaultProductData = createAction(
   (guitars: Guitar[]) => ({ payload: guitars }),
 );
 
+export const setIsUpdateLoaded = createAction(
+  ActionType.setIsUpdateLoaded,
+  (loadedState: boolean) => ({ payload: loadedState }),
+);
+
 export const setGuitarsTotalCount = createAction(
   ActionType.SetGuitarsTotalCount,
   (guitars: number) => ({ payload: guitars }),
