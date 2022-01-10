@@ -1,5 +1,5 @@
 
-import { useRef, useState, FormEvent, useEffect } from 'react';
+import { useRef, useState, useEffect, FormEvent, KeyboardEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkActionDispatch } from 'types/action';
 import { getDefaultServerGuitars } from 'store/product-data/selectors';
@@ -7,7 +7,7 @@ import { loadFilteredGuitarsAction } from 'store/api-actions';
 import { setPriceRangeFrom, setPriceRangeTo } from 'store/action';
 import { getPriceRangeFrom, getPriceRangeTo } from 'store/query-data/selectors';
 import { getNumberWithSpaceBetween, sortGuitarsByPrice } from 'utils/utils';
-import { SortGroup } from 'utils/const';
+import { SortGroup, ENTER_KEY } from 'utils/const';
 
 function FilterPrice(): JSX.Element {
   const dispatch = useDispatch<ThunkActionDispatch>();
@@ -65,12 +65,14 @@ function FilterPrice(): JSX.Element {
       updatingValue = value.toString();
 
       const valueTo = priceRangeTo && Number(priceRangeTo) < Number(updatingValue) ? '' : priceRangeTo;
+
       dispatch(setPriceRangeFrom(updatingValue));
       dispatch(setPriceRangeTo(valueTo));
     }
 
     if (isMaxPriceInput) {
       updatingValue = value > Number(priceRangeFrom) ? value.toString() : priceRangeFrom;
+
       dispatch(setPriceRangeTo(updatingValue));
     }
 
@@ -98,6 +100,16 @@ function FilterPrice(): JSX.Element {
     setBlankInputAfterChange(null);
   };
 
+  const handleEnterKeydown = (evt: KeyboardEvent) => {
+    const input = evt.target as HTMLInputElement;
+
+    if (evt.key !== ENTER_KEY) {
+      return;
+    }
+
+    input.blur();
+  };
+
   return (
     <fieldset onFocus={handlePriceFocus} onBlur={handlePriceBlur} className="catalog-filter__block">
       <legend className="catalog-filter__block-title">Цена, ₽</legend>
@@ -106,6 +118,7 @@ function FilterPrice(): JSX.Element {
           <label className="visually-hidden" htmlFor="priceMin">Минимальная цена</label>
           <input type="number" placeholder={getNumberWithSpaceBetween(MIN_PRICE_VALUE)} id="priceMin" name="от"
             onChange={handlePriceChange}
+            onKeyDown={handleEnterKeydown}
             ref={minPriceInput}
             value={!priceRangeFrom && blankInputAfterChange === minPriceInput.current ? '' : priceRangeFrom}
           />
@@ -114,6 +127,7 @@ function FilterPrice(): JSX.Element {
           <label className="visually-hidden" htmlFor="priceMax">Максимальная цена</label>
           <input type="number" placeholder={getNumberWithSpaceBetween(MAX_PRICE_VALUE)} id="priceMax" name="до"
             onChange={handlePriceChange}
+            onKeyDown={handleEnterKeydown}
             ref={maxPriceInput}
             value={!priceRangeTo && blankInputAfterChange === maxPriceInput.current ? '' : priceRangeTo}
           />
