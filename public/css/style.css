@@ -1262,6 +1262,10 @@ button,
   color: #545454;
 }
 
+.loader {
+  margin-top: 20px;
+}
+
 .breadcrumbs {
   display: flex;
 

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { ThunkActionDispatch } from 'types/action';
-import { Breadcrumbs, Footer, Header, Pagination } from 'components/common/common';
+import { Breadcrumbs, Footer, Header, Loader, Pagination } from 'components/common/common';
 import { Filter, Sort, Card } from './components/components';
 import { ErrorScreen, NotFoundScreen } from '../page-screens';
 import { getGuitarsTotalCount, getGuitarsToRender, getIsUpdateLoaded } from 'store/product-data/selectors';
@@ -49,7 +49,7 @@ function CatalogScreen(): JSX.Element {
             <Sort />
 
             {!isUpdateLoaded && (
-              <div>Загружаем список гитар</div>
+              <Loader />
             )}
 
             {isUpdateLoaded && (
