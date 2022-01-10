@@ -56,7 +56,7 @@ const parsePathToState = (path: string, page: number, dispatch: ThunkActionDispa
 
   if (priceRangeFrom) { dispatch(setPriceRangeFrom(priceRangeFrom)); }
   if (priceRangeTo) { dispatch(setPriceRangeTo(priceRangeTo)); }
-  if (types.length > 1) { dispatch(setGuitarType(types)); }
+  if (types.length > 0) { dispatch(setGuitarType(types)); }
 
   return Object.assign(
     {},
