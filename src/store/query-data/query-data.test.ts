@@ -95,6 +95,23 @@ describe('Query Data reducer', () => {
       ));
   });
 
+  it('should update stringCount state with type when using setStringCount action', () => {
+    const strings = [datatype.number(), datatype.number()];
+    const setStringCount = {
+      type: ActionType.SetStringCount,
+      payload: strings,
+    };
+
+    expect(reducer(state, setStringCount))
+      .toEqual(Object.assign(
+        {},
+        state,
+        {
+          stringCount: strings,
+        },
+      ));
+  });
+
   it('should update currentPage state with page when using setCurrentPage action', () => {
     const page = datatype.number();
     const setCurrentPage = {

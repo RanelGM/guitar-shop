@@ -36,6 +36,7 @@ const store = mockStore({
     priceRangeFrom: `${sortGuitarsByPrice(guitars, SortGroup.Ascending.type)[0].price}`,
     priceRangeTo: `${sortGuitarsByPrice(guitars, SortGroup.Descending.type)[0].price}`,
     guitarType: types,
+    stringCount: null,
     currentPage: INITIAL_CATALOG_PAGE,
   },
 });

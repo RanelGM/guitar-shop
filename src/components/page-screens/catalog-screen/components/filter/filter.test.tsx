@@ -28,6 +28,7 @@ const getStore = (types: GuitarType[] | null) => mockStore({
     priceRangeFrom: '',
     priceRangeTo: '',
     guitarType: types,
+    stringCount: null,
   },
 });
 
