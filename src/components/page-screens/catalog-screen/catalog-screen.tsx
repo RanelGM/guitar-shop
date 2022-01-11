@@ -4,9 +4,9 @@ import { Breadcrumbs, Footer, Header, Loader, Pagination } from 'components/comm
 import { Filter, Sort, Card } from './components/components';
 import { ErrorScreen, NotFoundScreen } from '../page-screens';
 import { getGuitarsTotalCount, getGuitarsToRender, getIsUpdateLoaded } from 'store/product-data/selectors';
-import { setCurrentPage, setGuitarType, setPriceRangeFrom, setPriceRangeTo } from 'store/action';
+import { setCurrentPage, setGuitarType, setPriceRangeFrom, setPriceRangeTo, setStringCount } from 'store/action';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
-import { getGuitarType, getIsServerError, getPriceRangeFrom, getPriceRangeTo } from 'store/query-data/selectors';
+import { getGuitarType, getIsServerError, getPriceRangeFrom, getPriceRangeTo, getStringCount } from 'store/query-data/selectors';
 import { INITIAL_CATALOG_PAGE, MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
 import { getPageFromLocation, getQueryPath } from 'utils/utils';
 import browserHistory from 'store/browser-history';
@@ -19,6 +19,7 @@ function CatalogScreen(): JSX.Element {
   const guitarsTotalCount = useSelector(getGuitarsTotalCount);
   const isUpdateLoaded = useSelector(getIsUpdateLoaded);
   const types = useSelector(getGuitarType);
+  const strings = useSelector(getStringCount);
   const priceFrom = useSelector(getPriceRangeFrom);
   const priceTo = useSelector(getPriceRangeTo);
   const currentPage = getPageFromLocation();
@@ -28,6 +29,7 @@ function CatalogScreen(): JSX.Element {
   const filterParams = getQueryPath(currentPage.toString());
   const isRedirectFromAnotherPage = browserHistory.action === 'REPLACE';
   const isTypesEmpty = types === null || types.length === 0;
+  const isStringsEmpty = strings === null || strings.length === 0;
   const isPriceFromEmpty = priceFrom === '';
   const isPriceToEmpty = priceTo === '';
 
@@ -36,6 +38,7 @@ function CatalogScreen(): JSX.Element {
   useEffect(() => {
     if (filterParams || !isRedirectFromAnotherPage) { return; }
     if (!isTypesEmpty) { dispatch(setGuitarType(null)); }
+    if (!isStringsEmpty) { dispatch(setStringCount(null)); }
     if (!isPriceFromEmpty) { dispatch(setPriceRangeFrom('')); }
     if (!isPriceToEmpty) { dispatch(setPriceRangeTo('')); }
 

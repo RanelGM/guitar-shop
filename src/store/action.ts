@@ -57,6 +57,11 @@ export const setGuitarType = createAction(
   (guitarType: GuitarType[] | null) => ({ payload: guitarType }),
 );
 
+export const setStringCount = createAction(
+  ActionType.SetStringCount,
+  (strings: number[] | null) => ({ payload: strings }),
+);
+
 export const setCurrentPage = createAction(
   ActionType.SetCurrentPage,
   (page: number) => ({ payload: page }),

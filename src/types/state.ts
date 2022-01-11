@@ -19,6 +19,7 @@ export type QueryDataState = {
   priceRangeFrom: string,
   priceRangeTo: string,
   guitarType: GuitarType[] | null,
+  stringCount: number[] | null,
   currentPage: number,
   isServerError: boolean,
 }

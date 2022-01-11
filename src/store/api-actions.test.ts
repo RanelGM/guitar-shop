@@ -42,6 +42,7 @@ const getState = (guitars: Guitar[], page: number, isFrom?: boolean, isTo?: bool
       priceRangeFrom: priceFrom.toString(),
       priceRangeTo: priceTo.toString(),
       guitarType: guitarTypes,
+      stringCount: null,
       currentPage: page,
       isServerError: false,
     },

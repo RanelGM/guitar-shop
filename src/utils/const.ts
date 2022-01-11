@@ -18,6 +18,7 @@ export enum APIQuery {
   PriceFrom = 'price_gte',
   PriceTo = 'price_lte',
   GuitarType = 'type',
+  StringCount = 'stringCount',
   GuitarFrom = '_start',
   GuitarToLimit = '_limit',
   TotalCount = 'x-total-count'

@@ -2,8 +2,8 @@ import { FormEvent, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { GuitarType } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
-import { getGuitarType } from 'store/query-data/selectors';
-import { setGuitarType } from 'store/action';
+import { getGuitarType, getStringCount } from 'store/query-data/selectors';
+import { setGuitarType, setStringCount } from 'store/action';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
 import { FilterPrice } from '../components';
 import { updateArray } from 'utils/utils';
@@ -33,8 +33,9 @@ const getUniqueTypesFromStringsCount = (stringsCount: number[]): GuitarType[] =>
 function Filter(): JSX.Element {
   const dispatch = useDispatch<ThunkActionDispatch>();
   const checkedGuitarsTypes = useSelector(getGuitarType);
+  const checkedStringsCount = useSelector(getStringCount);
+
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
-  const [checkedStringsCount, setCheckedStringsCount] = useState<number[] | null>(null);
   const [availableStringsCount, setAvailableStringsCount] = useState<number[] | null>(checkedGuitarsTypes !== null ? getUniqueStringsFromTypes(checkedGuitarsTypes) : null);
 
   useEffect(() => {
@@ -44,7 +45,7 @@ function Filter(): JSX.Element {
 
     dispatch(loadFilteredGuitarsAction());
     setIsUpdateRequired(false);
-  }, [dispatch, isUpdateRequired]);
+  }, [dispatch, isUpdateRequired, checkedStringsCount]);
 
   const guitarsTypes = GuitarGroupValues.map((group) => group.type);
   const stringsCount = getUniqueStringsFromTypes(guitarsTypes).sort((first, second) => first - second);
@@ -65,7 +66,7 @@ function Filter(): JSX.Element {
 
       if (isStringCountCheckboxActive) {
         const availableToCheckCount = checkedStringsCount.filter((count) => availableStrings.includes(count));
-        setCheckedStringsCount(availableToCheckCount);
+        dispatch(setStringCount(availableToCheckCount));
       }
 
       dispatch(setGuitarType(checkedTypes));
@@ -77,7 +78,7 @@ function Filter(): JSX.Element {
       const checkedStrings = updateArray<number>(checkedStringsCount, stringCount);
       const availableStrings = isGuitarTypeCheckboxActive ? getUniqueStringsFromTypes(checkedGuitarsTypes) : checkedStrings;
 
-      setCheckedStringsCount(checkedStrings);
+      dispatch(setStringCount(checkedStrings));
       setAvailableStringsCount(availableStrings);
     }
 
@@ -113,8 +114,9 @@ function Filter(): JSX.Element {
         <legend className="catalog-filter__block-title">Количество струн</legend>
 
         {stringsCount.map((count) => {
-          const isAvailable = availableStringsCount !== null && availableStringsCount.includes(count);
           const isChecked = checkedStringsCount !== null && checkedStringsCount.includes(count);
+          const isAvailable = (availableStringsCount !== null && availableStringsCount.includes(count))
+            || (checkedStringsCount !== null && checkedStringsCount.includes(count));
 
           return (
             <div key={`${count}-string`} className="form-checkbox catalog-filter__block-item">

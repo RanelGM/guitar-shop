@@ -1,7 +1,7 @@
 import { ThunkActionDispatch, ThunkActionResult } from 'types/action';
 import { Guitar, GuitarType } from 'types/product';
 import browserHistory from './browser-history';
-import { setDefaultProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setIsServerError, setIsUpdateLoaded } from './action';
+import { setDefaultProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setIsServerError, setIsUpdateLoaded, setStringCount } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { getQueryState } from './query-data/selectors';
 import { QueryDataState } from 'types/state';
@@ -14,6 +14,11 @@ const reduceGuitarsTypesArray = (array: GuitarType[]): string => array.reduce((r
   return result;
 }, '');
 
+const reduceStringsArray = (array: number[]): string => array.reduce((result, string) => {
+  result += `&${APIQuery.StringCount}=${string}`;
+  return result;
+}, '');
+
 const redirectToRoute = (url: string) => {
   browserHistory.push(`${AppRoute.Catalog}/${url}`);
 };
@@ -23,6 +28,7 @@ export const parseStateToPath = (state: QueryDataState, isPagination?: boolean) 
   const priceFrom = state.priceRangeFrom ? `&${APIQuery.PriceFrom}=${state.priceRangeFrom}` : '';
   const priceTo = state.priceRangeTo ? `&${APIQuery.PriceTo}=${state.priceRangeTo}` : '';
   const guitarType = state.guitarType ? reduceGuitarsTypesArray(state.guitarType) : '';
+  const stringCount = state.stringCount ? reduceStringsArray(state.stringCount) : '';
   const diapasonFrom = `&${APIQuery.GuitarFrom}=${MAX_CARD_ON_PAGE_COUNT * (page - INDEX_ADJUSTMENT_VALUE)}`;
   const diapasonTo = `&${APIQuery.GuitarToLimit}=${MAX_CARD_ON_PAGE_COUNT}`;
   let sortType = state.sortType ? `&${APIQuery.Sort}=${state.sortType}` : `&${APIQuery.Sort}=${DEFAULT_SORT_TYPE}`;
@@ -33,8 +39,8 @@ export const parseStateToPath = (state: QueryDataState, isPagination?: boolean) 
     orderType = '';
   }
 
-  const path = GuitarEmbedWithComment + sortType + orderType + priceFrom + priceTo + guitarType + diapasonFrom + diapasonTo;
-  const url = page + priceFrom + priceTo + guitarType;
+  const path = GuitarEmbedWithComment + sortType + orderType + priceFrom + priceTo + guitarType + stringCount + diapasonFrom + diapasonTo;
+  const url = page + priceFrom + priceTo + guitarType + stringCount;
 
   return { path, url };
 };
@@ -45,6 +51,16 @@ const parsePathToState = (path: string, page: number, dispatch: ThunkActionDispa
 
   const priceRangeFrom = queryList.find((item) => item.includes(APIQuery.PriceFrom))?.split('=').pop();
   const priceRangeTo = queryList.find((item) => item.includes(APIQuery.PriceTo))?.split('=').pop();
+
+  const stringCount = queryList.reduce((result, item) => {
+    if (item.includes(APIQuery.StringCount)) {
+      const string = item.split('=').pop() as GuitarType;
+      result.push(Number(string));
+    }
+
+    return result;
+  }, [] as number[]) as number[];
+
   const types = queryList.reduce((result, item) => {
     if (item.includes(APIQuery.GuitarType)) {
       const type = item.split('=').pop() as GuitarType;
@@ -56,6 +72,7 @@ const parsePathToState = (path: string, page: number, dispatch: ThunkActionDispa
 
   if (priceRangeFrom) { dispatch(setPriceRangeFrom(priceRangeFrom)); }
   if (priceRangeTo) { dispatch(setPriceRangeTo(priceRangeTo)); }
+  if (stringCount.length > 0) { dispatch(setStringCount(stringCount)); }
   if (types.length > 0) { dispatch(setGuitarType(types)); }
 
   return Object.assign(
@@ -64,6 +81,7 @@ const parsePathToState = (path: string, page: number, dispatch: ThunkActionDispa
     {
       priceRangeFrom,
       priceRangeTo,
+      stringCount,
       guitarType: types,
       currentPage: page,
     },

@@ -15,6 +15,7 @@ export enum ActionType {
   SetPriceRangeFrom = 'query/setPriceRangeFrom',
   SetPriceRangeTo = 'query/setPriceRangeTo',
   SetGuitarType = 'query/setGuitarType',
+  SetStringCount = 'query/setStringCount',
   SetCurrentPage = 'query/setCurrentPage',
   SetIsServerError = 'query/setIsServerError',
 }
