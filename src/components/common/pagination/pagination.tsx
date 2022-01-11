@@ -20,7 +20,7 @@ function Pagination({ currentPage, maxPageCount, onLinkClick }: PagionationProps
   const pages = Array.from({ length: maxPageCount }, (item, index) => index + INDEX_ADJUSTMENT_VALUE);
   const sliceFromValue = MAX_PAGINATION_COUNT * Math.floor((currentPage - INDEX_ADJUSTMENT_VALUE) / MAX_PAGINATION_COUNT);
   const sliceToValue = sliceFromValue + MAX_PAGINATION_COUNT;
-  const isNextPageAvailable = sliceToValue + INDEX_ADJUSTMENT_VALUE < maxPageCount;
+  const isNextPageAvailable = sliceToValue < maxPageCount;
   const isPreviousPageAvailable = sliceFromValue !== 0;
 
   const filterParams = getQueryPath(currentPage.toString());
