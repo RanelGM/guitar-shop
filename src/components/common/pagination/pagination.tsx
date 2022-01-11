@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ThunkActionDispatch } from 'types/action';
 import { setCurrentPage } from 'store/action';
-import { INDEX_ADJUSTMENT_VALUE } from 'utils/const';
+import { INDEX_ADJUSTMENT_VALUE, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { getQueryPath } from 'utils/utils';
 
 type PagionationProps = {
@@ -20,12 +20,12 @@ function Pagination({ currentPage, maxPageCount, onLinkClick }: PagionationProps
   const pages = Array.from({ length: maxPageCount }, (item, index) => index + INDEX_ADJUSTMENT_VALUE);
   const sliceFromValue = MAX_PAGINATION_COUNT * Math.floor((currentPage - INDEX_ADJUSTMENT_VALUE) / MAX_PAGINATION_COUNT);
   const sliceToValue = sliceFromValue + MAX_PAGINATION_COUNT;
-  const isNextPageAvailable = sliceToValue < maxPageCount;
-  const isPreviousPageAvailable = sliceFromValue !== 0;
+  const isNextPageAvailable = currentPage < maxPageCount;
+  const isPreviousPageAvailable = currentPage > INITIAL_CATALOG_PAGE;
 
   const filterParams = getQueryPath(currentPage.toString());
-  const prevPagePath = `${sliceToValue - MAX_PAGINATION_COUNT}${filterParams}`;
-  const nextPagePath = `${sliceFromValue + MAX_PAGINATION_COUNT + INDEX_ADJUSTMENT_VALUE}${filterParams}`;
+  const prevPagePath = `${currentPage - 1}${filterParams}`;
+  const nextPagePath = `${currentPage + 1}${filterParams}`;
 
   const handleLinkClick = (evt: MouseEvent) => {
     const linkElement = (evt.target as HTMLElement).closest('.link') as HTMLAnchorElement | null;

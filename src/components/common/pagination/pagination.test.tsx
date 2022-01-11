@@ -50,21 +50,32 @@ describe('Pagination Component', () => {
   const maxPaginationCount = 3;
   const getCurrentActiveElement = () => screen.getAllByRole('listitem').find((item) => item.classList.contains('pagination__page--active'));
 
-  it('should render Pagination component from 1 to maxPaginationCount, without next/prev link when current page is 1', () => {
+  it('should render Pagination component from 1 to maxPaginationCount, with next, but without prev link when current page is 1', () => {
     const guitars = Array.from({ length: maxCardOnPageCount * maxPaginationCount }, () => getGuitarMock());
     const page = 1;
+    const nextLinkCount = 1;
     const maxPageCount = Math.ceil(guitars.length / maxCardOnPageCount);
-    const pages = Array.from({ length: maxPageCount }, (item, index) => index + INDEX_ADJUSTMENT_VALUE);
 
     const store = getStore(page);
     const mockComponent = getCartMock(store, maxPageCount);
 
     render(mockComponent);
 
-    expect(screen.getAllByRole('link').length).toBe(maxPaginationCount);
-    screen.getAllByRole('link').forEach((link, index) => {
-      expect(Number(link.textContent)).toBe(pages[index]);
-    });
+    expect(screen.getAllByRole('link').length).toBe(maxPaginationCount + nextLinkCount);
+  });
+
+  it('should render Pagination component from 1 to maxPaginationCount, with prev, but without next link when current page is maxPaginationCount', () => {
+    const guitars = Array.from({ length: maxCardOnPageCount * maxPaginationCount }, () => getGuitarMock());
+    const page = maxPaginationCount;
+    const prevLinkCount = 1;
+    const maxPageCount = Math.ceil(guitars.length / maxCardOnPageCount);
+
+    const store = getStore(page);
+    const mockComponent = getCartMock(store, maxPageCount);
+
+    render(mockComponent);
+
+    expect(screen.getAllByRole('link').length).toBe(maxPaginationCount + prevLinkCount);
   });
 
   it('should redirect to new page when clicking to it', async () => {
@@ -120,9 +131,9 @@ describe('Pagination Component', () => {
     });
 
     userEvent.click(nextLinkElement);
-    expect(history.location.pathname === `/${pages[pages.length - 1] + 1}`).toBe(true);
+    expect(history.location.pathname === `/${page + 1}`).toBe(true);
 
     userEvent.click(prevLinkElement);
-    expect(history.location.pathname === `/${pages.shift() as number - 1}`).toBe(true);
+    expect(history.location.pathname === `/${page - 1}`).toBe(true);
   });
 });
