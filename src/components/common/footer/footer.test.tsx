@@ -1,18 +1,6 @@
-import { Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { Action } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
-import { configureMockStore } from '@jedmao/redux-mock-store';
-import { createMemoryHistory } from 'history';
-
-import { State } from 'types/state';
 import Footer from './footer';
-
-const mockStore = configureMockStore<State, Action, ThunkDispatch<State, undefined, Action>>();
-
-const store = mockStore({});
-const history = createMemoryHistory();
 
 describe('Footer Component', () => {
   afterEach(() => {
@@ -24,11 +12,9 @@ describe('Footer Component', () => {
 
   it('should render Footer component on Main Page with Link component as NOT link', () => {
     render(
-      <Provider store={store}>
-        <Router history={history}>
-          <Footer isMainPage />
-        </Router>
-      </Provider>,
+      <Router>
+        <Footer isMainPage />
+      </Router>,
     );
 
     const logo = screen.getByTestId('logo');
@@ -39,11 +25,9 @@ describe('Footer Component', () => {
 
   it('should render Footer component on Main Page with Link component as link', () => {
     render(
-      <Provider store={store}>
-        <Router history={history}>
-          <Footer />
-        </Router>
-      </Provider>,
+      <Router>
+        <Footer />
+      </Router>,
     );
 
     const logo = screen.getByTestId('logo');

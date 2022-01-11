@@ -4,11 +4,13 @@ import { Breadcrumbs, Footer, Header, Loader, Pagination } from 'components/comm
 import { Filter, Sort, Card } from './components/components';
 import { ErrorScreen, NotFoundScreen } from '../page-screens';
 import { getGuitarsTotalCount, getGuitarsToRender, getIsUpdateLoaded } from 'store/product-data/selectors';
-import { setCurrentPage } from 'store/action';
+import { setCurrentPage, setGuitarType, setPriceRangeFrom, setPriceRangeTo } from 'store/action';
 import { loadFilteredGuitarsAction } from 'store/api-actions';
-import { getIsServerError } from 'store/query-data/selectors';
+import { getGuitarType, getIsServerError, getPriceRangeFrom, getPriceRangeTo } from 'store/query-data/selectors';
 import { INITIAL_CATALOG_PAGE, MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
-import { getPageFromLocation } from 'utils/utils';
+import { getPageFromLocation, getQueryPath } from 'utils/utils';
+import browserHistory from 'store/browser-history';
+import { useEffect } from 'react';
 
 function CatalogScreen(): JSX.Element {
   const dispatch = useDispatch<ThunkActionDispatch>();
@@ -16,11 +18,29 @@ function CatalogScreen(): JSX.Element {
   const guitarsToRender = useSelector(getGuitarsToRender);
   const guitarsTotalCount = useSelector(getGuitarsTotalCount);
   const isUpdateLoaded = useSelector(getIsUpdateLoaded);
+  const types = useSelector(getGuitarType);
+  const priceFrom = useSelector(getPriceRangeFrom);
+  const priceTo = useSelector(getPriceRangeTo);
   const currentPage = getPageFromLocation();
   const maxPageCount = guitarsTotalCount !== 0 ? Math.ceil(guitarsTotalCount / MAX_CARD_ON_PAGE_COUNT) : INITIAL_CATALOG_PAGE;
   const isGuitars = guitarsToRender.length > 0;
 
+  const filterParams = getQueryPath(currentPage.toString());
+  const isRedirectFromAnotherPage = browserHistory.action === 'REPLACE';
+  const isTypesEmpty = types === null || types.length === 0;
+  const isPriceFromEmpty = priceFrom === '';
+  const isPriceToEmpty = priceTo === '';
+
   dispatch(setCurrentPage(currentPage));
+
+  useEffect(() => {
+    if (filterParams || !isRedirectFromAnotherPage) { return; }
+    if (!isTypesEmpty) { dispatch(setGuitarType(null)); }
+    if (!isPriceFromEmpty) { dispatch(setPriceRangeFrom('')); }
+    if (!isPriceToEmpty) { dispatch(setPriceRangeTo('')); }
+
+    dispatch(loadFilteredGuitarsAction());
+  });
 
   const handlePaginationClick = () => {
     dispatch(loadFilteredGuitarsAction(true));
