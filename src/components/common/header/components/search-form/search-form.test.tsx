@@ -16,6 +16,7 @@ import { NameSpace } from 'store/root-reducer';
 import { APIQuery, APIRoute } from 'utils/const';
 import { getGuitarMock } from 'utils/mocks';
 import { setSearchSimilar } from 'store/action';
+import { sortGuitarsByLetter } from 'utils/utils';
 
 const api = createAPI();
 const mockAPI = new MockAdapter(api);
@@ -53,6 +54,7 @@ describe('Search Form Component', () => {
   it('should update store with loaded guitars (and render their names) when typing in search input and server response is OK', async () => {
     const guitars = [getGuitarMock(), getGuitarMock(), getGuitarMock()];
     const inputValue = 'foo';
+    const sortedGuitars = sortGuitarsByLetter(guitars, inputValue);
     const store = getStore(null);
     const searchFormComponent = getSearchFormMock(store);
 
@@ -69,7 +71,7 @@ describe('Search Form Component', () => {
 
     expect(screen.getByLabelText(/Поиск/i)).toBeInTheDocument();
     expect(input).toBeInTheDocument();
-    await waitFor(() => expect(store.getActions()).toEqual([setSearchSimilar(guitars)]));
+    await waitFor(() => expect(store.getActions()).toEqual([setSearchSimilar(sortedGuitars)]));
     await waitFor(() => expect(screen.getByRole('list').classList.contains('hidden')).toBe(false));
   });
 

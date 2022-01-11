@@ -9,7 +9,7 @@ import { loadProductAction, loadSearchSimilarAction, loadFilteredGuitarsAction, 
 import { setDefaultProductData, setGuitarsToRender, setGuitarsTotalCount, setGuitarType, setIsServerError, setIsUpdateLoaded, setPriceRangeFrom, setPriceRangeTo, setSearchSimilar } from './action';
 import { getGuitarMock } from 'utils/mocks';
 import { APIRoute, APIQuery, AppRoute, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, GuitarGroup, SortGroup, INITIAL_CATALOG_PAGE } from 'utils/const';
-import { sortGuitarsByPrice } from 'utils/utils';
+import { sortGuitarsByLetter, sortGuitarsByPrice } from 'utils/utils';
 import { NameSpace } from './root-reducer';
 
 import * as QuerySelectors from 'store/query-data/selectors';
@@ -129,6 +129,7 @@ describe('Async actions', () => {
     const store = mockStore();
     const inputValue = 'random value';
     const guitars = [getGuitarMock(), getGuitarMock(), getGuitarMock()];
+    const sortedGuitars = sortGuitarsByLetter(guitars, inputValue);
 
     mockAPI
       .onGet(`${APIRoute.Guitar}?${APIQuery.Similar}=${inputValue}`)
@@ -139,7 +140,7 @@ describe('Async actions', () => {
     await (store.dispatch(loadSearchSimilarAction(inputValue)));
 
     expect(store.getActions()).toEqual([
-      setSearchSimilar(guitars),
+      setSearchSimilar(sortedGuitars),
     ]);
   });
 

@@ -5,7 +5,7 @@ import { setDefaultProductData, setSearchSimilar, setGuitarsToRender, setGuitars
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { getQueryState } from './query-data/selectors';
 import { QueryDataState } from 'types/state';
-import { getPageFromLocation, getQueryPath } from 'utils/utils';
+import { getPageFromLocation, getQueryPath, sortGuitarsByLetter } from 'utils/utils';
 
 const GuitarEmbedWithComment = `${APIRoute.Guitar}?${APIQuery.EmbedComment}`;
 
@@ -107,7 +107,9 @@ export const loadSearchSimilarAction = (inputValue: string): ThunkActionResult =
   async (dispatch, _getState, api): Promise<void> => {
     const { data } = await api.get<Guitar[]>(`${APIRoute.Guitar}?${APIQuery.Similar}=${inputValue}`);
 
-    dispatch(setSearchSimilar(data));
+    const dataSortedByLetter = sortGuitarsByLetter(data, inputValue);
+
+    dispatch(setSearchSimilar(dataSortedByLetter));
   };
 
 export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionResult =>

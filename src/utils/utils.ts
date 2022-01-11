@@ -49,5 +49,20 @@ export const sortGuitarsByPrice = (array: Guitar[], sortType: SortType) => {
   }
 };
 
+export const sortGuitarsByLetter = (array: Guitar[], letter: string) => array.slice().sort((first, second) => {
+  const letterInAInput = first.name.search(letter);
+  const letterInBInput = second.name.search(letter);
+
+  if (letterInAInput < 0) {
+    return 1;
+  }
+
+  if (letterInBInput < 0) {
+    return -1;
+  }
+
+  return letterInAInput - letterInBInput;
+});
+
 export const getPageFromLocation = () => Number(browserHistory.location.pathname.split('/').pop()?.split('&').shift());
 export const getQueryPath = (currentPage: string) => browserHistory.location.pathname.split('/').pop()?.slice(currentPage.length);
