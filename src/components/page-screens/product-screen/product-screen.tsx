@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { ThunkActionDispatch } from 'types/action';
 import { Breadcrumbs, Footer, Header, Loader } from 'components/common/common';
-import { Card } from './components/components';
+import { Card, ReviewsList } from './components/components';
 import { loadExpandedGuitarAction } from 'store/api-actions';
 import { getExpandedGuitar } from 'store/product-data/selectors';
 import { getPageFromLocation } from 'utils/utils';
@@ -51,7 +51,10 @@ function ProductScreen(): JSX.Element {
           )}
 
           {!isDataLoading && product !== null && (
-            <Card product={product} />
+            <div>
+              <Card product={product} />
+              <ReviewsList reviews={product.comments} />
+            </div>
           )}
         </div>
       </main>

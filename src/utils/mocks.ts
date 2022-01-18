@@ -7,8 +7,8 @@ const guitarTypes = Object.values(GuitarGroup).map((group) => group.type);
 const getGuitarComment = (id: number): Comment => ({
   'id': datatype.uuid(),
   'userName': name.firstName(),
-  'advantages': lorem.words(),
-  'disadvantages': lorem.words(),
+  'advantage': lorem.words(),
+  'disadvantage': lorem.words(),
   'comment': lorem.sentence(),
   'rating': datatype.number({ min: 1, max: 5 }),
   'createAt': datatype.datetime().toString(),
