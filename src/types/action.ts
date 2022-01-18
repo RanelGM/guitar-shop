@@ -9,6 +9,7 @@ export enum ActionType {
   SetSimilarAtSearch = 'product/setSimilarAtSearch',
   SetGuitarsTotalCount = 'product/setGuitarsTotalCount',
   SetGuitarsToRender = 'product/setGuitarsToRender',
+  SetExpandedGuitar = 'product/setExpandedGuitar',
   SetCart = 'order/setCart',
   SetSortType = 'query/setSortType',
   SetOrderType = 'query/setOrderType',

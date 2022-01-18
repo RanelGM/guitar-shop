@@ -71,3 +71,8 @@ export const setIsServerError = createAction(
   ActionType.SetIsServerError,
   (is: boolean) => ({ payload: is }),
 );
+
+export const setExpandedGuitar = createAction(
+  ActionType.SetExpandedGuitar,
+  (guitar: Guitar) => ({ payload: guitar }),
+);

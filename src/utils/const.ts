@@ -25,9 +25,9 @@ export enum APIQuery {
 }
 
 export const GuitarGroup = {
-  Acoustic: { type: 'acoustic', label: 'Акустические гитары', strings: [6, 7, 12] },
-  Electric: { type: 'electric', label: 'Электрогитары', strings: [4, 6, 7] },
-  Ukulele: { type: 'ukulele', label: 'Укулеле', strings: [4] },
+  Acoustic: { type: 'acoustic', label: 'Акустические гитары', labelSingular: 'Акустическая гитара', strings: [6, 7, 12] },
+  Electric: { type: 'electric', label: 'Электрогитары', labelSingular: 'Электрогитара', strings: [4, 6, 7] },
+  Ukulele: { type: 'ukulele', label: 'Укулеле', labelSingular: 'Укулеле', strings: [4] },
 } as const;
 
 export const SortGroup = {
@@ -46,3 +46,5 @@ export const INITIAL_CATALOG_PAGE = 1;
 export const INITIAL_GUITAR_COUNT = 0;
 
 export const ENTER_KEY = 'Enter';
+
+export const MAX_STARS_COUNT = 5;

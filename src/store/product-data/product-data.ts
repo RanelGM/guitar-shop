@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ProductDataState } from 'types/state';
-import { setDefaultProductData, setGuitarsTotalCount, setGuitarsToRender, setSearchSimilar, setIsUpdateLoaded } from '../action';
+import { setDefaultProductData, setGuitarsTotalCount, setGuitarsToRender, setSearchSimilar, setIsUpdateLoaded, setExpandedGuitar } from '../action';
 import { INITIAL_GUITAR_COUNT } from 'utils/const';
 
 export const initialState: ProductDataState = {
@@ -9,6 +9,7 @@ export const initialState: ProductDataState = {
   guitarsTotalCount: INITIAL_GUITAR_COUNT,
   guitarsToRender: [],
   similarAtSearch: [],
+  expandedGuitar: null,
 };
 
 const productData = createReducer(initialState, (builder) => {
@@ -27,6 +28,9 @@ const productData = createReducer(initialState, (builder) => {
     })
     .addCase(setSearchSimilar, (state, action) => {
       state.similarAtSearch = action.payload;
+    })
+    .addCase(setExpandedGuitar, (state, action) => {
+      state.expandedGuitar = action.payload;
     });
 });
 

@@ -14,6 +14,11 @@ export const getNumberWithSpaceBetween = (number: number | string, betweenEvery 
   return number.toString().replace(regExp, ' ');
 };
 
+export const adaptImageSrc = (src: string): string => {
+  const adaptingPath = 'content';
+  return `/${addWordInToArray(adaptingPath, src.split('/'))}`;
+};
+
 export const convertLabelToType = <
   TLabel extends GroupLabel,
   TGroup extends Group>

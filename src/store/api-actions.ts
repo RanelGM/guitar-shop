@@ -1,7 +1,7 @@
 import { ThunkActionDispatch, ThunkActionResult } from 'types/action';
 import { Guitar, GuitarType } from 'types/product';
 import browserHistory from './browser-history';
-import { setDefaultProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setIsServerError, setIsUpdateLoaded, setStringCount } from './action';
+import { setDefaultProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setIsServerError, setIsUpdateLoaded, setStringCount, setExpandedGuitar } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { getQueryState } from './query-data/selectors';
 import { QueryDataState } from 'types/state';
@@ -151,4 +151,11 @@ export const loadFilteredGuitarsAction = (isPagination?: boolean): ThunkActionRe
     catch {
       dispatch(setIsServerError(true));
     }
+  };
+
+export const loadExpandedGuitarAction = (id: string | number): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    const { data } = await api.get<Guitar>(`${APIRoute.Guitar}/${id}?${APIQuery.EmbedComment}`);
+
+    dispatch(setExpandedGuitar(data));
   };

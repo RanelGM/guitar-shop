@@ -7,6 +7,7 @@ export type ProductDataState = {
   guitarsTotalCount: number,
   guitarsToRender: Guitar[] | [],
   similarAtSearch: Guitar[] | [],
+  expandedGuitar: Guitar | null,
 }
 
 export type OrderDataState = {

@@ -1,5 +1,5 @@
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { CatalogScreen, ErrorScreen, UnderConstructionScreen, NotFoundScreen } from 'components/page-screens/page-screens';
+import { CatalogScreen, ErrorScreen, ProductScreen, UnderConstructionScreen, NotFoundScreen } from 'components/page-screens/page-screens';
 import { AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 
 type AppProps = {
@@ -20,7 +20,7 @@ function App({ isServerError }: AppProps): JSX.Element {
         <CatalogScreen />
       </Route>
       <Route exact path={`${AppRoute.Product}/:id`}>
-        <UnderConstructionScreen />
+        <ProductScreen />
       </Route>
       <Route exact path={AppRoute.Cart}>
         <UnderConstructionScreen />

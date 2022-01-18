@@ -5,20 +5,14 @@ import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { getCart } from 'store/order-data/selectors';
 import { setCart } from 'store/action';
-import { getNumberWithSpaceBetween, addWordInToArray, updateArray } from 'utils/utils';
-import { AppRoute } from 'utils/const';
+import { getNumberWithSpaceBetween, adaptImageSrc, updateArray } from 'utils/utils';
+import { AppRoute, MAX_STARS_COUNT } from 'utils/const';
 
 type CardProps = {
   guitar: Guitar
 }
 
-const MAX_STARS_COUNT = 5;
 const stars = Array.from({ length: MAX_STARS_COUNT }, (item, index) => index);
-
-const adaptImageSrc = (src: string): string => {
-  const adaptingPath = 'content';
-  return `/${addWordInToArray(adaptingPath, src.split('/'))}`;
-};
 
 function Card({ guitar }: CardProps): JSX.Element {
   const { id, name, previewImg, price, rating, comments } = guitar;
