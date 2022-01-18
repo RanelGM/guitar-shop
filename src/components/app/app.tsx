@@ -1,16 +1,8 @@
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { CatalogScreen, ErrorScreen, ProductScreen, UnderConstructionScreen, NotFoundScreen } from 'components/page-screens/page-screens';
+import { CatalogScreen, ProductScreen, UnderConstructionScreen, NotFoundScreen } from 'components/page-screens/page-screens';
 import { AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 
-type AppProps = {
-  isServerError: boolean,
-}
-
-function App({ isServerError }: AppProps): JSX.Element {
-  if (isServerError) {
-    return <ErrorScreen />;
-  }
-
+function App(): JSX.Element {
   return (
     <Switch>
       <Route exact path={AppRoute.Home}>

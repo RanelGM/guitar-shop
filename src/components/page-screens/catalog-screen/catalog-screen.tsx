@@ -1,19 +1,21 @@
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThunkActionDispatch } from 'types/action';
 import { Breadcrumbs, Footer, Header, Loader, Pagination } from 'components/common/common';
 import { Filter, Sort, Card } from './components/components';
 import { ErrorScreen, NotFoundScreen } from '../page-screens';
 import { getGuitarsTotalCount, getGuitarsToRender, getIsUpdateLoaded } from 'store/product-data/selectors';
-import { setCurrentPage, setGuitarType, setPriceRangeFrom, setPriceRangeTo, setStringCount } from 'store/action';
-import { loadFilteredGuitarsAction } from 'store/api-actions';
+import { setCurrentPage, setGuitarType, setIsServerError, setPriceRangeFrom, setPriceRangeTo, setStringCount } from 'store/action';
+import { loadFilteredGuitarsAction, loadProductAction } from 'store/api-actions';
 import { getGuitarType, getIsServerError, getPriceRangeFrom, getPriceRangeTo, getStringCount } from 'store/query-data/selectors';
 import { INITIAL_CATALOG_PAGE, MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
 import { getPageFromLocation, getQueryPath } from 'utils/utils';
 import browserHistory from 'store/browser-history';
-import { useEffect } from 'react';
 
 function CatalogScreen(): JSX.Element {
   const dispatch = useDispatch<ThunkActionDispatch>();
+  const [isDataLoading, setIsDataLoading] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const isServerError = useSelector(getIsServerError);
   const guitarsToRender = useSelector(getGuitarsToRender);
   const guitarsTotalCount = useSelector(getGuitarsTotalCount);
@@ -35,14 +37,34 @@ function CatalogScreen(): JSX.Element {
 
   dispatch(setCurrentPage(currentPage));
 
+  async function fetchGuitars() {
+    try {
+      setIsDataLoading(true);
+      await dispatch(loadProductAction());
+      setIsDataLoaded(true);
+    }
+    catch {
+      dispatch(setIsServerError(true));
+    }
+    finally {
+      setIsDataLoading(false);
+    }
+  }
+
   useEffect(() => {
-    if (filterParams || !isRedirectFromAnotherPage) { return; }
+    if (isDataLoaded || isRedirectFromAnotherPage || isDataLoading || isServerError) { return; }
+
+    fetchGuitars();
+  });
+
+  useEffect(() => {
+    if (filterParams || !isRedirectFromAnotherPage || isDataLoading || isDataLoaded || isServerError) { return; }
     if (!isTypesEmpty) { dispatch(setGuitarType(null)); }
     if (!isStringsEmpty) { dispatch(setStringCount(null)); }
     if (!isPriceFromEmpty) { dispatch(setPriceRangeFrom('')); }
     if (!isPriceToEmpty) { dispatch(setPriceRangeTo('')); }
 
-    dispatch(loadFilteredGuitarsAction());
+    fetchGuitars();
   });
 
   const handlePaginationClick = () => {
@@ -51,6 +73,10 @@ function CatalogScreen(): JSX.Element {
 
   if (isServerError) {
     return <ErrorScreen />;
+  }
+
+  if (isDataLoading) {
+    return <Loader />;
   }
 
   if (currentPage > maxPageCount) {
