@@ -1,5 +1,7 @@
+import { MouseEvent } from 'react';
+import browserHistory from 'store/browser-history';
 import { Guitar } from 'types/product';
-import { GuitarGroup, MAX_STARS_COUNT } from 'utils/const';
+import { AppRoute, GuitarGroup, MAX_STARS_COUNT } from 'utils/const';
 import { adaptImageSrc, getNumberWithSpaceBetween } from 'utils/utils';
 
 type CardProps = {
@@ -14,6 +16,12 @@ function Card({ product }: CardProps): JSX.Element {
   const adaptedImageSrc = adaptImageSrc(previewImg);
   const adaptedPrice = getNumberWithSpaceBetween(price);
   const adaptedType = Object.values(GuitarGroup).find((group) => group.type === type)?.labelSingular;
+
+  const handleCartClick = (evt: MouseEvent) => {
+    evt.preventDefault();
+
+    browserHistory.push(AppRoute.Cart);
+  };
 
   return (
     <div className="product-container">
@@ -73,7 +81,10 @@ function Card({ product }: CardProps): JSX.Element {
         <p className="product-container__price-info product-container__price-info--value">
           {adaptedPrice} ₽
         </p>
-        <a className="button button--red button--big product-container__button" href="#todo">Добавить в корзину</a>
+        <a href="#todo" className="button button--red button--big product-container__button"
+          onClick={handleCartClick}
+        >Добавить в корзину
+        </a>
       </div>
     </div>
   );

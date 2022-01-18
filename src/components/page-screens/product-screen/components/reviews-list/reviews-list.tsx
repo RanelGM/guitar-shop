@@ -17,7 +17,8 @@ function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
         <Review key={review.id} review={review} />
       ))}
 
-      <button className="button button--medium reviews__more-button">Показать еще отзывы</button><a className="button button--up button--red-border button--big reviews__up-button" href="#header">Наверх</a>
+      <button className="button button--medium reviews__more-button">Показать еще отзывы</button>
+      <a className="button button--up button--red-border button--big reviews__up-button" href="#header">Наверх</a>
     </section>
   );
 }

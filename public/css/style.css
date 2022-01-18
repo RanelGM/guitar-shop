@@ -2331,6 +2331,7 @@ button,
 .page-content::before,
 .page-content::after {
   position: absolute;
+  z-index: -1;
 
   width: 100%;
 
