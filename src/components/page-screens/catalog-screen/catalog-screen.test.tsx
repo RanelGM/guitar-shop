@@ -25,6 +25,7 @@ const getStore = (guitarsToRender: Guitar[] | []) => mockStore({
   [NameSpace.query]: {
     guitarType: null,
     stringCount: null,
+    isServerError: false,
   },
   [NameSpace.product]: {
     defaultServerGuitars: guitars,
