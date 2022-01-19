@@ -29,7 +29,7 @@ function CatalogScreen(): JSX.Element {
   const isGuitars = guitarsToRender.length > 0;
 
   const filterParams = getQueryPath(currentPage.toString());
-  const isRedirectFromAnotherPage = browserHistory.action === 'REPLACE';
+  const isRedirectFromAnotherPage = browserHistory.action === 'REPLACE' || browserHistory.location.state;
   const isTypesEmpty = types === null || types.length === 0;
   const isStringsEmpty = strings === null || strings.length === 0;
   const isPriceFromEmpty = priceFrom === '';

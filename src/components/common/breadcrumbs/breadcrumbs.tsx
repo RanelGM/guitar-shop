@@ -1,16 +1,36 @@
 import { Link } from 'react-router-dom';
-import { AppRoute } from 'utils/const';
+import browserHistory from 'store/browser-history';
+import { AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 
-function Breadcrumbs(): JSX.Element {
+type BreadcrumbsProps = {
+  productName?: string
+}
+
+function Breadcrumbs({ productName }: BreadcrumbsProps): JSX.Element {
+  const isProductPage = browserHistory.location.pathname.includes(AppRoute.Product) && productName !== undefined;
+
   return (
     <ul className="breadcrumbs page-content__breadcrumbs">
       <li className="breadcrumbs__item">
         <Link to={AppRoute.Home} className="link">Главная</Link>
       </li>
       <li className="breadcrumbs__item">
-        <a href="#todo" className="link">Каталог</a>
+        <Link className="link" to={{
+          pathname: `${AppRoute.Catalog}/${INITIAL_CATALOG_PAGE}`,
+          state: { 'redirect': true },
+        }}
+        >Каталог
+        </Link>
       </li>
-    </ul>
+
+      {
+        isProductPage && (
+          <li className="breadcrumbs__item">
+            <a href='#todo' className="link">{productName}</a>
+          </li>
+        )
+      }
+    </ul >
   );
 }
 

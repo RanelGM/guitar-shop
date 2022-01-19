@@ -44,14 +44,13 @@ function ProductScreen(): JSX.Element {
         <div className="container">
           <h1 className="page-content__title title title--bigger">Товар</h1>
 
-          <Breadcrumbs />
-
           {isDataLoading && (
             <Loader>Загружаем данные по гитаре</Loader>
           )}
 
           {!isDataLoading && product !== null && (
             <div>
+              <Breadcrumbs productName={product.name} />
               <Card product={product} />
               <ReviewsList reviews={product.comments} />
             </div>
