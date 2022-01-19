@@ -6,7 +6,11 @@ import { loadSearchSimilarAction } from 'store/api-actions';
 import { getSimilarAtSearch } from 'store/product-data/selectors';
 import { AppRoute } from 'utils/const';
 
-function SearchForm(): JSX.Element {
+type SearchFormProps = {
+  onUpdateRequest?: () => void,
+}
+
+function SearchForm({ onUpdateRequest }: SearchFormProps): JSX.Element {
   const dispatch = useDispatch<ThunkActionDispatch>();
   const [isSearchError, setIsSearchError] = useState(false);
   const similarGuitars = useSelector(getSimilarAtSearch);
@@ -55,6 +59,12 @@ function SearchForm(): JSX.Element {
     listRef.current?.classList.add('hidden');
   };
 
+  const handleLinkClick = () => {
+    if (onUpdateRequest) {
+      onUpdateRequest();
+    }
+  };
+
   return (
     <div ref={parentRef} onBlur={handleSearchBlur} className="form-search" >
       <form className="form-search__form">
@@ -79,7 +89,7 @@ function SearchForm(): JSX.Element {
       >
         {!isSearchError && similarGuitars.map((guitar) => (
           <li key={`search-${guitar.id}`}>
-            <Link to={`${AppRoute.Product}/${guitar.id}`} className="form-search__select-item" >{guitar.name}</Link>
+            <Link onClick={handleLinkClick} to={`${AppRoute.Product}/${guitar.id}`} className="form-search__select-item" >{guitar.name}</Link>
           </li>
         ))}
 

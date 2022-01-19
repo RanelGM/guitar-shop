@@ -3,10 +3,11 @@ import { Logo } from 'components/common/common';
 
 type HeaderProps = {
   isMainPage?: boolean,
-  isError?: boolean
+  isError?: boolean,
+  onUpdateRequest?: () => void,
 }
 
-function Header({ isMainPage, isError }: HeaderProps): JSX.Element {
+function Header({ isMainPage, isError, onUpdateRequest }: HeaderProps): JSX.Element {
   return (
     <header className="header" id="header">
       <div className="container header__wrapper">
@@ -26,7 +27,7 @@ function Header({ isMainPage, isError }: HeaderProps): JSX.Element {
           </ul>
         </nav>
 
-        {!isError && <SearchForm />}
+        {!isError && <SearchForm onUpdateRequest={onUpdateRequest} />}
         {!isError && <Cart />}
       </div>
     </header>

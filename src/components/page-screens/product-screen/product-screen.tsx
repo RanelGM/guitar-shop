@@ -14,6 +14,7 @@ function ProductScreen(): JSX.Element {
   const [prevPageId, setPrevPageId] = useState(0);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isUpdateRequired, setIsUpdateRequired] = useState(false);
   const product = useSelector(getExpandedGuitar);
   const pageId = getPageFromLocation();
 
@@ -27,11 +28,16 @@ function ProductScreen(): JSX.Element {
       finally { setIsDataLoading(false); }
     }
 
-    if (pageId !== prevPageId) {
+    if (!isDataLoading && (pageId !== prevPageId || isUpdateRequired)) {
       setIsDataLoading(true);
+      setIsUpdateRequired(false);
       loadGuitar();
     }
-  }, [dispatch, pageId, prevPageId]);
+  }, [dispatch, pageId, prevPageId, isUpdateRequired, isDataLoading]);
+
+  const handleUpdateRequest = () => {
+    setIsUpdateRequired(true);
+  };
 
   if (isError) {
     return <ErrorScreen />;
@@ -39,7 +45,7 @@ function ProductScreen(): JSX.Element {
 
   return (
     <div className="wrapper">
-      <Header />
+      <Header onUpdateRequest={handleUpdateRequest} />
       <main className="page-content">
         <div className="container">
           <h1 className="page-content__title title title--bigger">Товар</h1>
