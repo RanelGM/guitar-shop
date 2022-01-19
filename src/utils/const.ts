@@ -55,3 +55,4 @@ export const INITIAL_GUITAR_COUNT = 0;
 export const ENTER_KEY = 'Enter';
 
 export const MAX_STARS_COUNT = 5;
+export const MAX_COMMENTS_COUNT = 3;

@@ -8,7 +8,7 @@ type ReviewProps = {
 function Review({ review }: ReviewProps): JSX.Element {
   const { id, userName, advantage, disadvantage, comment, rating, createAt } = review;
 
-  const adaptedDate = new Date(createAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+  const adaptedDate = new Date(createAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
   const stars = Array.from({ length: rating }, (item, index) => index);
 
   return (

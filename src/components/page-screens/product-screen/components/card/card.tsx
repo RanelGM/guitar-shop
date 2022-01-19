@@ -15,7 +15,7 @@ const tabs = Object.values(TabGroup);
 const stars = Array.from({ length: MAX_STARS_COUNT }, (item, index) => index);
 
 function Card({ product }: CardProps): JSX.Element {
-  const { id, name, vendorCode, type, description, previewImg, stringCount, rating, price } = product;
+  const { id, name, vendorCode, type, description, previewImg, stringCount, rating, price, comments } = product;
   const [activeTab, setActiveTab] = useState<TabType>(DEFAULT_ACTIVE_TAB);
 
   const adaptedImageSrc = adaptImageSrc(previewImg);
@@ -64,7 +64,7 @@ function Card({ product }: CardProps): JSX.Element {
             );
           })}
 
-          <span className="rate__count"></span><span className="rate__message"></span>
+          <span className="rate__count">{comments.length}</span><span className="rate__message"></span>
         </div>
 
         <div className="tabs">

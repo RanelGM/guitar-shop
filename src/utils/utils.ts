@@ -1,5 +1,5 @@
 import browserHistory from 'store/browser-history';
-import { Group, GroupKey, GroupType, GroupLabel, GuitarType, Guitar, SortType } from 'types/product';
+import { Comment, Group, GroupKey, GroupType, GroupLabel, GuitarType, Guitar, SortType } from 'types/product';
 import { SortGroup } from './const';
 
 export const addWordInToArray = (word: string, array: string[], addToIndex = 1, separator = '/', deleteCount = 0): string => {
@@ -68,6 +68,10 @@ export const sortGuitarsByLetter = (array: Guitar[], letter: string) => array.sl
 
   return letterInAInput - letterInBInput;
 });
+
+export const sortCommentsByDate = (comments: Comment[]) => comments.slice().sort(
+  (first, second) => new Date(first.createAt).getTime() - new Date(second.createAt).getTime(),
+);
 
 export const getPageFromLocation = () => Number(browserHistory.location.pathname.split('/').pop()?.split('&').shift());
 export const getQueryPath = (currentPage: string) => browserHistory.location.pathname.split('/').pop()?.slice(currentPage.length);
