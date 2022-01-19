@@ -1,21 +1,40 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import browserHistory from 'store/browser-history';
 import { Guitar } from 'types/product';
-import { AppRoute, GuitarGroup, MAX_STARS_COUNT } from 'utils/const';
+import { AppRoute, DEFAULT_ACTIVE_TAB, GuitarGroup, MAX_STARS_COUNT, TabGroup } from 'utils/const';
 import { adaptImageSrc, getNumberWithSpaceBetween } from 'utils/utils';
 
 type CardProps = {
   product: Guitar,
 }
 
+type TabKey = keyof typeof TabGroup;
+type TabType = typeof TabGroup[TabKey]['type'];
+
+const tabs = Object.values(TabGroup);
 const stars = Array.from({ length: MAX_STARS_COUNT }, (item, index) => index);
 
 function Card({ product }: CardProps): JSX.Element {
   const { id, name, vendorCode, type, description, previewImg, stringCount, rating, price } = product;
+  const [activeTab, setActiveTab] = useState<TabType>(DEFAULT_ACTIVE_TAB);
 
   const adaptedImageSrc = adaptImageSrc(previewImg);
   const adaptedPrice = getNumberWithSpaceBetween(price);
   const adaptedType = Object.values(GuitarGroup).find((group) => group.type === type)?.labelSingular;
+
+  const isCharacterTabActive = activeTab === TabGroup.Characteristics.type;
+  const isDescriptionTabActive = activeTab === TabGroup.Description.type;
+
+  const handleTabClick = (evt: MouseEvent) => {
+    evt.preventDefault();
+
+    const tabLink = evt.target as HTMLAnchorElement;
+    const tabGroup = tabs.find((tab) => tab.label === tabLink.innerHTML);
+
+    if (!tabGroup || tabGroup.type === activeTab) { return; }
+
+    setActiveTab(tabGroup.type);
+  };
 
   const handleCartClick = (evt: MouseEvent) => {
     evt.preventDefault();
@@ -49,10 +68,20 @@ function Card({ product }: CardProps): JSX.Element {
         </div>
 
         <div className="tabs">
-          <a className="button button--medium tabs__button" href="#characteristics">Характеристики</a>
-          <a className="button button--black-border button--medium tabs__button" href="#description">Описание</a>
+          {tabs.map((tab) => (
+            <a href={`#${tab.type}`}
+              key={`${tab.type}-${tab.label}`}
+              onClick={handleTabClick}
+              className={`button button--medium tabs__button
+              ${activeTab === tab.type ? '' : 'button--black-border'}`}
+            >{tab.label}
+            </a>
+          ))}
+
           <div className="tabs__content" id="characteristics">
-            <table className="tabs__table">
+            <table className={`tabs__table
+            ${isCharacterTabActive ? '' : 'hidden'}`}
+            >
               <tbody>
                 <tr className="tabs__table-row">
                   <td className="tabs__title">Артикул:</td>
@@ -69,7 +98,9 @@ function Card({ product }: CardProps): JSX.Element {
               </tbody>
             </table>
 
-            <p className="tabs__product-description hidden">
+            <p className={`tabs__product-description
+            ${isDescriptionTabActive ? '' : 'hidden'}`}
+            >
               {description}
             </p>
           </div>

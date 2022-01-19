@@ -37,6 +37,13 @@ export const SortGroup = {
   Descending: { type: 'desc', label: 'По убыванию' },
 } as const;
 
+export const TabGroup = {
+  Characteristics: { type: 'characteristics', label: 'Характеристики' },
+  Description: { type: 'description', label: 'Описание' },
+} as const;
+
+export const DEFAULT_ACTIVE_TAB = TabGroup.Characteristics.type;
+
 export const DEFAULT_SORT_TYPE = SortGroup.Price.type;
 export const DEFAULT_SORT_ORDER = SortGroup.Ascending.type;
 
