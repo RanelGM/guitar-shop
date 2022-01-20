@@ -1,16 +1,19 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, MouseEvent } from 'react';
 import { Comment } from 'types/product';
 import { Review } from '../components';
 import { MAX_COMMENTS_COUNT } from 'utils/const';
 import { sortCommentsByDate } from 'utils/utils';
+import { ModalReview } from './components/components';
 
 type ReviewsListProps = {
-  reviews: Comment[]
+  reviews: Comment[],
+  productName: string,
 }
 
-function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
+function ReviewsList({ reviews, productName }: ReviewsListProps): JSX.Element {
   const [displayCount, setDisplayCount] = useState(MAX_COMMENTS_COUNT);
+  const [isModalOpened, setIsModalOpened] = useState(false);
 
   reviews = sortCommentsByDate(reviews).reverse();
 
@@ -18,6 +21,10 @@ function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
   const isShowMoreBtnAvailable = displayCount < reviews.length;
 
   useEffect(() => {
+    if (isModalOpened) {
+      return;
+    }
+
     document.addEventListener('scroll', handlePageScroll);
 
     return () => {
@@ -28,6 +35,15 @@ function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
   const showMoreComments = () => {
     const commentsCount = displayCount + MAX_COMMENTS_COUNT <= reviews.length ? displayCount + MAX_COMMENTS_COUNT : reviews.length;
     setDisplayCount(commentsCount);
+  };
+
+  const closeModal = () => {
+    setIsModalOpened(false);
+  };
+
+  const handleAddReviewBtnClick = (evt: MouseEvent) => {
+    evt.preventDefault();
+    setIsModalOpened(true);
   };
 
   const handleShowMoreBtnClick = () => {
@@ -50,7 +66,7 @@ function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
     <section className="reviews">
       <h3 className="reviews__title title title--bigger">Отзывы</h3>
 
-      <a className="button button--red-border button--big reviews__sumbit-button" href="#todo">Оставить отзыв</a>
+      <a onClick={handleAddReviewBtnClick} className="button button--red-border button--big reviews__sumbit-button" href="#todo">Оставить отзыв</a>
 
       {reviews.slice(0, displayCount).map((review) => (
         <Review key={review.id} review={review} />
@@ -66,6 +82,10 @@ function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
 
       {isReviews && (
         <a className="button button--up button--red-border button--big reviews__up-button" href="#header">Назад</a>
+      )}
+
+      {isModalOpened && (
+        <ModalReview productName={productName} onCloseModalCallback={closeModal} />
       )}
     </section>
   );

@@ -58,7 +58,7 @@ function ProductScreen(): JSX.Element {
             <div>
               <Breadcrumbs productName={product.name} />
               <Card product={product} />
-              <ReviewsList reviews={product.comments} />
+              <ReviewsList reviews={product.comments} productName={product.name} />
             </div>
           )}
         </div>
