@@ -2004,6 +2004,12 @@ button,
   flex-direction: column;
 }
 
+.form-review__fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
 .form-review__wrapper {
   display: flex;
 
@@ -2018,6 +2024,7 @@ button,
 
 .form-review__label {
   display: inline-block;
+  align-self: flex-start;
 
   margin-bottom: 5px;
 
@@ -2126,6 +2133,14 @@ button,
 
   text-align: end;
   letter-spacing: 0.02em;
+}
+
+.form-review__warning--load-error {
+  font-size: 19px;
+  line-height: 21px;
+
+  font-weight: bold;
+  text-align: start;
 }
 
 .form-review__button {

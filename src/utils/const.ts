@@ -8,6 +8,7 @@ export enum AppRoute {
 export enum APIRoute {
   Guitar = '/guitars',
   SimilarGuitar = '/guitars?name_like',
+  Comments = '/comments',
 }
 
 export enum APIQuery {
@@ -22,6 +23,11 @@ export enum APIQuery {
   GuitarFrom = '_start',
   GuitarToLimit = '_limit',
   TotalCount = 'x-total-count'
+}
+
+export enum KeyboardKey {
+  Enter = 'Enter',
+  Esc = 'Escape',
 }
 
 export const GuitarGroup = {
@@ -51,8 +57,6 @@ export const MAX_CARD_ON_PAGE_COUNT = 9;
 export const INDEX_ADJUSTMENT_VALUE = 1;
 export const INITIAL_CATALOG_PAGE = 1;
 export const INITIAL_GUITAR_COUNT = 0;
-
-export const ENTER_KEY = 'Enter';
 
 export const MAX_STARS_COUNT = 5;
 export const MAX_COMMENTS_COUNT = 3;

@@ -7,7 +7,7 @@ import { loadFilteredGuitarsAction } from 'store/api-actions';
 import { setPriceRangeFrom, setPriceRangeTo } from 'store/action';
 import { getPriceRangeFrom, getPriceRangeTo } from 'store/query-data/selectors';
 import { getNumberWithSpaceBetween, sortGuitarsByPrice } from 'utils/utils';
-import { SortGroup, ENTER_KEY } from 'utils/const';
+import { SortGroup, KeyboardKey } from 'utils/const';
 
 function FilterPrice(): JSX.Element {
   const dispatch = useDispatch<ThunkActionDispatch>();
@@ -103,7 +103,7 @@ function FilterPrice(): JSX.Element {
   const handleEnterKeydown = (evt: KeyboardEvent) => {
     const input = evt.target as HTMLInputElement;
 
-    if (evt.key !== ENTER_KEY) {
+    if (evt.key !== KeyboardKey.Enter) {
       return;
     }
 

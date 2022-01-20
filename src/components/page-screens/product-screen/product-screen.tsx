@@ -28,12 +28,14 @@ function ProductScreen(): JSX.Element {
       finally { setIsDataLoading(false); }
     }
 
+    if (isError) { return; }
+
     if (!isDataLoading && (pageId !== prevPageId || isUpdateRequired)) {
       setIsDataLoading(true);
       setIsUpdateRequired(false);
       loadGuitar();
     }
-  }, [dispatch, pageId, prevPageId, isUpdateRequired, isDataLoading]);
+  }, [dispatch, pageId, prevPageId, isUpdateRequired, isDataLoading, isError]);
 
   const handleUpdateRequest = () => {
     setIsUpdateRequired(true);
@@ -58,7 +60,7 @@ function ProductScreen(): JSX.Element {
             <div>
               <Breadcrumbs productName={product.name} />
               <Card product={product} />
-              <ReviewsList reviews={product.comments} productName={product.name} />
+              <ReviewsList product={product} />
             </div>
           )}
         </div>

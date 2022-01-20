@@ -1,27 +1,29 @@
 
 import { useEffect, useState, MouseEvent } from 'react';
-import { Comment } from 'types/product';
+import { Guitar } from 'types/product';
 import { Review } from '../components';
 import { MAX_COMMENTS_COUNT } from 'utils/const';
 import { sortCommentsByDate } from 'utils/utils';
-import { ModalReview } from './components/components';
+import { ModalReview, ModalSuccess } from './components/components';
 
 type ReviewsListProps = {
-  reviews: Comment[],
-  productName: string,
+  product: Guitar,
 }
 
-function ReviewsList({ reviews, productName }: ReviewsListProps): JSX.Element {
+function ReviewsList({ product }: ReviewsListProps): JSX.Element {
   const [displayCount, setDisplayCount] = useState(MAX_COMMENTS_COUNT);
-  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [openedModal, setOpenedModal] = useState({
+    isModalReviewOpen: false,
+    isModalSuccessOpen: false,
+  });
 
-  reviews = sortCommentsByDate(reviews).reverse();
+  const reviews = sortCommentsByDate(product.comments).reverse();
 
   const isReviews = reviews.length > 0;
   const isShowMoreBtnAvailable = displayCount < reviews.length;
 
   useEffect(() => {
-    if (isModalOpened) {
+    if (openedModal.isModalReviewOpen || openedModal.isModalSuccessOpen) {
       return;
     }
 
@@ -37,13 +39,17 @@ function ReviewsList({ reviews, productName }: ReviewsListProps): JSX.Element {
     setDisplayCount(commentsCount);
   };
 
-  const closeModal = () => {
-    setIsModalOpened(false);
+  const handleModalsClose = () => {
+    setOpenedModal({ isModalReviewOpen: false, isModalSuccessOpen: false });
+  };
+
+  const handleSuccessPost = () => {
+    setOpenedModal({ isModalReviewOpen: false, isModalSuccessOpen: true });
   };
 
   const handleAddReviewBtnClick = (evt: MouseEvent) => {
     evt.preventDefault();
-    setIsModalOpened(true);
+    setOpenedModal({ ...openedModal, isModalReviewOpen: true });
   };
 
   const handleShowMoreBtnClick = () => {
@@ -84,8 +90,18 @@ function ReviewsList({ reviews, productName }: ReviewsListProps): JSX.Element {
         <a className="button button--up button--red-border button--big reviews__up-button" href="#header">Назад</a>
       )}
 
-      {isModalOpened && (
-        <ModalReview productName={productName} onCloseModalCallback={closeModal} />
+      {openedModal.isModalReviewOpen && (
+        <ModalReview
+          product={product}
+          onModalClose={handleModalsClose}
+          onSuccessPost={handleSuccessPost}
+        />
+      )}
+
+      {openedModal.isModalSuccessOpen && (
+        <ModalSuccess
+          onModalClose={handleModalsClose}
+        />
       )}
     </section>
   );
