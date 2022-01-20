@@ -30,6 +30,10 @@ export enum KeyboardKey {
   Esc = 'Escape',
 }
 
+export enum ResponseCode {
+  NotFound = 404,
+}
+
 export const GuitarGroup = {
   Acoustic: { type: 'acoustic', label: 'Акустические гитары', labelSingular: 'Акустическая гитара', strings: [6, 7, 12] },
   Electric: { type: 'electric', label: 'Электрогитары', labelSingular: 'Электрогитара', strings: [4, 6, 7] },
