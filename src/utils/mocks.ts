@@ -4,7 +4,7 @@ import { GuitarGroup } from './const';
 
 const guitarTypes = Object.values(GuitarGroup).map((group) => group.type);
 
-const getGuitarComment = (id: number): Comment => ({
+export const getGuitarComment = (id: number): Comment => ({
   'id': datatype.uuid(),
   'userName': name.firstName(),
   'advantage': lorem.words(),
@@ -15,11 +15,15 @@ const getGuitarComment = (id: number): Comment => ({
   'guitarId': id,
 });
 
-export const getGuitarMock = (): Guitar => {
+export const getGuitarMock = (commentCount?: number): Guitar => {
   const id = datatype.number();
   const type = random.arrayElement(guitarTypes) as GuitarType;
   const keys = Object.keys(GuitarGroup) as GuitarKey[];
   const currentKey = keys.find((key) => GuitarGroup[key].type === type) as GuitarKey;
+  const randomDefaultCount = 3;
+  commentCount = commentCount ? commentCount : randomDefaultCount;
+
+  const comments = Array.from({ length: commentCount }, () => getGuitarComment(id));
 
   return ({
     'id': id,
@@ -31,6 +35,6 @@ export const getGuitarMock = (): Guitar => {
     'stringCount': random.arrayElement(GuitarGroup[currentKey].strings),
     'rating': datatype.number({ min: 1, max: 5 }),
     'price': datatype.number({ min: 1700, max: 35000 }),
-    'comments': [getGuitarComment(id), getGuitarComment(id), getGuitarComment(id)],
+    'comments': comments,
   });
 };

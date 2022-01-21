@@ -19,7 +19,7 @@ function Review({ review }: ReviewProps): JSX.Element {
       </div>
       <div className="rate review__rating-panel" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
         {stars.map((star) => (
-          <svg key={`rating-${id}-${star}`} width="16" height="16" aria-hidden="true">
+          <svg key={`rating-${id}-${star}`} width="16" height="16" aria-hidden="true" data-testid='rateStar'>
             <use xlinkHref="#icon-full-star"></use>
           </svg>
         ))}

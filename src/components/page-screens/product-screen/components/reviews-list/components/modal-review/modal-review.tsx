@@ -122,7 +122,7 @@ function ModalReview({ product, onModalClose, onSuccessPost }: ModalReviewProps)
     <FocusLock>
       <div className="modal is-active modal--review">
         <div className="modal__wrapper">
-          <div onClick={handleOverlayClick} className="modal__overlay"></div>
+          <div onClick={handleOverlayClick} className="modal__overlay" data-testid="overlay"></div>
 
           <div className="modal__content">
             <h2 className="modal__header modal__header--review title title--medium">Оставить отзыв</h2>
@@ -148,15 +148,15 @@ function ModalReview({ product, onModalClose, onSuccessPost }: ModalReviewProps)
                   <div>
                     <span className="form-review__label form-review__label--required">Ваша Оценка</span>
                     <div className="rate rate--reverse">
-                      <input className="visually-hidden" type="radio" id="star-5" name="rate" value="5" />
+                      <input className="visually-hidden" type="radio" id="star-5" aria-labelledby='star-5' name="rate" value="5" />
                       <label className="rate__label" htmlFor="star-5" title="Отлично"></label>
-                      <input className="visually-hidden" type="radio" id="star-4" name="rate" value="4" />
+                      <input className="visually-hidden" type="radio" id="star-4" aria-labelledby='star-4' name="rate" value="4" />
                       <label className="rate__label" htmlFor="star-4" title="Хорошо"></label>
-                      <input className="visually-hidden" type="radio" id="star-3" name="rate" value="3" />
+                      <input className="visually-hidden" type="radio" id="star-3" aria-labelledby='star-3' name="rate" value="3" />
                       <label className="rate__label" htmlFor="star-3" title="Нормально"></label>
-                      <input className="visually-hidden" type="radio" id="star-2" name="rate" value="2" />
+                      <input className="visually-hidden" type="radio" id="star-2" aria-labelledby='star-2' name="rate" value="2" />
                       <label className="rate__label" htmlFor="star-2" title="Плохо"></label>
-                      <input className="visually-hidden" type="radio" id="star-1" name="rate" value="1" />
+                      <input className="visually-hidden" type="radio" id="star-1" aria-labelledby='star-1' name="rate" value="1" />
                       <label className="rate__label" htmlFor="star-1" title="Ужасно"></label>
                       <span className="rate__count"></span>
 

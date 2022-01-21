@@ -11,7 +11,7 @@ import { State } from 'types/state';
 import App from './app';
 import { createAPI } from 'api/api';
 import { getGuitarMock } from 'utils/mocks';
-import { DEFAULT_SORT_TYPE, DEFAULT_SORT_ORDER, SortGroup, INITIAL_CATALOG_PAGE, AppRoute, APIQuery } from 'utils/const';
+import { DEFAULT_SORT_TYPE, DEFAULT_SORT_ORDER, SortGroup, INITIAL_CATALOG_PAGE, AppRoute, APIQuery, APIRoute } from 'utils/const';
 import { sortGuitarsByPrice } from 'utils/utils';
 
 const api = createAPI();
@@ -19,7 +19,8 @@ const mockAPI = new MockAdapter(api);
 const middlewares = [thunk.withExtraArgument(api)];
 const mockStore = configureMockStore<State, Action, ThunkDispatch<State, typeof api, Action>>(middlewares);
 
-const guitars = [getGuitarMock(), getGuitarMock(), getGuitarMock()];
+const expandedGuitar = getGuitarMock();
+const guitars = [getGuitarMock(), getGuitarMock(), getGuitarMock(), expandedGuitar];
 const types = guitars.map((guitar) => guitar.type);
 
 const store = mockStore({
@@ -28,6 +29,7 @@ const store = mockStore({
     guitarsTotalCount: guitars.length,
     guitarsToRender: guitars,
     similarAtSearch: [],
+    expandedGuitar: expandedGuitar,
   },
   ORDER: {
     cart: null,
@@ -45,6 +47,15 @@ const store = mockStore({
 });
 
 const history = createMemoryHistory();
+
+const fakeHistory = {
+  location: { pathname: '' },
+  push(path: string) {
+    this.location.pathname = path;
+  },
+};
+
+jest.mock('store/browser-history', () => fakeHistory);
 
 const mockApp = (
   <Provider store={store}>
@@ -95,13 +106,22 @@ describe('Application routing', () => {
     expect(screen.getByText(/Сортировать/i)).toBeInTheDocument();
   });
 
-  it('should render Under Construction Screen when route is /product/:id', () => {
-    const { id } = getGuitarMock();
+  it('should render Product Screen when route is /product/:id', async () => {
+    const { id } = expandedGuitar;
+
+    mockAPI
+      .onGet(`${APIRoute.Guitar}/${id}?${APIQuery.EmbedComment}`)
+      .reply(200, expandedGuitar);
+
+    fakeHistory.push(`${AppRoute.Product}/${id}`);
     history.push(`${AppRoute.Product}/${id}`);
+
     render(mockApp);
 
-    expect(screen.getByText(/Страница находится на этапе разработки/i)).toBeInTheDocument();
-    expect(screen.getByText(/Реализация на следующем этапе/i)).toBeInTheDocument();
+    expect(screen.getByText(/Товар/i)).toBeInTheDocument();
+    await screen.findByText(/Отзывы/i);
+    expect(screen.getByText(/Характеристики/i)).toBeInTheDocument();
+    expect(screen.getByText(expandedGuitar.vendorCode)).toBeInTheDocument();
   });
 
   it('should render Under Construction Screen when route is /cart', () => {
