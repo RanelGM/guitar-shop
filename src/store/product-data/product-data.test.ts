@@ -87,5 +87,23 @@ describe('Product Data reducer', () => {
         },
       ));
   });
+
+  it('should update expandedGuitar state with guitar when using setExpandedGuitar action', () => {
+    const guitar = getGuitarMock();
+
+    const setExpandedGuitar = {
+      type: ActionType.SetExpandedGuitar,
+      payload: guitar,
+    };
+
+    expect(reducer(state, setExpandedGuitar))
+      .toEqual(Object.assign(
+        {},
+        state,
+        {
+          expandedGuitar: guitar,
+        },
+      ));
+  });
 });
 

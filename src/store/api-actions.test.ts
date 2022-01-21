@@ -5,9 +5,9 @@ import MockAdapter from 'axios-mock-adapter';
 import { State } from 'types/state';
 import { Guitar, GuitarType } from 'types/product';
 import { createAPI } from 'api/api';
-import { loadProductAction, loadSearchSimilarAction, loadFilteredGuitarsAction, parseStateToPath } from './api-actions';
-import { setDefaultProductData, setGuitarsToRender, setGuitarsTotalCount, setGuitarType, setIsServerError, setIsUpdateLoaded, setPriceRangeFrom, setPriceRangeTo, setSearchSimilar } from './action';
-import { getGuitarMock } from 'utils/mocks';
+import { loadProductAction, loadSearchSimilarAction, loadFilteredGuitarsAction, parseStateToPath, postCommentAction, loadExpandedGuitarAction } from './api-actions';
+import { setDefaultProductData, setExpandedGuitar, setGuitarsToRender, setGuitarsTotalCount, setGuitarType, setIsServerError, setIsUpdateLoaded, setPriceRangeFrom, setPriceRangeTo, setSearchSimilar } from './action';
+import { getGuitarComment, getGuitarMock } from 'utils/mocks';
 import { APIRoute, APIQuery, AppRoute, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, GuitarGroup, SortGroup, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { sortGuitarsByLetter, sortGuitarsByPrice } from 'utils/utils';
 import { NameSpace } from './root-reducer';
@@ -248,6 +248,47 @@ describe('Async actions', () => {
     expect(store.getActions()).toEqual([
       setIsUpdateLoaded(false),
       setIsServerError(true),
+    ]);
+  });
+
+  it('should dispatch setExpandedGuitar when using loadExpandedGuitarAction', async () => {
+    const store = mockStore();
+    const guitar = getGuitarMock();
+
+    mockAPI
+      .onGet(`${APIRoute.Guitar}/${guitar.id}?${APIQuery.EmbedComment}`)
+      .reply(200, guitar);
+
+    expect(store.getActions()).toEqual([]);
+
+    await (store.dispatch(loadExpandedGuitarAction(guitar.id)));
+
+    expect(store.getActions()).toEqual([
+      setExpandedGuitar(guitar),
+    ]);
+  });
+
+  it('should dispatch setExpandedGuitar when using postCommentAction', async () => {
+    const store = mockStore();
+    const guitar = getGuitarMock();
+    const comment = getGuitarComment(guitar.id);
+
+    mockAPI
+      .onPost(APIRoute.Comments)
+      .reply(200);
+
+    mockAPI
+      .onGet(`${APIRoute.Guitar}/${comment.guitarId}?${APIQuery.EmbedComment}`)
+      .reply(200, guitar);
+
+    fakeHistory.push(`${AppRoute.Product}/${guitar.id}`);
+
+    expect(store.getActions()).toEqual([]);
+
+    await (store.dispatch(postCommentAction(comment)));
+
+    expect(store.getActions()).toEqual([
+      setExpandedGuitar(guitar),
     ]);
   });
 });
