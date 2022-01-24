@@ -1,26 +1,19 @@
 
 import { useEffect, useState, MouseEvent } from 'react';
-import { Guitar } from 'types/product';
+import { useSelector } from 'react-redux';
 import { Review } from '../components';
+import { ErrorScreen } from 'components/page-screens/page-screens';
+import { getExpandedGuitar } from 'store/product-data/selectors';
 import { MAX_COMMENTS_COUNT } from 'utils/const';
-import { sortCommentsByDate } from 'utils/utils';
 import { ModalReview, ModalSuccess } from './components/components';
 
-type ReviewsListProps = {
-  product: Guitar,
-}
-
-function ReviewsList({ product }: ReviewsListProps): JSX.Element {
+function ReviewsList(): JSX.Element {
+  const product = useSelector(getExpandedGuitar);
   const [displayCount, setDisplayCount] = useState(MAX_COMMENTS_COUNT);
   const [openedModal, setOpenedModal] = useState({
     isModalReviewOpen: false,
     isModalSuccessOpen: false,
   });
-
-  const reviews = sortCommentsByDate(product.comments).reverse();
-
-  const isReviews = reviews.length > 0;
-  const isShowMoreBtnAvailable = displayCount < reviews.length;
 
   useEffect(() => {
     if (openedModal.isModalReviewOpen || openedModal.isModalSuccessOpen) {
@@ -33,6 +26,13 @@ function ReviewsList({ product }: ReviewsListProps): JSX.Element {
       document.removeEventListener('scroll', handlePageScroll);
     };
   });
+
+  if (!product) { return <ErrorScreen />; }
+
+  const reviews = product.comments;
+
+  const isReviews = reviews.length > 0;
+  const isShowMoreBtnAvailable = displayCount < reviews.length;
 
   const showMoreComments = () => {
     const commentsCount = displayCount + MAX_COMMENTS_COUNT <= reviews.length ? displayCount + MAX_COMMENTS_COUNT : reviews.length;

@@ -80,8 +80,8 @@ function ProductScreen(): JSX.Element {
           {!isDataLoading && product !== null && (
             <div>
               <Breadcrumbs productName={product.name} />
-              <Card product={product} />
-              <ReviewsList product={product} />
+              <Card />
+              <ReviewsList />
             </div>
           )}
         </div>

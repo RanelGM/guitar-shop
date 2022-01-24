@@ -1,12 +1,10 @@
 import { MouseEvent, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Guitar } from 'types/product';
+import { ErrorScreen } from 'components/page-screens/page-screens';
+import { getExpandedGuitar } from 'store/product-data/selectors';
 import { AppRoute, DEFAULT_ACTIVE_TAB, GuitarGroup, MAX_STARS_COUNT, TabGroup } from 'utils/const';
 import { adaptImageSrc, getNumberWithSpaceBetween } from 'utils/utils';
-
-type CardProps = {
-  product: Guitar,
-}
 
 type TabKey = keyof typeof TabGroup;
 type TabType = typeof TabGroup[TabKey]['type'];
@@ -14,9 +12,13 @@ type TabType = typeof TabGroup[TabKey]['type'];
 const tabs = Object.values(TabGroup);
 const stars = Array.from({ length: MAX_STARS_COUNT }, (item, index) => index);
 
-function Card({ product }: CardProps): JSX.Element {
-  const { id, name, vendorCode, type, description, previewImg, stringCount, rating, price, comments } = product;
+function Card(): JSX.Element {
+  const product = useSelector(getExpandedGuitar);
   const [activeTab, setActiveTab] = useState<TabType>(DEFAULT_ACTIVE_TAB);
+
+  if (product === null) { return <ErrorScreen />; }
+
+  const { id, name, vendorCode, type, description, previewImg, stringCount, rating, price, comments } = product;
 
   const adaptedImageSrc = adaptImageSrc(previewImg);
   const adaptedPrice = getNumberWithSpaceBetween(price);

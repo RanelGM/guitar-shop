@@ -1,21 +1,37 @@
 import { Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { configureMockStore } from '@jedmao/redux-mock-store';
 import { createMemoryHistory } from 'history';
 
+import { State } from 'types/state';
 import Card from './card';
+import { NameSpace } from 'store/root-reducer';
 import { getGuitarMock } from 'utils/mocks';
 import { TabGroup } from 'utils/const';
 
 
 const expandedGuitar = getGuitarMock();
 
+const mockStore = configureMockStore<State, Action, ThunkDispatch<State, undefined, Action>>();
+
+const store = mockStore({
+  [NameSpace.product]: {
+    expandedGuitar: expandedGuitar,
+  },
+});
+
 const history = createMemoryHistory();
 
 const mockComponent = (
-  <Router history={history}>
-    <Card product={expandedGuitar} />
-  </Router>
+  <Provider store={store}>
+    <Router history={history}>
+      <Card />
+    </Router>
+  </Provider>
 );
 
 describe('Card component', () => {

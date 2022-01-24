@@ -1,6 +1,6 @@
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { Action } from 'redux';
+import { Action, Store } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -12,17 +12,22 @@ import { Guitar } from 'types/product';
 import ReviewsList from './reviews-list';
 import { getGuitarMock } from 'utils/mocks';
 import { MAX_COMMENTS_COUNT } from 'utils/const';
+import { NameSpace } from 'store/root-reducer';
 
 const mockStore = configureMockStore<State, Action, ThunkDispatch<State, undefined, Action>>();
 
-const store = mockStore({});
+const getStore = (expandedGuitar: Guitar) => mockStore({
+  [NameSpace.product]: {
+    expandedGuitar: expandedGuitar,
+  },
+});
 
 const history = createMemoryHistory();
 
-const getMockedComponent = (expandedGuitar: Guitar) => (
+const getMockedComponent = (store: Store) => (
   <Provider store={store}>
     <Router history={history}>
-      <ReviewsList product={expandedGuitar} />
+      <ReviewsList />
     </Router>
   </Provider>
 );
@@ -30,7 +35,8 @@ const getMockedComponent = (expandedGuitar: Guitar) => (
 describe('Reviews List component', () => {
   it('should render component WITHOUT show more button when comments count less or equal than max count to render', () => {
     const guitar = getGuitarMock(MAX_COMMENTS_COUNT);
-    const mockComponent = getMockedComponent(guitar);
+    const store = getStore(guitar);
+    const mockComponent = getMockedComponent(store);
 
     render(mockComponent);
 
@@ -43,7 +49,8 @@ describe('Reviews List component', () => {
    when comments count more than max count to render`, () => {
     const commentsCount = MAX_COMMENTS_COUNT + 1;
     const guitar = getGuitarMock(commentsCount);
-    const mockComponent = getMockedComponent(guitar);
+    const store = getStore(guitar);
+    const mockComponent = getMockedComponent(store);
 
     render(mockComponent);
 
@@ -60,7 +67,8 @@ describe('Reviews List component', () => {
   it('should render Review Popup when clicking on button', () => {
     const commentsCount = MAX_COMMENTS_COUNT + 1;
     const guitar = getGuitarMock(commentsCount);
-    const mockComponent = getMockedComponent(guitar);
+    const store = getStore(guitar);
+    const mockComponent = getMockedComponent(store);
 
     render(mockComponent);
 
