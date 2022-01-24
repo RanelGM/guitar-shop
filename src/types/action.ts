@@ -19,6 +19,7 @@ export enum ActionType {
   SetStringCount = 'query/setStringCount',
   SetCurrentPage = 'query/setCurrentPage',
   SetIsServerError = 'query/setIsServerError',
+  SetIsDataLoading = 'query/setIsDataLoading',
 }
 
 export type ThunkActionResult = ThunkAction<Promise<void>, State, AxiosInstance, Action>

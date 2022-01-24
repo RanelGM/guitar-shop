@@ -72,6 +72,11 @@ export const setIsServerError = createAction(
   (is: boolean) => ({ payload: is }),
 );
 
+export const setIsDataLoading = createAction(
+  ActionType.SetIsDataLoading,
+  (is: boolean) => ({ payload: is }),
+);
+
 export const setExpandedGuitar = createAction(
   ActionType.SetExpandedGuitar,
   (guitar: Guitar) => ({ payload: guitar }),

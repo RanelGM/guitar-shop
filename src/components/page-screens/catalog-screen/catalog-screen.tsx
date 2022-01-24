@@ -5,17 +5,17 @@ import { Breadcrumbs, Footer, Header, Loader, Pagination } from 'components/comm
 import { Filter, Sort, Card } from './components/components';
 import { ErrorScreen, NotFoundScreen } from '../page-screens';
 import { getGuitarsTotalCount, getGuitarsToRender, getIsUpdateLoaded } from 'store/product-data/selectors';
-import { setCurrentPage, setGuitarType, setIsServerError, setPriceRangeFrom, setPriceRangeTo, setStringCount } from 'store/action';
+import { setCurrentPage, setGuitarType, setIsDataLoading, setIsServerError, setPriceRangeFrom, setPriceRangeTo, setStringCount } from 'store/action';
 import { loadFilteredGuitarsAction, loadProductAction } from 'store/api-actions';
-import { getGuitarType, getIsServerError, getPriceRangeFrom, getPriceRangeTo, getStringCount } from 'store/query-data/selectors';
+import { getGuitarType, getIsDataLoading, getIsServerError, getPriceRangeFrom, getPriceRangeTo, getStringCount } from 'store/query-data/selectors';
 import { INITIAL_CATALOG_PAGE, MAX_CARD_ON_PAGE_COUNT } from 'utils/const';
 import { getPageFromLocation, getQueryPath } from 'utils/utils';
 import browserHistory from 'store/browser-history';
 
 function CatalogScreen(): JSX.Element {
   const dispatch = useDispatch<ThunkActionDispatch>();
-  const [isDataLoading, setIsDataLoading] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const isDataLoading = useSelector(getIsDataLoading);
   const isServerError = useSelector(getIsServerError);
   const guitarsToRender = useSelector(getGuitarsToRender);
   const guitarsTotalCount = useSelector(getGuitarsTotalCount);
@@ -39,7 +39,7 @@ function CatalogScreen(): JSX.Element {
 
   async function fetchGuitars() {
     try {
-      setIsDataLoading(true);
+      dispatch(setIsDataLoading(true));
       await dispatch(loadProductAction());
       setIsDataLoaded(true);
     }
@@ -47,7 +47,7 @@ function CatalogScreen(): JSX.Element {
       dispatch(setIsServerError(true));
     }
     finally {
-      setIsDataLoading(false);
+      dispatch(setIsDataLoading(false));
     }
   }
 

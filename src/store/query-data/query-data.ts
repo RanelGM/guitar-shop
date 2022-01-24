@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { QueryDataState } from 'types/state';
-import { setSortType, setOrderType, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setCurrentPage, setIsServerError, setStringCount } from 'store/action';
+import { setSortType, setOrderType, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setCurrentPage, setIsServerError, setStringCount, setIsDataLoading } from 'store/action';
 import { INITIAL_CATALOG_PAGE } from 'utils/const';
 
 export const initialState: QueryDataState = {
@@ -12,6 +12,7 @@ export const initialState: QueryDataState = {
   stringCount: null,
   currentPage: INITIAL_CATALOG_PAGE,
   isServerError: false,
+  isDataLoading: false,
 };
 
 const queryData = createReducer(initialState, (builder) => {
@@ -39,6 +40,9 @@ const queryData = createReducer(initialState, (builder) => {
     })
     .addCase(setIsServerError, (state, action) => {
       state.isServerError = action.payload;
+    })
+    .addCase(setIsDataLoading, (state, action) => {
+      state.isDataLoading = action.payload;
     });
 });
 

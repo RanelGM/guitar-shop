@@ -29,6 +29,9 @@ const store = mockStore({
     expandedGuitar: expandedGuitar,
     similarAtSearch: [],
   },
+  [NameSpace.query]: {
+    isDataLoading: false,
+  },
 });
 
 const history = createMemoryHistory();

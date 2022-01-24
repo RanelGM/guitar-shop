@@ -11,4 +11,5 @@ export const getGuitarType = (state: State): GuitarType[] | null => state[NameSp
 export const getStringCount = (state: State): number[] | null => state[NameSpace.query].stringCount;
 export const getCurrentPage = (state: State): number => state[NameSpace.query].currentPage;
 export const getIsServerError = (state: State): boolean => state[NameSpace.query].isServerError;
+export const getIsDataLoading = (state: State): boolean => state[NameSpace.query].isDataLoading;
 export const getQueryState = (): QueryDataState => store.getState()[NameSpace.query];

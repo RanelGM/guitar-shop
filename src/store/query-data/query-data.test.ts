@@ -144,4 +144,20 @@ describe('Query Data reducer', () => {
         },
       ));
   });
+
+  it('should update isDataLoading state for true when using setIsDataLoading action', () => {
+    const setIsDataLoading = {
+      type: ActionType.SetIsDataLoading,
+      payload: true,
+    };
+
+    expect(reducer(state, setIsDataLoading))
+      .toEqual(Object.assign(
+        {},
+        state,
+        {
+          isDataLoading: true,
+        },
+      ));
+  });
 });

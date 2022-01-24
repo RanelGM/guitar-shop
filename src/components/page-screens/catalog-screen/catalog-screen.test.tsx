@@ -18,7 +18,7 @@ const mockStore = configureMockStore<State, Action, ThunkDispatch<State, undefin
 
 const guitars = [getGuitarMock(), getGuitarMock(), getGuitarMock()];
 
-const getStore = (guitarsToRender: Guitar[] | []) => mockStore({
+const getStore = (guitarsToRender: Guitar[] | [], isDataLoading?: boolean) => mockStore({
   [NameSpace.order]: {
     cart: null,
   },
@@ -26,6 +26,7 @@ const getStore = (guitarsToRender: Guitar[] | []) => mockStore({
     guitarType: null,
     stringCount: null,
     isServerError: false,
+    isDataLoading: isDataLoading ? isDataLoading : false,
   },
   [NameSpace.product]: {
     defaultServerGuitars: guitars,
@@ -78,5 +79,21 @@ describe('Catalog Screen component', () => {
     );
 
     expect(screen.getByText(/В каталоге не найдено гитар в соответствии с заданными параметрами/i)).toBeInTheDocument();
+  });
+
+  it('should render component with Loader', () => {
+    const guitarsToRender = guitars;
+    const isDataLoading = true;
+    const store = getStore(guitarsToRender, isDataLoading);
+
+    render(
+      <Provider store={store}>
+        <Router history={history}>
+          <CatalogScreen />
+        </Router>
+      </Provider>,
+    );
+
+    expect(screen.getByText(/Загружаем список гитар/i)).toBeInTheDocument();
   });
 });

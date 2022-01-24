@@ -8,17 +8,19 @@ import { Breadcrumbs, Footer, Header, Loader } from 'components/common/common';
 import { Card, ReviewsList } from './components/components';
 import { ErrorScreen, NotFoundScreen } from '../page-screens';
 import { loadExpandedGuitarAction } from 'store/api-actions';
+import { setIsDataLoading } from 'store/action';
 import { getExpandedGuitar } from 'store/product-data/selectors';
+import { getIsDataLoading } from 'store/query-data/selectors';
 import { getPageFromLocation } from 'utils/utils';
 import { ResponseCode } from 'utils/const';
 
 function ProductScreen(): JSX.Element {
   const dispatch = useDispatch<ThunkActionDispatch>();
   const [prevPageId, setPrevPageId] = useState<number | null>(null);
-  const [isDataLoading, setIsDataLoading] = useState(false);
   const [isServerError, setIsServerError] = useState(false);
   const [isNotFoundError, setIsNotFoundError] = useState(false);
   const [isUpdateRequired, setIsUpdateRequired] = useState(false);
+  const isDataLoading = useSelector(getIsDataLoading);
   const product = useSelector(getExpandedGuitar);
   const pageId = getPageFromLocation();
 
@@ -38,13 +40,15 @@ function ProductScreen(): JSX.Element {
         }
 
       }
-      finally { setIsDataLoading(false); }
+      finally {
+        dispatch(setIsDataLoading(false));
+      }
     }
 
     if (isServerError || isNotFoundError) { return; }
 
     if (!isDataLoading && (pageId !== prevPageId || isUpdateRequired)) {
-      setIsDataLoading(true);
+      dispatch(setIsDataLoading(true));
       setIsUpdateRequired(false);
       loadGuitar();
     }

@@ -23,6 +23,7 @@ export type QueryDataState = {
   stringCount: number[] | null,
   currentPage: number,
   isServerError: boolean,
+  isDataLoading: boolean,
 }
 
 export type State = RootState;

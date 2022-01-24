@@ -45,6 +45,7 @@ const getState = (guitars: Guitar[], page: number, isFrom?: boolean, isTo?: bool
       stringCount: null,
       currentPage: page,
       isServerError: false,
+      isDataLoading: false,
     },
   });
 };
