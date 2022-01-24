@@ -1,5 +1,5 @@
 import { MouseEvent, useState } from 'react';
-import browserHistory from 'store/browser-history';
+import { Link } from 'react-router-dom';
 import { Guitar } from 'types/product';
 import { AppRoute, DEFAULT_ACTIVE_TAB, GuitarGroup, MAX_STARS_COUNT, TabGroup } from 'utils/const';
 import { adaptImageSrc, getNumberWithSpaceBetween } from 'utils/utils';
@@ -36,15 +36,9 @@ function Card({ product }: CardProps): JSX.Element {
     setActiveTab(tabGroup.type);
   };
 
-  const handleCartClick = (evt: MouseEvent) => {
-    evt.preventDefault();
-
-    browserHistory.push(AppRoute.Cart);
-  };
-
   return (
     <div className="product-container">
-      <img className="product-container__img" width="90" height="235" alt=""
+      <img className="product-container__img" width="90" height="235" alt={`Изображение ${product.name}`}
         src={adaptedImageSrc}
       />
 
@@ -112,10 +106,8 @@ function Card({ product }: CardProps): JSX.Element {
         <p className="product-container__price-info product-container__price-info--value">
           {adaptedPrice} ₽
         </p>
-        <a href="#todo" className="button button--red button--big product-container__button"
-          onClick={handleCartClick}
-        >Добавить в корзину
-        </a>
+        <Link to={AppRoute.Cart} className="button button--red button--big product-container__button">Добавить в корзину
+        </Link>
       </div>
     </div>
   );
