@@ -5,7 +5,7 @@ import { Review } from '../components';
 import { ErrorScreen } from 'components/page-screens/page-screens';
 import { getExpandedGuitar } from 'store/product-data/selectors';
 import { MAX_COMMENTS_COUNT } from 'utils/const';
-import { ModalReview, ModalSuccess } from './components/components';
+import { ModalReview, ModalSuccessReview } from 'components/modals/modals';
 
 function ReviewsList(): JSX.Element {
   const product = useSelector(getExpandedGuitar);
@@ -99,7 +99,7 @@ function ReviewsList(): JSX.Element {
       )}
 
       {openedModal.isModalSuccessOpen && (
-        <ModalSuccess
+        <ModalSuccessReview
           onModalClose={handleModalsClose}
         />
       )}

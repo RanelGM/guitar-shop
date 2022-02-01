@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 
-import ModalSuccess from './modal-success';
+import ModalSuccess from './modal-success-review';
 import { KeyboardKey } from 'utils/const';
 
 const history = createMemoryHistory();

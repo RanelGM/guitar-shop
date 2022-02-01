@@ -2,11 +2,11 @@ import { useEffect, MouseEvent } from 'react';
 import FocusLock from 'react-focus-lock';
 import { KeyboardKey } from 'utils/const';
 
-type ModalSuccessProps = {
+type ModalSuccessReviewProps = {
   onModalClose: () => void
 }
 
-function ModalSuccess({ onModalClose }: ModalSuccessProps): JSX.Element {
+function ModalSuccessReview({ onModalClose }: ModalSuccessReviewProps): JSX.Element {
   useEffect(() => {
     document.addEventListener('keydown', handleEscKeydown);
     document.body.classList.add('scroll-lock');
@@ -37,7 +37,7 @@ function ModalSuccess({ onModalClose }: ModalSuccessProps): JSX.Element {
 
   return (
     <FocusLock>
-      <div className="modal is-active modal--success modal-for-ui-kit">
+      <div className="modal is-active modal--success">
         <div className="modal__wrapper">
           <div onClick={handleOverlayClick} className="modal__overlay" data-testid="overlay"></div>
           <div className="modal__content">
@@ -59,4 +59,4 @@ function ModalSuccess({ onModalClose }: ModalSuccessProps): JSX.Element {
   );
 }
 
-export default ModalSuccess;
+export default ModalSuccessReview;
