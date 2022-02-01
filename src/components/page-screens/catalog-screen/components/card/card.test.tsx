@@ -8,17 +8,18 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 
 import { State } from 'types/state';
-import { Guitar } from 'types/product';
+import { Guitar, GuitarInCart } from 'types/product';
 import Card from './card';
 import { setCart } from 'store/action';
 import { NameSpace } from 'store/root-reducer';
-import { getGuitarMock } from 'utils/mocks';
+import { getGuitarMock, getGuitarInCartMock } from 'utils/mocks';
+import { AppRoute } from 'utils/const';
 
 const history = createMemoryHistory();
 
 const mockStore = configureMockStore<State, Action, ThunkDispatch<State, undefined, Action>>();
 
-const getStore = (guitars: Guitar[] | null) => mockStore({
+const getStore = (guitars: GuitarInCart[] | null) => mockStore({
   [NameSpace.order]: {
     cart: guitars,
   },
@@ -48,6 +49,7 @@ describe('Card component', () => {
 
   it('should render component as OUT OF cart if cart is null and should add guitar card to cart', () => {
     const guitar = getGuitarMock();
+    const updatingGuitar = getGuitarInCartMock(guitar);
     const store = getStore(null);
     const cardMock = getCardMock(guitar, store);
 
@@ -59,12 +61,13 @@ describe('Card component', () => {
 
     userEvent.click(addBtn);
 
-    expect(store.getActions()).toEqual([setCart([guitar])]);
+    expect(store.getActions()).toEqual([setCart([updatingGuitar])]);
   });
 
   it('should render component as OUT OF cart if cart doesn\'t contains current guitar and should add guitar card to cart', () => {
     const guitar = getGuitarMock();
-    const guitarsInCart = [getGuitarMock(), getGuitarMock(), getGuitarMock()];
+    const updatingGuitar = getGuitarInCartMock(guitar);
+    const guitarsInCart = [getGuitarInCartMock(), getGuitarInCartMock(), getGuitarInCartMock()];
     const store = getStore(guitarsInCart);
     const cardMock = getCardMock(guitar, store);
 
@@ -76,12 +79,12 @@ describe('Card component', () => {
 
     userEvent.click(addBtn);
 
-    expect(store.getActions()).toEqual([setCart(guitarsInCart.concat(guitar))]);
+    expect(store.getActions()).toEqual([setCart(guitarsInCart.concat(updatingGuitar))]);
   });
 
-  it('should render component as IN cart if cart contains current guitar and should remove car from cart', async () => {
-    const guitar = getGuitarMock();
-    const anotherGuitars = [getGuitarMock(), getGuitarMock()];
+  it('should render component as IN cart if cart contains current guitar and should redirect to Cart Screen', async () => {
+    const guitar = getGuitarInCartMock();
+    const anotherGuitars = [getGuitarInCartMock(), getGuitarInCartMock()];
     const guitarsInCart = anotherGuitars.concat(guitar);
     const store = getStore(guitarsInCart);
     const cardMock = getCardMock(guitar, store);
@@ -94,6 +97,6 @@ describe('Card component', () => {
 
     userEvent.click(addBtn);
 
-    expect(store.getActions()).toEqual([setCart(anotherGuitars)]);
+    expect(history.location.pathname).toEqual(AppRoute.Cart);
   });
 });

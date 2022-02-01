@@ -5,7 +5,7 @@ import { Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { getCart } from 'store/order-data/selectors';
 import { setCart } from 'store/action';
-import { getNumberWithSpaceBetween, adaptImageSrc, updateArray } from 'utils/utils';
+import { getNumberWithSpaceBetween, adaptImageSrc } from 'utils/utils';
 import { AppRoute, MAX_STARS_COUNT } from 'utils/const';
 
 type CardProps = {
@@ -19,7 +19,8 @@ function Card({ guitar }: CardProps): JSX.Element {
 
   const dispatch = useDispatch<ThunkActionDispatch>();
   const guitarsInCart = useSelector(getCart);
-  const isGuitarInCart = guitarsInCart?.includes(guitar);
+
+  const isGuitarInCart = guitarsInCart !== null && guitarsInCart.filter((guitarInCart) => guitarInCart.id === guitar.id).length > 0;
 
   const adaptedImageSrc = adaptImageSrc(previewImg);
   const adaptedPrice = getNumberWithSpaceBetween(price);
@@ -27,9 +28,14 @@ function Card({ guitar }: CardProps): JSX.Element {
   const handleCartBtnClick = (evt: MouseEvent) => {
     evt.preventDefault();
 
-    const updatingChart = updateArray<Guitar>(guitarsInCart, guitar);
+    const updatingCart = guitarsInCart ? guitarsInCart.slice() : [];
 
-    dispatch(setCart(updatingChart));
+    const updatingGuitar = Object.assign({}, guitar, {
+      count: 1,
+    });
+
+    updatingCart.push(updatingGuitar);
+    dispatch(setCart(updatingCart));
   };
 
   return (
@@ -53,14 +59,20 @@ function Card({ guitar }: CardProps): JSX.Element {
       </div>
       <div className="product-card__buttons">
         <Link to={`${AppRoute.Product}/${id}`} className="button button--mini">Подробнее</Link>
-        <a href="#todo"
-          className={`button button--mini ${isGuitarInCart
-            ? 'button--red-border button--in-cart'
-            : 'button--red  button--add-to-cart'}
-          `}
-          onClick={handleCartBtnClick}
-        >{isGuitarInCart ? 'В Корзине' : 'Купить'}
-        </a>
+
+        {isGuitarInCart && (
+          <Link to={AppRoute.Cart} className={'button button--mini button--red-border button--in-cart'}>В Корзине
+          </Link>
+        )}
+
+        {!isGuitarInCart && (
+          <a href="#todo"
+            className={'button button--mini button--red  button--add-to-cart'}
+            onClick={handleCartBtnClick}
+          >Купить
+          </a>
+        )}
+
       </div>
     </div >
   );

@@ -1,5 +1,5 @@
 import browserHistory from 'store/browser-history';
-import { Comment, Group, GroupKey, GroupType, GroupLabel, GuitarType, Guitar, SortType } from 'types/product';
+import { Comment, Group, GroupKey, GroupType, GroupLabel, GuitarType, Guitar, SortType, GuitarInCart } from 'types/product';
 import { SortGroup } from './const';
 
 export const addWordInToArray = (word: string, array: string[], addToIndex = 1, separator = '/', deleteCount = 0): string => {
@@ -27,7 +27,7 @@ export const convertLabelToType = <
   return groupItem.type;
 };
 
-export const updateArray = <TItem extends GuitarType | number | Guitar>(array: TItem[] | null, item: TItem): TItem[] => {
+export const updateArray = <TItem extends GuitarType | number>(array: TItem[] | null, item: TItem): TItem[] => {
   const isItemInArray = array?.includes(item);
   const updatingArray = array ? array.slice() : [];
 
@@ -75,3 +75,5 @@ export const sortCommentsByDate = (comments: Comment[]) => comments.slice().sort
 
 export const getPageFromLocation = () => Number(browserHistory.location.pathname.split('/').pop()?.split('&').shift());
 export const getQueryPath = (currentPage: string) => browserHistory.location.pathname.split('/').pop()?.slice(currentPage.length);
+
+export const getTotalPrice = (array: GuitarInCart[]) => array.reduce((sum, guitar) => sum += guitar.price, 0);

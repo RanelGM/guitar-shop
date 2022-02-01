@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import { ActionType } from 'types/action';
-import { Guitar, GuitarType, SortType } from 'types/product';
+import { Guitar, GuitarInCart, GuitarType, SortType } from 'types/product';
 
 export const setDefaultProductData = createAction(
   ActionType.LoadProductData,
@@ -24,7 +24,7 @@ export const setGuitarsToRender = createAction(
 
 export const setCart = createAction(
   ActionType.SetCart,
-  (cart: Guitar[]) => ({ payload: cart }),
+  (cart: GuitarInCart[]) => ({ payload: cart }),
 );
 
 export const setSearchSimilar = createAction(

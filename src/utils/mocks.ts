@@ -1,5 +1,5 @@
 import { datatype, image, lorem, name, random } from 'faker';
-import { Comment, Guitar, GuitarKey, GuitarType } from 'types/product';
+import { Comment, Guitar, GuitarInCart, GuitarKey, GuitarType } from 'types/product';
 import { GuitarGroup } from './const';
 
 const guitarTypes = Object.values(GuitarGroup).map((group) => group.type);
@@ -36,5 +36,13 @@ export const getGuitarMock = (commentCount?: number): Guitar => {
     'rating': datatype.number({ min: 1, max: 5 }),
     'price': datatype.number({ min: 1700, max: 35000 }),
     'comments': comments,
+  });
+};
+
+export const getGuitarInCartMock = (guitar?: Guitar): GuitarInCart => {
+  const guitarInCart = guitar ? guitar : getGuitarMock();
+
+  return Object.assign({}, guitarInCart, {
+    count: 1,
   });
 };

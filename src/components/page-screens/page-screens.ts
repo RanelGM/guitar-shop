@@ -1,3 +1,4 @@
+export { default as CartScreen } from './cart-screen/cart-screen';
 export { default as CatalogScreen } from './catalog-screen/catalog-screen';
 export { default as ErrorScreen } from './error-screen/error-screen';
 export { default as ProductScreen } from './product-screen/product-screen';

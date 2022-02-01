@@ -1,5 +1,5 @@
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { CatalogScreen, ProductScreen, UnderConstructionScreen, NotFoundScreen } from 'components/page-screens/page-screens';
+import { CartScreen,CatalogScreen, ProductScreen, NotFoundScreen } from 'components/page-screens/page-screens';
 import { AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 
 function App(): JSX.Element {
@@ -15,7 +15,7 @@ function App(): JSX.Element {
         <ProductScreen />
       </Route>
       <Route exact path={AppRoute.Cart}>
-        <UnderConstructionScreen />
+        <CartScreen />
       </Route>
       <Route>
         <NotFoundScreen />

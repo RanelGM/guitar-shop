@@ -8,6 +8,7 @@ type BreadcrumbsProps = {
 
 function Breadcrumbs({ productName }: BreadcrumbsProps): JSX.Element {
   const isProductPage = browserHistory.location.pathname.includes(AppRoute.Product) && productName !== undefined;
+  const isCartPage = browserHistory.location.pathname.includes(AppRoute.Cart);
 
   return (
     <ul className="breadcrumbs page-content__breadcrumbs">
@@ -23,13 +24,17 @@ function Breadcrumbs({ productName }: BreadcrumbsProps): JSX.Element {
         </Link>
       </li>
 
-      {
-        isProductPage && (
-          <li className="breadcrumbs__item">
-            <a href='#todo' className="link">{productName}</a>
-          </li>
-        )
-      }
+      {isProductPage && (
+        <li className="breadcrumbs__item">
+          <a href='#todo' className="link">{productName}</a>
+        </li>
+      )}
+
+      {isCartPage && (
+        <li className="breadcrumbs__item">
+          <a href='#todo' className="link">Корзина</a>
+        </li>
+      )}
     </ul >
   );
 }

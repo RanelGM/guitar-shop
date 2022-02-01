@@ -46,3 +46,7 @@ export type Guitar = {
   'price': number,
   'comments': Comment[],
 }
+
+export type GuitarInCart = Guitar & {
+  'count': number,
+}
