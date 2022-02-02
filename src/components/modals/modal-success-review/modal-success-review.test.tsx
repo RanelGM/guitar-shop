@@ -25,24 +25,17 @@ const handleModalDidMount = () => {
   document.addEventListener('keydown', handleEscKeydown);
 };
 
-const modalStateMock = {
-  isModalReviewOpen: false,
-  isModalSuccessOpen: false,
-};
-
-const modalControllerMock = {
-  openedModal: modalStateMock,
-  setOpenedModal: jest.fn(),
+const mockHandlerGroup = {
   handleCloseBtnClick: handleCloseBtnClick,
-  handleSuccessEvent: jest.fn(),
   handleOverlayClick: handleOverlayClick,
   handleModalDidMount: handleModalDidMount,
   handleModalDidUnmount: handleModalDidUnmount,
+  handleSuccessEvent: jest.fn(),
 };
 
 const mockComponent = (
   <Router history={history}>
-    <ModalSuccess modalController={modalControllerMock} />
+    <ModalSuccess handlerGroup={mockHandlerGroup} />
   </Router>
 );
 

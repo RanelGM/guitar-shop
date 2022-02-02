@@ -15,29 +15,20 @@ type CardProps = {
 
 const stars = Array.from({ length: MAX_STARS_COUNT }, (item, index) => index);
 
-const successModalKey = 'isModalSuccessOpen';
-
-const modalState = {
-  isModalAddOpen: false,
-  [successModalKey]: false,
-};
-
 function Card({ guitar }: CardProps): JSX.Element {
   const { id, name, previewImg, price, rating, comments } = guitar;
 
   const guitarsInCart = useSelector(getCart);
   const isGuitarInCart = guitarsInCart !== null && guitarsInCart.filter((guitarInCart) => guitarInCart.id === guitar.id).length > 0;
 
-  const modalController = useModal(modalState, successModalKey);
-  const { openedModal, setOpenedModal } = modalController;
+  const [isModalAddOpen, setIsModalAddOpen, modalAddHandlerGroup] = useModal();
 
   const adaptedImageSrc = adaptImageSrc(previewImg);
   const adaptedPrice = getNumberWithSpaceBetween(price);
 
   const handleCartBtnClick = (evt: MouseEvent) => {
     evt.preventDefault();
-
-    setOpenedModal({ ...openedModal, isModalAddOpen: true });
+    setIsModalAddOpen(true);
   };
 
   return (
@@ -76,8 +67,11 @@ function Card({ guitar }: CardProps): JSX.Element {
           </a>
         )}
 
-        {openedModal.isModalAddOpen && (
-          <ModalCartAdd guitar={guitar} modalController={modalController} />
+        {isModalAddOpen && (
+          <ModalCartAdd
+            guitar={guitar}
+            handlerGroup={modalAddHandlerGroup}
+          />
         )}
       </div>
     </div >

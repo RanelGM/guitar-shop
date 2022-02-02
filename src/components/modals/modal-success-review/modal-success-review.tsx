@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import FocusLock from 'react-focus-lock';
-import { useModalType } from 'hooks/useModal';
+import { ModalHandlerGroup } from 'hooks/useModal';
 
 type ModalSuccessReviewProps = {
-  modalController: useModalType,
+  handlerGroup: ModalHandlerGroup,
 }
 
-function ModalSuccessReview({ modalController }: ModalSuccessReviewProps): JSX.Element {
-  const { handleCloseBtnClick, handleOverlayClick, handleModalDidMount, handleModalDidUnmount } = modalController;
+function ModalSuccessReview({ handlerGroup }: ModalSuccessReviewProps): JSX.Element {
+  const { handleCloseBtnClick, handleOverlayClick, handleModalDidMount, handleModalDidUnmount } = handlerGroup;
 
   useEffect(() => {
     handleModalDidMount();

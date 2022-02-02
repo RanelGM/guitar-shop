@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ThunkActionDispatch } from 'types/action';
 import { Guitar } from 'types/product';
-import { useModalType } from 'hooks/useModal';
+import { ModalHandlerGroup } from 'hooks/useModal';
 import { getCart } from 'store/order-data/selectors';
 import { setCart } from 'store/action';
 import { adaptImageSrc, getNumberWithSpaceBetween } from 'utils/utils';
@@ -11,12 +11,12 @@ import { GuitarGroup } from 'utils/const';
 
 type ModalCartAddProps = {
   guitar: Guitar,
-  modalController: useModalType,
+  handlerGroup: ModalHandlerGroup,
 }
 
-function ModalCartAdd({ guitar, modalController }: ModalCartAddProps): JSX.Element {
+function ModalCartAdd({ guitar, handlerGroup }: ModalCartAddProps): JSX.Element {
   const { name, vendorCode, type, previewImg, stringCount, price } = guitar;
-  const { handleCloseBtnClick, handleOverlayClick, handleModalDidMount, handleModalDidUnmount, handleSuccessEvent } = modalController;
+  const { handleCloseBtnClick, handleOverlayClick, handleModalDidMount, handleModalDidUnmount, handleSuccessEvent } = handlerGroup;
 
   const guitarsInCart = useSelector(getCart);
   const dispatch = useDispatch<ThunkActionDispatch>();

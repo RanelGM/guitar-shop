@@ -8,22 +8,21 @@ import { getExpandedGuitar } from 'store/product-data/selectors';
 import { MAX_COMMENTS_COUNT } from 'utils/const';
 import { ModalReview, ModalSuccessReview } from 'components/modals/modals';
 
-const successModalKey = 'isModalSuccessOpen';
-
-const modalState = {
-  isModalReviewOpen: false,
-  [successModalKey]: false,
-};
-
 function ReviewsList(): JSX.Element {
   const product = useSelector(getExpandedGuitar);
   const [displayCount, setDisplayCount] = useState(MAX_COMMENTS_COUNT);
 
-  const modalController = useModal(modalState, successModalKey);
-  const { openedModal, setOpenedModal } = modalController;
+  const [isModalSuccessOpen, setIsModalSuccessOpen, modalSuccessHandlerGroup] = useModal();
+
+  const handleSuccesEvent = () => {
+    setIsModalAddOpen(false);
+    setIsModalSuccessOpen(true);
+  };
+
+  const [isModalAddOpen, setIsModalAddOpen, modalAddHandlerGroup] = useModal(handleSuccesEvent);
 
   useEffect(() => {
-    if (openedModal.isModalReviewOpen || openedModal[successModalKey]) {
+    if (isModalAddOpen || isModalSuccessOpen) {
       return;
     }
 
@@ -48,7 +47,7 @@ function ReviewsList(): JSX.Element {
 
   const handleAddReviewBtnClick = (evt: MouseEvent) => {
     evt.preventDefault();
-    setOpenedModal({ ...openedModal, isModalReviewOpen: true });
+    setIsModalAddOpen(true);
   };
 
   const handleShowMoreBtnClick = () => {
@@ -89,16 +88,16 @@ function ReviewsList(): JSX.Element {
         <a className="button button--up button--red-border button--big reviews__up-button" href="#header">Назад</a>
       )}
 
-      {openedModal.isModalReviewOpen && (
+      {isModalAddOpen && (
         <ModalReview
           product={product}
-          modalController={modalController}
+          handlerGroup={modalAddHandlerGroup}
         />
       )}
 
-      {openedModal.isModalSuccessOpen && (
+      {isModalSuccessOpen && (
         <ModalSuccessReview
-          modalController={modalController}
+          handlerGroup={modalSuccessHandlerGroup}
         />
       )}
     </section>

@@ -2,14 +2,14 @@ import { FormEvent, useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import FocusLock from 'react-focus-lock';
 
-import { useModalType } from 'hooks/useModal';
+import { ModalHandlerGroup } from 'hooks/useModal';
 import { CommentPost, Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { postCommentAction } from 'store/api-actions';
 
 type ModalReviewProps = {
   product: Guitar,
-  modalController: useModalType,
+  handlerGroup: ModalHandlerGroup,
 }
 
 const getCommentPostData = (id: number, name: string, pros: string, cons: string, comment: string, rating: string): CommentPost => ({
@@ -21,9 +21,9 @@ const getCommentPostData = (id: number, name: string, pros: string, cons: string
   'rating': Number(rating),
 });
 
-function ModalReview({ product, modalController }: ModalReviewProps): JSX.Element {
+function ModalReview({ product, handlerGroup }: ModalReviewProps): JSX.Element {
   const { id, name } = product;
-  const { handleSuccessEvent, handleCloseBtnClick, handleOverlayClick, handleModalDidMount, handleModalDidUnmount } = modalController;
+  const { handleSuccessEvent, handleCloseBtnClick, handleOverlayClick, handleModalDidMount, handleModalDidUnmount } = handlerGroup;
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isServerError, setIsServerError] = useState(false);
   const [validInputs, setValidInputs] = useState({

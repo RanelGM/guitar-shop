@@ -1,37 +1,21 @@
 import { MouseEvent, useState } from 'react';
 import { KeyboardKey } from 'utils/const';
 
-type modalStateType = {
-  [isModalOpen: string]: boolean
-}
+type ModalResult = [boolean, React.Dispatch<React.SetStateAction<boolean>>, ModalHandlerGroup];
 
-export type useModalType = ReturnType<typeof useModal>;
+export type ModalHandlerGroup = {
+  handleCloseBtnClick: () => void,
+  handleOverlayClick: (evt: MouseEvent) => void,
+  handleModalDidMount: () => void,
+  handleModalDidUnmount: () => void,
+  handleSuccessEvent: () => void,
+};
 
-export default function useModal(modalState: modalStateType, successModalKey?: string) {
-  const [openedModal, setOpenedModal] = useState(modalState);
+export default function useModal(onSuccessCallback?: () => void): ModalResult {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleModalClose = () => {
-    const keys = Object.keys(openedModal);
-
-    const state = keys.reduce((result, key) => {
-      result[key] = false;
-      return result;
-    }, {} as modalStateType);
-
-    setOpenedModal(state);
-  };
-
-  const handleSuccessEvent = () => {
-    if (!successModalKey) { return; }
-
-    const keys = Object.keys(openedModal);
-
-    const state = keys.reduce((result, key) => {
-      result[key] = key === successModalKey;
-      return result;
-    }, {} as modalStateType);
-
-    setOpenedModal(state);
+    setIsModalOpen(false);
   };
 
   const handleCloseBtnClick = () => {
@@ -62,5 +46,19 @@ export default function useModal(modalState: modalStateType, successModalKey?: s
     document.body.classList.remove('scroll-lock');
   };
 
-  return { openedModal, setOpenedModal, handleCloseBtnClick, handleSuccessEvent, handleOverlayClick, handleModalDidMount, handleModalDidUnmount };
+  const handleSuccessEvent = () => {
+    if (!onSuccessCallback) { return; }
+
+    onSuccessCallback();
+  };
+
+  const handlerGroup = {
+    handleCloseBtnClick,
+    handleOverlayClick,
+    handleModalDidMount,
+    handleModalDidUnmount,
+    handleSuccessEvent,
+  };
+
+  return [isModalOpen, setIsModalOpen, handlerGroup];
 }

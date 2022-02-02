@@ -48,19 +48,12 @@ const handleModalDidMount = () => {
   document.body.classList.add('scroll-lock');
 };
 
-const modalStateMock = {
-  isModalReviewOpen: false,
-  isModalSuccessOpen: false,
-};
-
-const modalControllerMock = {
-  openedModal: modalStateMock,
-  setOpenedModal: jest.fn(),
+const mockHandlerGroup = {
   handleCloseBtnClick: handleCloseBtnClick,
-  handleSuccessEvent: handleSuccessPost,
   handleOverlayClick: handleOverlayClick,
   handleModalDidMount: handleModalDidMount,
   handleModalDidUnmount: handleModalDidUnmount,
+  handleSuccessEvent: handleSuccessPost,
 };
 
 const mockComponent = (
@@ -68,7 +61,7 @@ const mockComponent = (
     <Router history={history}>
       <ModalReview
         product={expandedGuitar}
-        modalController={modalControllerMock}
+        handlerGroup={mockHandlerGroup}
       />
     </Router>
   </Provider>
