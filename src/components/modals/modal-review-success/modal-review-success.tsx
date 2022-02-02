@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import FocusLock from 'react-focus-lock';
 import { ModalHandlerGroup } from 'hooks/useModal';
 
-type ModalSuccessReviewProps = {
+type ModalReviewSuccessProps = {
   handlerGroup: ModalHandlerGroup,
 }
 
-function ModalSuccessReview({ handlerGroup }: ModalSuccessReviewProps): JSX.Element {
+function ModalReviewSuccess({ handlerGroup }: ModalReviewSuccessProps): JSX.Element {
   const { handleCloseBtnClick, handleOverlayClick, handleModalDidMount, handleModalDidUnmount } = handlerGroup;
 
   useEffect(() => {
@@ -39,4 +39,4 @@ function ModalSuccessReview({ handlerGroup }: ModalSuccessReviewProps): JSX.Elem
   );
 }
 
-export default ModalSuccessReview;
+export default ModalReviewSuccess;

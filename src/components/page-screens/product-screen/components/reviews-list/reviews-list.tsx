@@ -6,19 +6,18 @@ import { ErrorScreen } from 'components/page-screens/page-screens';
 import useModal from 'hooks/useModal';
 import { getExpandedGuitar } from 'store/product-data/selectors';
 import { MAX_COMMENTS_COUNT } from 'utils/const';
-import { ModalReview, ModalSuccessReview } from 'components/modals/modals';
+import { ModalReviewAdd, ModalReviewSuccess } from 'components/modals/modals';
 
 function ReviewsList(): JSX.Element {
   const product = useSelector(getExpandedGuitar);
   const [displayCount, setDisplayCount] = useState(MAX_COMMENTS_COUNT);
-
-  const [isModalSuccessOpen, setIsModalSuccessOpen, modalSuccessHandlerGroup] = useModal();
 
   const handleSuccesEvent = () => {
     setIsModalAddOpen(false);
     setIsModalSuccessOpen(true);
   };
 
+  const [isModalSuccessOpen, setIsModalSuccessOpen, modalSuccessHandlerGroup] = useModal();
   const [isModalAddOpen, setIsModalAddOpen, modalAddHandlerGroup] = useModal(handleSuccesEvent);
 
   useEffect(() => {
@@ -89,14 +88,14 @@ function ReviewsList(): JSX.Element {
       )}
 
       {isModalAddOpen && (
-        <ModalReview
+        <ModalReviewAdd
           product={product}
           handlerGroup={modalAddHandlerGroup}
         />
       )}
 
       {isModalSuccessOpen && (
-        <ModalSuccessReview
+        <ModalReviewSuccess
           handlerGroup={modalSuccessHandlerGroup}
         />
       )}

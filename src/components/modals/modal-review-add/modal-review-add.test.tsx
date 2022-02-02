@@ -10,7 +10,7 @@ import { createMemoryHistory } from 'history';
 
 
 import { State } from 'types/state';
-import ModalReview from './modal-review';
+import ModalReviewAdd from './modal-review-add';
 import { createAPI } from 'api/api';
 import { NameSpace } from 'store/root-reducer';
 import { getGuitarMock } from 'utils/mocks';
@@ -59,7 +59,7 @@ const mockHandlerGroup = {
 const mockComponent = (
   <Provider store={store}>
     <Router history={history}>
-      <ModalReview
+      <ModalReviewAdd
         product={expandedGuitar}
         handlerGroup={mockHandlerGroup}
       />

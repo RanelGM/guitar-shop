@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 
-import ModalSuccess from './modal-success-review';
+import ModalReviewSuccess from './modal-review-success';
 import { KeyboardKey } from 'utils/const';
 
 const history = createMemoryHistory();
@@ -35,11 +35,11 @@ const mockHandlerGroup = {
 
 const mockComponent = (
   <Router history={history}>
-    <ModalSuccess handlerGroup={mockHandlerGroup} />
+    <ModalReviewSuccess handlerGroup={mockHandlerGroup} />
   </Router>
 );
 
-describe('Review component', () => {
+describe('Modal Review Success component', () => {
   it('should render component', async () => {
     render(mockComponent);
 
