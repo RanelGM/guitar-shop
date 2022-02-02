@@ -1,39 +1,19 @@
-import { useEffect, MouseEvent } from 'react';
+import { useEffect } from 'react';
 import FocusLock from 'react-focus-lock';
-import { KeyboardKey } from 'utils/const';
+import { useModalType } from 'hooks/useModal';
 
 type ModalSuccessReviewProps = {
-  onModalClose: () => void
+  modalController: useModalType,
 }
 
-function ModalSuccessReview({ onModalClose }: ModalSuccessReviewProps): JSX.Element {
+function ModalSuccessReview({ modalController }: ModalSuccessReviewProps): JSX.Element {
+  const { handleCloseBtnClick, handleOverlayClick, handleModalDidMount, handleModalDidUnmount } = modalController;
+
   useEffect(() => {
-    document.addEventListener('keydown', handleEscKeydown);
-    document.body.classList.add('scroll-lock');
+    handleModalDidMount();
 
-    return () => {
-      document.removeEventListener('keydown', handleEscKeydown);
-      document.body.classList.remove('scroll-lock');
-    };
+    return () => handleModalDidUnmount();
   });
-
-  const handleCloseBtnClick = () => {
-    onModalClose();
-  };
-
-  const handleEscKeydown = (evt: KeyboardEvent) => {
-    if (evt.key === KeyboardKey.Esc) {
-      onModalClose();
-    }
-  };
-
-  const handleOverlayClick = (evt: MouseEvent) => {
-    const isOverlay = (evt.target as HTMLDivElement).closest('.modal__overlay') !== null;
-
-    if (!isOverlay) { return; }
-
-    onModalClose();
-  };
 
   return (
     <FocusLock>

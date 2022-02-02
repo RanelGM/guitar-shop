@@ -3,27 +3,34 @@ import { useEffect, useState, MouseEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { Review } from '../components';
 import { ErrorScreen } from 'components/page-screens/page-screens';
+import useModal from 'hooks/useModal';
 import { getExpandedGuitar } from 'store/product-data/selectors';
 import { MAX_COMMENTS_COUNT } from 'utils/const';
 import { ModalReview, ModalSuccessReview } from 'components/modals/modals';
 
+const successModalKey = 'isModalSuccessOpen';
+
+const modalState = {
+  isModalReviewOpen: false,
+  [successModalKey]: false,
+};
+
 function ReviewsList(): JSX.Element {
   const product = useSelector(getExpandedGuitar);
   const [displayCount, setDisplayCount] = useState(MAX_COMMENTS_COUNT);
-  const [openedModal, setOpenedModal] = useState({
-    isModalReviewOpen: false,
-    isModalSuccessOpen: false,
-  });
+
+  const modalController = useModal(modalState, successModalKey);
+  const { openedModal, setOpenedModal } = modalController;
 
   useEffect(() => {
-    if (openedModal.isModalReviewOpen || openedModal.isModalSuccessOpen) {
+    if (openedModal.isModalReviewOpen || openedModal[successModalKey]) {
       return;
     }
 
-    document.addEventListener('scroll', handlePageScroll);
+    document.addEventListener('scroll', handleReviewListScroll);
 
     return () => {
-      document.removeEventListener('scroll', handlePageScroll);
+      document.removeEventListener('scroll', handleReviewListScroll);
     };
   });
 
@@ -39,14 +46,6 @@ function ReviewsList(): JSX.Element {
     setDisplayCount(commentsCount);
   };
 
-  const handleModalsClose = () => {
-    setOpenedModal({ isModalReviewOpen: false, isModalSuccessOpen: false });
-  };
-
-  const handleSuccessPost = () => {
-    setOpenedModal({ isModalReviewOpen: false, isModalSuccessOpen: true });
-  };
-
   const handleAddReviewBtnClick = (evt: MouseEvent) => {
     evt.preventDefault();
     setOpenedModal({ ...openedModal, isModalReviewOpen: true });
@@ -56,7 +55,7 @@ function ReviewsList(): JSX.Element {
     showMoreComments();
   };
 
-  const handlePageScroll = () => {
+  const handleReviewListScroll = () => {
     if (!isShowMoreBtnAvailable) { return; }
 
     const viewportHeight = window.innerHeight;
@@ -93,14 +92,13 @@ function ReviewsList(): JSX.Element {
       {openedModal.isModalReviewOpen && (
         <ModalReview
           product={product}
-          onModalClose={handleModalsClose}
-          onSuccessPost={handleSuccessPost}
+          modalController={modalController}
         />
       )}
 
       {openedModal.isModalSuccessOpen && (
         <ModalSuccessReview
-          onModalClose={handleModalsClose}
+          modalController={modalController}
         />
       )}
     </section>

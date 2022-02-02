@@ -1,18 +1,16 @@
-import { MouseEvent, FormEvent, useEffect, useState, useRef } from 'react';
+import { FormEvent, useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import FocusLock from 'react-focus-lock';
 
+import { useModalType } from 'hooks/useModal';
 import { CommentPost, Guitar } from 'types/product';
 import { ThunkActionDispatch } from 'types/action';
 import { postCommentAction } from 'store/api-actions';
-import { KeyboardKey } from 'utils/const';
 
 type ModalReviewProps = {
   product: Guitar,
-  onModalClose: () => void,
-  onSuccessPost: () => void,
+  modalController: useModalType,
 }
-
 
 const getCommentPostData = (id: number, name: string, pros: string, cons: string, comment: string, rating: string): CommentPost => ({
   'guitarId': id,
@@ -23,8 +21,9 @@ const getCommentPostData = (id: number, name: string, pros: string, cons: string
   'rating': Number(rating),
 });
 
-function ModalReview({ product, onModalClose, onSuccessPost }: ModalReviewProps): JSX.Element {
+function ModalReview({ product, modalController }: ModalReviewProps): JSX.Element {
   const { id, name } = product;
+  const { handleSuccessEvent, handleCloseBtnClick, handleOverlayClick, handleModalDidMount, handleModalDidUnmount } = modalController;
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isServerError, setIsServerError] = useState(false);
   const [validInputs, setValidInputs] = useState({
@@ -39,37 +38,15 @@ function ModalReview({ product, onModalClose, onSuccessPost }: ModalReviewProps)
   const dispatch = useDispatch<ThunkActionDispatch>();
 
   useEffect(() => {
-    document.addEventListener('keydown', handleEscKeydown);
-    document.body.classList.add('scroll-lock');
+    handleModalDidMount();
 
-    return () => {
-      document.removeEventListener('keydown', handleEscKeydown);
-      document.body.classList.remove('scroll-lock');
-    };
+    return () => handleModalDidUnmount();
   });
-
-  const handleCloseBtnClick = () => {
-    onModalClose();
-  };
-
-  const handleEscKeydown = (evt: KeyboardEvent) => {
-    if (evt.key === KeyboardKey.Esc) {
-      onModalClose();
-    }
-  };
-
-  const handleOverlayClick = (evt: MouseEvent) => {
-    const isOverlay = (evt.target as HTMLDivElement).closest('.modal__overlay') !== null;
-
-    if (!isOverlay) { return; }
-
-    onModalClose();
-  };
 
   const postComment = async (comment: CommentPost) => {
     try {
       await dispatch(postCommentAction(comment));
-      onSuccessPost();
+      handleSuccessEvent();
     }
     catch {
       setIsServerError(true);

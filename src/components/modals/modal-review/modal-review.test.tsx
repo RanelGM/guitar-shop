@@ -31,16 +31,44 @@ const store = mockStore({
 
 const history = createMemoryHistory();
 
-const handleModalClose = jest.fn();
 const handleSuccessPost = jest.fn();
+const handleModalDidUnmount = jest.fn();
+const handleCloseBtnClick = jest.fn();
+const handleOverlayClick = jest.fn();
+const handleEscAction = jest.fn();
+
+const handleEscKeydown = (evt: KeyboardEvent) => {
+  if (evt.key === KeyboardKey.Esc) {
+    handleEscAction();
+  }
+};
+
+const handleModalDidMount = () => {
+  document.addEventListener('keydown', handleEscKeydown);
+  document.body.classList.add('scroll-lock');
+};
+
+const modalStateMock = {
+  isModalReviewOpen: false,
+  isModalSuccessOpen: false,
+};
+
+const modalControllerMock = {
+  openedModal: modalStateMock,
+  setOpenedModal: jest.fn(),
+  handleCloseBtnClick: handleCloseBtnClick,
+  handleSuccessEvent: handleSuccessPost,
+  handleOverlayClick: handleOverlayClick,
+  handleModalDidMount: handleModalDidMount,
+  handleModalDidUnmount: handleModalDidUnmount,
+};
 
 const mockComponent = (
   <Provider store={store}>
     <Router history={history}>
       <ModalReview
         product={expandedGuitar}
-        onModalClose={handleModalClose}
-        onSuccessPost={handleSuccessPost}
+        modalController={modalControllerMock}
       />
     </Router>
   </Provider>
@@ -84,13 +112,19 @@ describe('Reviews List component', () => {
     const closeButton = screen.getByLabelText(/Закрыть/i);
     const overlay = screen.getByTestId('overlay');
 
-    expect(handleModalClose).toBeCalledTimes(0);
+    expect(handleCloseBtnClick).toBeCalledTimes(0);
+    expect(handleOverlayClick).toBeCalledTimes(0);
+    expect(handleEscAction).toBeCalledTimes(0);
 
     userEvent.click(closeButton);
-    userEvent.click(overlay);
-    fireEvent.keyDown(document, { key: KeyboardKey.Esc });
+    expect(handleCloseBtnClick).toBeCalledTimes(1);
 
-    expect(handleModalClose).toBeCalledTimes(3);
+    userEvent.click(overlay);
+    expect(handleOverlayClick).toBeCalledTimes(1);
+
+    fireEvent.keyDown(document, { key: KeyboardKey.Esc });
+    fireEvent.keyDown(document, { key: KeyboardKey.Enter });
+    expect(handleEscAction).toBeCalledTimes(1);
   });
 
   it('should not call success callback when clicking on submit button but required inputs are not filled', () => {
