@@ -1,12 +1,13 @@
 import { MouseEvent } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+
 import { Guitar } from 'types/product';
-import { ThunkActionDispatch } from 'types/action';
+import useModal from 'hooks/useModal';
 import { getCart } from 'store/order-data/selectors';
-import { setCart } from 'store/action';
 import { getNumberWithSpaceBetween, adaptImageSrc } from 'utils/utils';
 import { AppRoute, MAX_STARS_COUNT } from 'utils/const';
+import { ModalCartAdd } from 'components/modals/modals';
 
 type CardProps = {
   guitar: Guitar
@@ -14,13 +15,21 @@ type CardProps = {
 
 const stars = Array.from({ length: MAX_STARS_COUNT }, (item, index) => index);
 
+const successModalKey = 'isModalSuccessOpen';
+
+const modalState = {
+  isModalAddOpen: false,
+  [successModalKey]: false,
+};
+
 function Card({ guitar }: CardProps): JSX.Element {
   const { id, name, previewImg, price, rating, comments } = guitar;
 
-  const dispatch = useDispatch<ThunkActionDispatch>();
   const guitarsInCart = useSelector(getCart);
-
   const isGuitarInCart = guitarsInCart !== null && guitarsInCart.filter((guitarInCart) => guitarInCart.id === guitar.id).length > 0;
+
+  const modalController = useModal(modalState, successModalKey);
+  const { openedModal, setOpenedModal } = modalController;
 
   const adaptedImageSrc = adaptImageSrc(previewImg);
   const adaptedPrice = getNumberWithSpaceBetween(price);
@@ -28,18 +37,12 @@ function Card({ guitar }: CardProps): JSX.Element {
   const handleCartBtnClick = (evt: MouseEvent) => {
     evt.preventDefault();
 
-    const updatingCart = guitarsInCart ? guitarsInCart.slice() : [];
-
-    const updatingGuitar = Object.assign({}, guitar, {
-      count: 1,
-    });
-
-    updatingCart.push(updatingGuitar);
-    dispatch(setCart(updatingCart));
+    setOpenedModal({ ...openedModal, isModalAddOpen: true });
   };
 
   return (
-    <div className="product-card"><img src={adaptedImageSrc} width="75" height="190" alt={name} />
+    <div className="product-card">
+      <img className='product-card__img' src={adaptedImageSrc} width="75" height="190" alt={name} />
       <div className="product-card__info">
         <div className="rate product-card__rate" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>
           {stars.map((item, index) => {
@@ -73,6 +76,9 @@ function Card({ guitar }: CardProps): JSX.Element {
           </a>
         )}
 
+        {openedModal.isModalAddOpen && (
+          <ModalCartAdd guitar={guitar} modalController={modalController} />
+        )}
       </div>
     </div >
   );
