@@ -13,6 +13,7 @@ import { getPageFromLocation, getQueryPath } from 'utils/utils';
 import browserHistory from 'store/browser-history';
 
 function CatalogScreen(): JSX.Element {
+
   const dispatch = useDispatch<ThunkActionDispatch>();
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const isDataLoading = useSelector(getIsDataLoading);
@@ -35,7 +36,6 @@ function CatalogScreen(): JSX.Element {
   const isPriceFromEmpty = priceFrom === '';
   const isPriceToEmpty = priceTo === '';
 
-  dispatch(setCurrentPage(currentPage));
 
   async function fetchGuitars() {
     try {
@@ -52,6 +52,8 @@ function CatalogScreen(): JSX.Element {
   }
 
   useEffect(() => {
+    dispatch(setCurrentPage(currentPage));
+
     if (isDataLoaded || isRedirectFromAnotherPage || isDataLoading || isServerError) { return; }
 
     fetchGuitars();
@@ -66,6 +68,7 @@ function CatalogScreen(): JSX.Element {
 
     fetchGuitars();
   });
+
 
   const handlePaginationClick = () => {
     dispatch(loadFilteredGuitarsAction(true));

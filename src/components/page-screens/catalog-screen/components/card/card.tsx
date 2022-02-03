@@ -7,7 +7,7 @@ import useModal from 'hooks/useModal';
 import { getCart } from 'store/order-data/selectors';
 import { getNumberWithSpaceBetween, adaptImageSrc } from 'utils/utils';
 import { AppRoute, MAX_STARS_COUNT } from 'utils/const';
-import { ModalCartAdd } from 'components/modals/modals';
+import { ModalCartAdd, ModalCartSuccess } from 'components/modals/modals';
 
 type CardProps = {
   guitar: Guitar
@@ -21,7 +21,13 @@ function Card({ guitar }: CardProps): JSX.Element {
   const guitarsInCart = useSelector(getCart);
   const isGuitarInCart = guitarsInCart !== null && guitarsInCart.filter((guitarInCart) => guitarInCart.id === guitar.id).length > 0;
 
-  const [isModalAddOpen, setIsModalAddOpen, modalAddHandlerGroup] = useModal();
+  const handleSuccesEvent = () => {
+    setIsModalAddOpen(false);
+    setIsModalSuccessOpen(true);
+  };
+
+  const [isModalAddOpen, setIsModalAddOpen, modalAddHandlerGroup] = useModal(handleSuccesEvent);
+  const [isModalSuccessOpen, setIsModalSuccessOpen, modalSuccessHandlerGroup] = useModal();
 
   const adaptedImageSrc = adaptImageSrc(previewImg);
   const adaptedPrice = getNumberWithSpaceBetween(price);
@@ -71,6 +77,12 @@ function Card({ guitar }: CardProps): JSX.Element {
           <ModalCartAdd
             guitar={guitar}
             handlerGroup={modalAddHandlerGroup}
+          />
+        )}
+
+        {isModalSuccessOpen && (
+          <ModalCartSuccess
+            handlerGroup={modalSuccessHandlerGroup}
           />
         )}
       </div>

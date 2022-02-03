@@ -1,10 +1,12 @@
 import { MouseEvent, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+
 import { ErrorScreen } from 'components/page-screens/page-screens';
+import useModal from 'hooks/useModal';
 import { getExpandedGuitar } from 'store/product-data/selectors';
-import { AppRoute, DEFAULT_ACTIVE_TAB, GuitarGroup, MAX_STARS_COUNT, TabGroup } from 'utils/const';
+import { DEFAULT_ACTIVE_TAB, GuitarGroup, MAX_STARS_COUNT, TabGroup } from 'utils/const';
 import { adaptImageSrc, getNumberWithSpaceBetween } from 'utils/utils';
+import { ModalCartAdd, ModalCartSuccess } from 'components/modals/modals';
 
 type TabKey = keyof typeof TabGroup;
 type TabType = typeof TabGroup[TabKey]['type'];
@@ -15,6 +17,14 @@ const stars = Array.from({ length: MAX_STARS_COUNT }, (item, index) => index);
 function Card(): JSX.Element {
   const product = useSelector(getExpandedGuitar);
   const [activeTab, setActiveTab] = useState<TabType>(DEFAULT_ACTIVE_TAB);
+
+  const handleSuccesEvent = () => {
+    setIsModalAddOpen(false);
+    setIsModalSuccessOpen(true);
+  };
+
+  const [isModalSuccessOpen, setIsModalSuccessOpen, modalSuccessHandlerGroup] = useModal();
+  const [isModalAddOpen, setIsModalAddOpen, modalAddHandlerGroup] = useModal(handleSuccesEvent);
 
   if (product === null) { return <ErrorScreen />; }
 
@@ -36,6 +46,10 @@ function Card(): JSX.Element {
     if (!tabGroup || tabGroup.type === activeTab) { return; }
 
     setActiveTab(tabGroup.type);
+  };
+
+  const handleBuyBtnClick = () => {
+    setIsModalAddOpen(true);
   };
 
   return (
@@ -60,7 +74,8 @@ function Card(): JSX.Element {
             );
           })}
 
-          <span className="rate__count">{comments.length}</span><span className="rate__message"></span>
+          <span className="rate__count">{comments.length}</span>
+          <span className="rate__message"></span>
         </div>
 
         <div className="tabs">
@@ -108,9 +123,18 @@ function Card(): JSX.Element {
         <p className="product-container__price-info product-container__price-info--value">
           {adaptedPrice} ₽
         </p>
-        <Link to={AppRoute.Cart} className="button button--red button--big product-container__button">Добавить в корзину
-        </Link>
+
+        <button onClick={handleBuyBtnClick} className="button button--red button--big product-container__button">Добавить в корзину
+        </button>
       </div>
+
+      {isModalAddOpen && (
+        <ModalCartAdd guitar={product} handlerGroup={modalAddHandlerGroup} />
+      )}
+
+      {isModalSuccessOpen && (
+        <ModalCartSuccess handlerGroup={modalSuccessHandlerGroup} />
+      )}
     </div>
   );
 }

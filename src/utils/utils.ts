@@ -43,6 +43,14 @@ export const updateArray = <TItem extends GuitarType | number>(array: TItem[] | 
   return updatingArray;
 };
 
+export function replaceItemInArrayByIndex<T>(item: T, array: T[], index: number): T[] {
+  return [
+    ...array.slice(0, index),
+    item,
+    ...array.slice(index + 1),
+  ];
+}
+
 export const sortGuitarsByPrice = (array: Guitar[], sortType: SortType) => {
   switch (sortType) {
     case SortGroup.Ascending.type:

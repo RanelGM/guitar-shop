@@ -8,7 +8,7 @@ import { Portal } from 'components/common/common';
 import { ModalHandlerGroup } from 'hooks/useModal';
 import { getCart } from 'store/order-data/selectors';
 import { setCart } from 'store/action';
-import { adaptImageSrc, getNumberWithSpaceBetween } from 'utils/utils';
+import { adaptImageSrc, getNumberWithSpaceBetween, replaceItemInArrayByIndex } from 'utils/utils';
 import { GuitarGroup } from 'utils/const';
 
 
@@ -35,13 +35,17 @@ function ModalCartAdd({ guitar, handlerGroup }: ModalCartAddProps): JSX.Element 
   const adaptedType = Object.values(GuitarGroup).find((group) => group.type === type)?.labelSingular;
 
   const handleBuyBtnClick = () => {
-    const updatingCart = guitarsInCart ? guitarsInCart.slice() : [];
+    const currentCart = guitarsInCart ? guitarsInCart.slice() : [];
+    const guitarInCart = currentCart.find((item) => item.id === guitar.id);
+    const index = guitarInCart ? currentCart.indexOf(guitarInCart) : -1;
+    const count = guitarInCart ? guitarInCart.count + 1 : 1;
 
     const updatingGuitar = Object.assign({}, guitar, {
-      count: 1,
+      count,
     });
 
-    updatingCart.push(updatingGuitar);
+    const updatingCart = guitarInCart ? replaceItemInArrayByIndex(updatingGuitar, currentCart, index) : currentCart.concat(updatingGuitar);
+
     dispatch(setCart(updatingCart));
     handleSuccessEvent();
   };
