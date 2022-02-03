@@ -75,10 +75,6 @@ function CatalogScreen(): JSX.Element {
     return <ErrorScreen />;
   }
 
-  if (isDataLoading) {
-    return <Loader />;
-  }
-
   if (currentPage > maxPageCount) {
     return <NotFoundScreen />;
   }
@@ -93,35 +89,43 @@ function CatalogScreen(): JSX.Element {
 
           <Breadcrumbs />
 
-          <div className="catalog">
-            <Filter />
-            <Sort />
+          {isDataLoading && (
+            <Loader />
+          )}
 
-            {!isUpdateLoaded && (
-              <Loader />
-            )}
+          {!isDataLoading && (
+            < div className="catalog">
+              <Filter />
+              <Sort />
 
-            {isUpdateLoaded && (
-              <div className="cards catalog__cards">
-                {!isGuitars && (
-                  <div className='cards__empty'>В каталоге не найдено гитар в соответствии с заданными параметрами</div>
-                )}
+              {!isUpdateLoaded && (
+                <Loader />
+              )}
 
-                {guitarsToRender.map((guitar) => <Card key={guitar.id} guitar={guitar} />)}
-              </div>
-            )}
+              {isUpdateLoaded && (
+                <div className="cards catalog__cards">
+                  {!isGuitars && (
+                    <div className='cards__empty'>В каталоге не найдено гитар в соответствии с заданными параметрами</div>
+                  )}
 
-            <Pagination
-              currentPage={currentPage}
-              maxPageCount={maxPageCount}
-              onLinkClick={handlePaginationClick}
-            />
-          </div>
+                  {guitarsToRender.map((guitar) => <Card key={guitar.id} guitar={guitar} />)}
+                </div>
+              )}
+
+              <Pagination
+                currentPage={currentPage}
+                maxPageCount={maxPageCount}
+                onLinkClick={handlePaginationClick}
+              />
+            </div>
+          )}
+
+
         </div>
-      </main>
+      </main >
 
       <Footer isMainPage />
-    </div>
+    </div >
   );
 }
 
