@@ -27,7 +27,7 @@ export const convertLabelToType = <
   return groupItem.type;
 };
 
-export const updateArray = <TItem extends GuitarType | number>(array: TItem[] | null, item: TItem): TItem[] => {
+export const updateArray = <TItem extends GuitarType | GuitarInCart | number>(array: TItem[] | null, item: TItem): TItem[] => {
   const isItemInArray = array?.includes(item);
   const updatingArray = array ? array.slice() : [];
 
@@ -84,4 +84,4 @@ export const sortCommentsByDate = (comments: Comment[]) => comments.slice().sort
 export const getPageFromLocation = () => Number(browserHistory.location.pathname.split('/').pop()?.split('&').shift());
 export const getQueryPath = (currentPage: string) => browserHistory.location.pathname.split('/').pop()?.slice(currentPage.length);
 
-export const getTotalPrice = (array: GuitarInCart[]) => array.reduce((sum, guitar) => sum += guitar.price, 0);
+export const getTotalPrice = (array: GuitarInCart[]) => array.reduce((sum, guitar) => sum += guitar.price * guitar.count, 0);

@@ -1,15 +1,19 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { ThunkActionDispatch } from 'types/action';
+import { GuitarInCart } from 'types/product';
 import { Card, Promocode } from './components/components';
 import { Breadcrumbs, Footer, Header } from 'components/common/common';
+import { setCart } from 'store/action';
 import { getCart } from 'store/order-data/selectors';
-import { getNumberWithSpaceBetween, getTotalPrice } from 'utils/utils';
+import { getNumberWithSpaceBetween, getTotalPrice, replaceItemInArrayByIndex } from 'utils/utils';
 
 function CartScreen(): JSX.Element {
-  const promoDiscount = 0;
-
   const cart = useSelector(getCart);
+  const dispatch = useDispatch<ThunkActionDispatch>();
   const isGuitarsInCart = cart !== null && cart.length > 0;
+
+  const promoDiscount = 0;
   const undiscountedPrice = cart ? getTotalPrice(cart) : 0;
   const discountPrice = undiscountedPrice * promoDiscount / 100;
   const discountedPrice = undiscountedPrice - discountPrice;
@@ -17,6 +21,19 @@ function CartScreen(): JSX.Element {
   const adaptedUndicountedPrice = getNumberWithSpaceBetween(undiscountedPrice);
   const adaptedDiscountPrice = getNumberWithSpaceBetween(discountPrice);
   const adaptedDiscountedPrice = getNumberWithSpaceBetween(discountedPrice);
+
+  const handleCartUpdate = (updatingCount: number, guitar: GuitarInCart) => {
+    if (!cart) { return; }
+
+    const updatedGuitar = Object.assign({}, guitar, {
+      count: updatingCount,
+    });
+
+    const index = cart.indexOf(guitar);
+    const updatedCart = replaceItemInArrayByIndex(updatedGuitar, cart, index);
+
+    dispatch(setCart(updatedCart));
+  };
 
   return (
     <div className='wrapper'>
@@ -38,7 +55,7 @@ function CartScreen(): JSX.Element {
           {isGuitarsInCart && (
             <div className="cart">
               {cart.map((guitar) => (
-                <Card key={`cart-key-${guitar.id}`} guitar={guitar}/>
+                <Card key={`cart-key-${guitar.id}`} guitar={guitar} onCartUpdate={handleCartUpdate} />
               ))}
 
               <div className="cart__footer">
