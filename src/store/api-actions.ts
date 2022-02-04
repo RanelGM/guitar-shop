@@ -1,11 +1,12 @@
 import { ThunkActionDispatch, ThunkActionResult } from 'types/action';
 import { CommentPost, Guitar, GuitarType } from 'types/product';
 import browserHistory from './browser-history';
-import { setDefaultProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setIsServerError, setIsUpdateLoaded, setStringCount, setExpandedGuitar } from './action';
+import { setDefaultProductData, setSearchSimilar, setGuitarsToRender, setGuitarsTotalCount, setPriceRangeFrom, setPriceRangeTo, setGuitarType, setIsServerError, setIsUpdateLoaded, setStringCount, setExpandedGuitar, setDiscount } from './action';
 import { APIRoute, APIQuery, DEFAULT_SORT_ORDER, DEFAULT_SORT_TYPE, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, AppRoute, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { getQueryState } from './query-data/selectors';
 import { QueryDataState } from 'types/state';
 import { getPageFromLocation, getQueryPath, sortGuitarsByLetter } from 'utils/utils';
+import { Coupon } from 'types/order';
 
 const GuitarEmbedWithComment = `${APIRoute.Guitar}?${APIQuery.EmbedComment}`;
 
@@ -164,4 +165,11 @@ export const postCommentAction = (comment: CommentPost): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     await api.post(APIRoute.Comments, { ...comment });
     await dispatch(loadExpandedGuitarAction(comment.guitarId));
+  };
+
+export const postDiscountAction = (coupon: Coupon): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    const { data } = await api.post<number>(APIRoute.Coupons, { ...coupon });
+
+    dispatch(setDiscount(data));
   };

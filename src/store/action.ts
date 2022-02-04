@@ -81,3 +81,8 @@ export const setExpandedGuitar = createAction(
   ActionType.SetExpandedGuitar,
   (guitar: Guitar) => ({ payload: guitar }),
 );
+
+export const setDiscount = createAction(
+  ActionType.SetDiscount,
+  (discount: number) => ({ payload: discount }),
+);

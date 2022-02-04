@@ -9,6 +9,7 @@ export enum APIRoute {
   Guitar = '/guitars',
   SimilarGuitar = '/guitars?name_like',
   Comments = '/comments',
+  Coupons = '/coupons',
 }
 
 export enum APIQuery {
@@ -22,7 +23,7 @@ export enum APIQuery {
   StringCount = 'stringCount',
   GuitarFrom = '_start',
   GuitarToLimit = '_limit',
-  TotalCount = 'x-total-count'
+  TotalCount = 'x-total-count',
 }
 
 export enum KeyboardKey {
@@ -32,6 +33,14 @@ export enum KeyboardKey {
 
 export enum ResponseCode {
   NotFound = 404,
+}
+
+export enum PromocodeState {
+  Initial = 'Initial',
+  Valid = 'Valid',
+  Invalid = 'Invalid',
+  Blank = 'Blank',
+  Loading = 'Loading',
 }
 
 export const GuitarGroup = {
@@ -64,3 +73,5 @@ export const INITIAL_GUITAR_COUNT = 0;
 
 export const MAX_STARS_COUNT = 5;
 export const MAX_COMMENTS_COUNT = 3;
+
+export const INITIAL_PROMOCODE_DISCOUNT = 0;

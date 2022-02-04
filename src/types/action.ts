@@ -11,6 +11,7 @@ export enum ActionType {
   SetGuitarsToRender = 'product/setGuitarsToRender',
   SetExpandedGuitar = 'product/setExpandedGuitar',
   SetCart = 'order/setCart',
+  SetDiscount = 'order/setDiscount',
   SetSortType = 'query/setSortType',
   SetOrderType = 'query/setOrderType',
   SetPriceRangeFrom = 'query/setPriceRangeFrom',

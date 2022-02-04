@@ -59,7 +59,7 @@ function Card({ guitar, onCartUpdate }: CardProps): JSX.Element {
     updatingCount = updatingCount < MAX_PRODUCT_COUNT ? updatingCount : MAX_PRODUCT_COUNT;
 
     setCurrentCount(updatingCount);
-    onCartUpdate(value, guitar);
+    onCartUpdate(updatingCount, guitar);
   };
 
   const handleEnterKeydown = (evt: KeyboardEvent) => {

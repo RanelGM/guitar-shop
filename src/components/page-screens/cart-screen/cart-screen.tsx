@@ -5,15 +5,16 @@ import { GuitarInCart } from 'types/product';
 import { Card, Promocode } from './components/components';
 import { Breadcrumbs, Footer, Header } from 'components/common/common';
 import { setCart } from 'store/action';
-import { getCart } from 'store/order-data/selectors';
+import { getCart, getDiscount } from 'store/order-data/selectors';
 import { getNumberWithSpaceBetween, getTotalPrice, replaceItemInArrayByIndex } from 'utils/utils';
 
 function CartScreen(): JSX.Element {
   const cart = useSelector(getCart);
+  const promoDiscount = useSelector(getDiscount);
   const dispatch = useDispatch<ThunkActionDispatch>();
   const isGuitarsInCart = cart !== null && cart.length > 0;
 
-  const promoDiscount = 0;
+  const isDiscount = promoDiscount > 0;
   const undiscountedPrice = cart ? getTotalPrice(cart) : 0;
   const discountPrice = undiscountedPrice * promoDiscount / 100;
   const discountedPrice = undiscountedPrice - discountPrice;
@@ -68,7 +69,10 @@ function CartScreen(): JSX.Element {
                   </p>
                   <p className="cart__total-item">
                     <span className="cart__total-value-name">Скидка:</span>
-                    <span className="cart__total-value cart__total-value--bonus">- {adaptedDiscountPrice} ₽</span>
+                    <span className={`cart__total-value
+                    ${isDiscount ? 'cart__total-value--bonus' : ''}`}
+                    >{isDiscount ? '- ' : ''}{adaptedDiscountPrice} ₽
+                    </span>
                   </p>
                   <p className="cart__total-item">
                     <span className="cart__total-value-name">К оплате:</span>
@@ -81,10 +85,10 @@ function CartScreen(): JSX.Element {
           )}
 
         </div>
-      </main>
+      </main >
 
       <Footer />
-    </div>
+    </div >
 
   );
 }

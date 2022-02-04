@@ -12,6 +12,7 @@ export type ProductDataState = {
 
 export type OrderDataState = {
   cart: GuitarInCart[] | null,
+  discount: number,
 }
 
 export type QueryDataState = {
