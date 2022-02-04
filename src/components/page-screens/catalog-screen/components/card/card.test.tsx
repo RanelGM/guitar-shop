@@ -10,7 +10,6 @@ import { createMemoryHistory } from 'history';
 import { State } from 'types/state';
 import { Guitar, GuitarInCart } from 'types/product';
 import Card from './card';
-import { setCart } from 'store/action';
 import { NameSpace } from 'store/root-reducer';
 import { getGuitarMock, getGuitarInCartMock } from 'utils/mocks';
 import { AppRoute } from 'utils/const';
@@ -47,9 +46,8 @@ describe('Card component', () => {
     expect(screen.getByText(/Подробнее/i)).toBeInTheDocument();
   });
 
-  it('should render component as OUT OF cart if cart is null and should add guitar card to cart', () => {
+  it('should render component as OUT OF cart if cart is null and should open Modal Cart Add', async () => {
     const guitar = getGuitarMock();
-    const updatingGuitar = getGuitarInCartMock(guitar);
     const store = getStore(null);
     const cardMock = getCardMock(guitar, store);
 
@@ -59,14 +57,13 @@ describe('Card component', () => {
     expect(screen.queryByText(/В Корзине/i)).not.toBeInTheDocument();
     expect(addBtn).toBeInTheDocument();
 
+    expect(screen.queryByText(/Добавить товар в корзину/i)).not.toBeInTheDocument();
     userEvent.click(addBtn);
-
-    expect(store.getActions()).toEqual([setCart([updatingGuitar])]);
+    expect(await screen.findByText(/Добавить товар в корзину/i)).toBeInTheDocument();
   });
 
-  it('should render component as OUT OF cart if cart doesn\'t contains current guitar and should add guitar card to cart', () => {
+  it('should render component as OUT OF cart if cart doesn\'t contains current guitar and should open Modal Cart Add', async () => {
     const guitar = getGuitarMock();
-    const updatingGuitar = getGuitarInCartMock(guitar);
     const guitarsInCart = [getGuitarInCartMock(), getGuitarInCartMock(), getGuitarInCartMock()];
     const store = getStore(guitarsInCart);
     const cardMock = getCardMock(guitar, store);
@@ -77,9 +74,9 @@ describe('Card component', () => {
     expect(screen.queryByText(/В Корзине/i)).not.toBeInTheDocument();
     expect(addBtn).toBeInTheDocument();
 
+    expect(screen.queryByText(/Добавить товар в корзину/i)).not.toBeInTheDocument();
     userEvent.click(addBtn);
-
-    expect(store.getActions()).toEqual([setCart(guitarsInCart.concat(updatingGuitar))]);
+    expect(await screen.findByText(/Добавить товар в корзину/i)).toBeInTheDocument();
   });
 
   it('should render component as IN cart if cart contains current guitar and should redirect to Cart Screen', async () => {

@@ -124,12 +124,13 @@ describe('Application routing', () => {
     expect(screen.getByText(expandedGuitar.vendorCode)).toBeInTheDocument();
   });
 
-  it('should render Under Construction Screen when route is /cart', () => {
+  it('should render Cart Screen when route is /cart', () => {
     history.push(AppRoute.Cart);
     render(mockApp);
 
-    expect(screen.getByText(/Страница находится на этапе разработки/i)).toBeInTheDocument();
-    expect(screen.getByText(/Реализация на следующем этапе/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Корзина/i)[0]).toBeInTheDocument();
+    expect(screen.getByText(/Корзина пуста./i)).toBeInTheDocument();
+    expect(screen.getByText(/Воспользуйтесь каталогом, чтобы найти нужный товар./i)).toBeInTheDocument();
   });
 
   it('should render Not Found Screen when route is unknown', () => {
