@@ -27,5 +27,23 @@ describe('Order Data reducer', () => {
         },
       ));
   });
+
+  it('should update discount state with discount when setDiscount', () => {
+    const discount = 10;
+
+    const setDiscount = {
+      type: ActionType.SetDiscount,
+      payload: discount,
+    };
+
+    expect(reducer(state, setDiscount))
+      .toEqual(Object.assign(
+        {},
+        state,
+        {
+          discount: discount,
+        },
+      ));
+  });
 });
 

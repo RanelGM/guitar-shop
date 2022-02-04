@@ -5,8 +5,8 @@ import MockAdapter from 'axios-mock-adapter';
 import { State } from 'types/state';
 import { Guitar, GuitarType } from 'types/product';
 import { createAPI } from 'api/api';
-import { loadProductAction, loadSearchSimilarAction, loadFilteredGuitarsAction, parseStateToPath, postCommentAction, loadExpandedGuitarAction } from './api-actions';
-import { setDefaultProductData, setExpandedGuitar, setGuitarsToRender, setGuitarsTotalCount, setGuitarType, setIsServerError, setIsUpdateLoaded, setPriceRangeFrom, setPriceRangeTo, setSearchSimilar } from './action';
+import { loadProductAction, loadSearchSimilarAction, loadFilteredGuitarsAction, parseStateToPath, postCommentAction, loadExpandedGuitarAction, postDiscountAction } from './api-actions';
+import { setDefaultProductData, setDiscount, setExpandedGuitar, setGuitarsToRender, setGuitarsTotalCount, setGuitarType, setIsServerError, setIsUpdateLoaded, setPriceRangeFrom, setPriceRangeTo, setSearchSimilar } from './action';
 import { getGuitarComment, getGuitarMock } from 'utils/mocks';
 import { APIRoute, APIQuery, AppRoute, MAX_CARD_ON_PAGE_COUNT, INDEX_ADJUSTMENT_VALUE, GuitarGroup, SortGroup, INITIAL_CATALOG_PAGE } from 'utils/const';
 import { sortGuitarsByLetter, sortGuitarsByPrice } from 'utils/utils';
@@ -292,4 +292,24 @@ describe('Async actions', () => {
       setExpandedGuitar(guitar),
     ]);
   });
+});
+
+it('should dispatch setDiscount with discount when using postDiscountAction', async () => {
+  const store = mockStore();
+  const discount = 10;
+  const coupon = {
+    coupon: 'foo',
+  };
+
+  mockAPI
+    .onPost(APIRoute.Coupons)
+    .reply(200, discount);
+
+  expect(store.getActions()).toEqual([]);
+
+  await (store.dispatch(postDiscountAction(coupon)));
+
+  expect(store.getActions()).toEqual([
+    setDiscount(discount),
+  ]);
 });
