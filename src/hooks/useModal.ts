@@ -2,6 +2,7 @@ import { MouseEvent, useState } from 'react';
 import { KeyboardKey } from 'utils/const';
 
 type ModalResult = [boolean, React.Dispatch<React.SetStateAction<boolean>>, ModalHandlerGroup];
+type SucceesCallback = () => void;
 
 export type ModalHandlerGroup = {
   handleCloseBtnClick: () => void,
@@ -11,7 +12,7 @@ export type ModalHandlerGroup = {
   handleSuccessEvent: () => void,
 };
 
-export default function useModal(onSuccessCallback?: () => void): ModalResult {
+export default function useModal(onSuccessCallback?: SucceesCallback): ModalResult {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleModalClose = () => {
