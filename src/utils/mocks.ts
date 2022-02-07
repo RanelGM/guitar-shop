@@ -39,10 +39,11 @@ export const getGuitarMock = (commentCount?: number): Guitar => {
   });
 };
 
-export const getGuitarInCartMock = (guitar?: Guitar): GuitarInCart => {
+export const getGuitarInCartMock = (guitar?: Guitar, count?: number): GuitarInCart => {
   const guitarInCart = guitar ? guitar : getGuitarMock();
+  const guitarCount = count ? count : 1;
 
   return Object.assign({}, guitarInCart, {
-    count: 1,
+    count: guitarCount,
   });
 };

@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { Action } from 'redux';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import MockAdapter from 'axios-mock-adapter';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { createMemoryHistory } from 'history';
@@ -14,7 +14,7 @@ import ModalReviewAdd from './modal-review-add';
 import { createAPI } from 'api/api';
 import { NameSpace } from 'store/root-reducer';
 import { getGuitarMock } from 'utils/mocks';
-import { APIQuery, APIRoute, KeyboardKey } from 'utils/const';
+import { APIQuery, APIRoute } from 'utils/const';
 
 const expandedGuitar = getGuitarMock();
 
@@ -31,29 +31,12 @@ const store = mockStore({
 
 const history = createMemoryHistory();
 
-const handleSuccessPost = jest.fn();
-const handleModalDidUnmount = jest.fn();
-const handleCloseBtnClick = jest.fn();
-const handleOverlayClick = jest.fn();
-const handleEscAction = jest.fn();
-
-const handleEscKeydown = (evt: KeyboardEvent) => {
-  if (evt.key === KeyboardKey.Esc) {
-    handleEscAction();
-  }
-};
-
-const handleModalDidMount = () => {
-  document.addEventListener('keydown', handleEscKeydown);
-  document.body.classList.add('scroll-lock');
-};
-
 const mockHandlerGroup = {
-  handleCloseBtnClick: handleCloseBtnClick,
-  handleOverlayClick: handleOverlayClick,
-  handleModalDidMount: handleModalDidMount,
-  handleModalDidUnmount: handleModalDidUnmount,
-  handleSuccessEvent: handleSuccessPost,
+  handleCloseBtnClick: jest.fn(),
+  handleOverlayClick: jest.fn(),
+  handleModalDidMount: jest.fn(),
+  handleModalDidUnmount: jest.fn(),
+  handleSuccessEvent: jest.fn(),
 };
 
 const mockComponent = (
@@ -87,8 +70,10 @@ const fillForm = (text?: string, rating?: number) => {
   userEvent.type(commentInput, text);
 };
 
-describe('Reviews List component', () => {
-  it('should render component with scroll lock on Body', () => {
+describe('Modal Review Add component', () => {
+  it('should render component and call handleModalDidMount callback', () => {
+    expect(mockHandlerGroup.handleModalDidMount).not.toBeCalled();
+
     render(mockComponent);
 
     expect(screen.getByLabelText(/Ваше имя/i)).toBeInTheDocument();
@@ -96,42 +81,37 @@ describe('Reviews List component', () => {
     expect(screen.getByLabelText(/Недостатки/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Комментарий/i)).toBeInTheDocument();
     expect(screen.getByText(/Отправить отзыв/i)).toBeInTheDocument();
-    expect(document.body.classList.contains('scroll-lock')).toBe(true);
+    expect(mockHandlerGroup.handleModalDidMount).toBeCalled();
   });
 
-  it('should call close callback when Esc keydown, click on close button or overlay', () => {
+  it('should call handleCloseBtnClick and handleOverlayClick when clicking on close button or overlay', () => {
     render(mockComponent);
 
     const closeButton = screen.getByLabelText(/Закрыть/i);
     const overlay = screen.getByTestId('overlay');
 
-    expect(handleCloseBtnClick).toBeCalledTimes(0);
-    expect(handleOverlayClick).toBeCalledTimes(0);
-    expect(handleEscAction).toBeCalledTimes(0);
+    expect(mockHandlerGroup.handleCloseBtnClick).not.toBeCalled();
+    expect(mockHandlerGroup.handleOverlayClick).not.toBeCalled();
 
     userEvent.click(closeButton);
-    expect(handleCloseBtnClick).toBeCalledTimes(1);
-
     userEvent.click(overlay);
-    expect(handleOverlayClick).toBeCalledTimes(1);
 
-    fireEvent.keyDown(document, { key: KeyboardKey.Esc });
-    fireEvent.keyDown(document, { key: KeyboardKey.Enter });
-    expect(handleEscAction).toBeCalledTimes(1);
+    expect(mockHandlerGroup.handleCloseBtnClick).toBeCalled();
+    expect(mockHandlerGroup.handleOverlayClick).toBeCalled();
   });
 
-  it('should not call success callback when clicking on submit button but required inputs are not filled', () => {
+  it('should not call handleSuccessEvent when clicking on submit button but required inputs are not filled', () => {
     render(mockComponent);
 
     const submitBtn = screen.getByText(/Отправить отзыв/i);
 
     userEvent.click(submitBtn);
 
-    expect(handleSuccessPost).toBeCalledTimes(0);
+    expect(mockHandlerGroup.handleSuccessEvent).toBeCalledTimes(0);
     expect(screen.getAllByText(/Заполните поле/i).length).toBeTruthy();
   });
 
-  it('should call success callback when clicking on submit button and required inputs are filled / server response is OK', async () => {
+  it('should call handleSuccessEvent when clicking on submit button and required inputs are filled / server response is OK', async () => {
     const text = 'foo';
     const rating = 4;
 
@@ -156,12 +136,12 @@ describe('Reviews List component', () => {
 
     const submitBtn = screen.getByText(/Отправить отзыв/i);
 
-    expect(handleSuccessPost).toBeCalledTimes(0);
+    expect(mockHandlerGroup.handleSuccessEvent).toBeCalledTimes(0);
 
     fillForm(text, rating);
     userEvent.click(submitBtn);
 
-    await waitFor(() => expect(handleSuccessPost).toBeCalledTimes(1));
+    await waitFor(() => expect(mockHandlerGroup.handleSuccessEvent).toBeCalledTimes(1));
   });
 
   it('should render error message when clicking on submit button and server response is NOT OK', async () => {
@@ -179,6 +159,6 @@ describe('Reviews List component', () => {
     userEvent.click(submitBtn);
 
     await screen.findByText(errorMessage);
-    expect(handleSuccessPost).toBeCalledTimes(0);
+    expect(mockHandlerGroup.handleSuccessEvent).toBeCalledTimes(0);
   });
 });

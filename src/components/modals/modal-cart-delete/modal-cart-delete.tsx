@@ -45,7 +45,7 @@ function ModalCartDelete({ guitar, handlerGroup }: ModalCartDeleteProps): JSX.El
       <FocusLock>
         <div className="modal is-active">
           <div className="modal__wrapper">
-            <div onClick={handleOverlayClick} className="modal__overlay" data-close-modal=""></div>
+            <div onClick={handleOverlayClick} className="modal__overlay" data-testid="overlay"></div>
             <div className="modal__content">
               <h2 className="modal__header title title--medium title--red">Удалить этот товар?</h2>
               <div className="modal__info">
@@ -61,7 +61,7 @@ function ModalCartDelete({ guitar, handlerGroup }: ModalCartDeleteProps): JSX.El
                 </div>
               </div>
               <div className="modal__button-container">
-                <button onClick={handleDeleteBtnClick} className="button button--small modal__button">Удалить товар</button>
+                <button onClick={handleDeleteBtnClick} className="button button--small modal__button" data-testid={guitar.id}>Удалить товар</button>
                 <button onClick={handleCloseBtnClick} className="button button--black-border button--small modal__button modal__button--right">Продолжить покупки</button>
               </div>
               <button onClick={handleCloseBtnClick} className="modal__close-btn button-cross" type="button" aria-label="Закрыть">
