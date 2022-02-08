@@ -75,3 +75,5 @@ export const MAX_STARS_COUNT = 5;
 export const MAX_COMMENTS_COUNT = 3;
 
 export const INITIAL_PROMOCODE_DISCOUNT = 0;
+export const MIN_PRODUCT_COUNT = 1;
+export const MAX_PRODUCT_COUNT = 99;

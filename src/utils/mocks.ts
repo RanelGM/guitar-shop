@@ -28,7 +28,7 @@ export const getGuitarMock = (commentCount?: number): Guitar => {
   return ({
     'id': id,
     'name': lorem.word(),
-    'vendorCode': datatype.string(),
+    'vendorCode': lorem.word(),
     'type': type,
     'description': lorem.sentence(),
     'previewImg': image.imageUrl(),

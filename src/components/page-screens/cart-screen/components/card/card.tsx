@@ -3,16 +3,13 @@ import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { GuitarInCart } from 'types/product';
 import useModal from 'hooks/useModal';
 import { ModalCartDelete } from 'components/modals/modals';
-import { GuitarGroup, KeyboardKey } from 'utils/const';
+import { GuitarGroup, KeyboardKey, MIN_PRODUCT_COUNT, MAX_PRODUCT_COUNT } from 'utils/const';
 import { adaptImageSrc, getNumberWithSpaceBetween } from 'utils/utils';
 
 type CardProps = {
   guitar: GuitarInCart,
   onCartUpdate: (count: number, guitar: GuitarInCart) => void,
 }
-
-const MIN_PRODUCT_COUNT = 1;
-const MAX_PRODUCT_COUNT = 99;
 
 function Card({ guitar, onCartUpdate }: CardProps): JSX.Element {
   const { name, vendorCode, type, previewImg, stringCount, price, count } = guitar;
@@ -108,7 +105,7 @@ function Card({ guitar, onCartUpdate }: CardProps): JSX.Element {
           className="quantity__input" type="number" id="counter" name="counter"
           min={MIN_PRODUCT_COUNT}
           max={MAX_PRODUCT_COUNT}
-          placeholder={`${currentCount}`}
+          aria-label="Изменить количество"
           value={currentCount}
           onChange={handleCountChange}
           onBlur={handleCountBlur}

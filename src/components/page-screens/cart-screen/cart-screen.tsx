@@ -65,18 +65,21 @@ function CartScreen(): JSX.Element {
                 <div className="cart__total-info">
                   <p className="cart__total-item">
                     <span className="cart__total-value-name">Всего:</span>
-                    <span className="cart__total-value">{adaptedUndicountedPrice} ₽</span>
+                    <span className="cart__total-value" data-testid="total-value">{adaptedUndicountedPrice} ₽</span>
                   </p>
                   <p className="cart__total-item">
                     <span className="cart__total-value-name">Скидка:</span>
-                    <span className={`cart__total-value
+                    <span data-testid="discount-value" className={`cart__total-value
                     ${isDiscount ? 'cart__total-value--bonus' : ''}`}
                     >{isDiscount ? '- ' : ''}{adaptedDiscountPrice} ₽
                     </span>
                   </p>
                   <p className="cart__total-item">
                     <span className="cart__total-value-name">К оплате:</span>
-                    <span className="cart__total-value cart__total-value--payment">{adaptedDiscountedPrice} ₽</span>
+                    <span className="cart__total-value cart__total-value--payment"
+                      data-testid="total-discounted-value"
+                    >{adaptedDiscountedPrice} ₽
+                    </span>
                   </p>
                   <button className="button button--red button--big cart__order-button">Оформить заказ</button>
                 </div>
