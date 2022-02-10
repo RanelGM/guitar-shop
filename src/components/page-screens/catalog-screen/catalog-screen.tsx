@@ -84,7 +84,7 @@ function CatalogScreen(): JSX.Element {
 
   return (
     <div className="wrapper">
-      <Header isMainPage />
+      <Header />
 
       <main className="page-content">
         <div className="container">
