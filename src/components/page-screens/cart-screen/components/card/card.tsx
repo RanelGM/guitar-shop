@@ -26,7 +26,14 @@ function Card({ guitar, onCartUpdate }: CardProps): JSX.Element {
 
   const handleCountChange = (evt: ChangeEvent) => {
     const input = evt.target as HTMLInputElement;
-    setCurrentCount(input.value);
+    const value = input.value;
+    const isValueOutOfSymbol = value.length > MAX_PRODUCT_COUNT.toString().length;
+
+    if (isValueOutOfSymbol) {
+      return;
+    }
+
+    setCurrentCount(value);
   };
 
   const handleDecrementBtnClick = () => {
