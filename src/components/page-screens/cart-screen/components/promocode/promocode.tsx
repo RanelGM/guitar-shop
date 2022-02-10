@@ -46,12 +46,13 @@ function Promocode(): JSX.Element {
     postCoupon(value);
   };
 
-  const handleInputBlur = () => {
+  const handleInputChange = () => {
     const input = promocodeRef.current;
+    const whiteSpaceReg = new RegExp(/\s/g);
 
     if (!input) { return; }
 
-    input.value = input.value.trim();
+    input.value = input.value.replace(whiteSpaceReg, '');
   };
 
   return (
@@ -63,7 +64,7 @@ function Promocode(): JSX.Element {
           <label className="visually-hidden">Промокод</label>
           <input type="text" placeholder="Введите промокод" id="coupon" name="coupon"
             ref={promocodeRef}
-            onBlur={handleInputBlur}
+            onChange={handleInputChange}
           />
 
           {promocodeStatus === PromocodeState.Valid && (

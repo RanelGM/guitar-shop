@@ -97,10 +97,9 @@ describe('Page-Screens Card Component', () => {
     expect(input.value).toBe(typingValue);
   });
 
-  it('should use min/max input values when input is on blur and typed value is lesser/greater than min/max value', () => {
+  it('should use min input value when input is on blur and typed value is lesser than min value', () => {
     const mockComponent = getMockComponent();
     const minTypingValue = (MIN_PRODUCT_COUNT - 1).toString();
-    const maxTypingValue = (MAX_PRODUCT_COUNT + 1).toString();
 
     render(mockComponent);
 
@@ -112,13 +111,22 @@ describe('Page-Screens Card Component', () => {
     expect(input.value).toBe(minTypingValue);
     fireEvent.blur(input);
     expect(input.value).toBe(MIN_PRODUCT_COUNT.toString());
+  });
+
+  it('should use maxSymbol input value when typed value is more symbols that maxSymbol value', () => {
+    const mockComponent = getMockComponent();
+    const maxSymbol = MAX_PRODUCT_COUNT.toString().length;
+    const typingValue = Array.from({ length: maxSymbol + 1 }, (item, index) => item = index).join('');
+    const expectingValue = typingValue.slice(0, maxSymbol);
+
+    render(mockComponent);
+
+    const input = screen.getByLabelText('Изменить количество') as HTMLInputElement;
 
     input.value = '';
 
-    userEvent.type(input, maxTypingValue);
-    expect(input.value).toBe(maxTypingValue);
-    fireEvent.blur(input);
-    expect(input.value).toBe(MAX_PRODUCT_COUNT.toString());
+    userEvent.type(input, typingValue);
+    expect(input.value).toBe(expectingValue);
   });
 
   it('should render ModalCartDelete component when clicking on delete button', () => {
